@@ -1,40 +1,35 @@
-﻿using Common.DataConfig;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Common.DataConfig;
 using Common.Enums;
 using Common.Exeptions;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
 using Db;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Crm.Dal.Dals
+namespace Server.Managers
 {
-    public class LoginEmployeeDal
+    public class EmployeeManager
     {
         LoggerManager _logger;
 
-        public LoginEmployeeDal()
+        public EmployeeManager()
         {
-            _logger = new LoggerManager(new FileLogger(), "loginDal.txt");
+            _logger = new LoggerManager(new FileLogger(), "employeeManager.txt");
         }
 
-        /// <summary>
-        /// Checking system login
-        /// </summary>
-        /// <returns>A employee model if login successful </returns>
-        public Employee Login(LoginDTO loginEmployee)
+        internal Employee Login(LoginDTO loginEmployee)
         {
             Employee requstedEmployee = null;
 
             try
             {
-                using (var context = new CellularContext())
+                using (var context = new UnitOfWork(new CellularContext()))
                 {
-                    requstedEmployee = context.EmplyeesTable.SingleOrDefault((e) => e.UserName == loginEmployee.UserName);
+                    requstedEmployee = context.Employee.GetEmployeeByUserName(loginEmployee.UserName);
                 }
             }
             catch (Exception e)

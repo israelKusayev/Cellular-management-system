@@ -8,7 +8,7 @@ using System.Web.Http;
 
 namespace Server.Interfaces
 {
-    interface ILoginApi
+    interface IEmployeeLoginApi
     {
         IHttpActionResult Login(LoginDTO loginEmployee);
     }

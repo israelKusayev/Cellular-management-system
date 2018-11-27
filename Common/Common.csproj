@@ -80,9 +80,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryInterfaces\ICallRepository.cs" />
     <Compile Include="RepositoryInterfaces\ICustomerRepository.cs" />
+    <Compile Include="RepositoryInterfaces\IEmployeeRepository.cs" />
     <Compile Include="RepositoryInterfaces\IFriendsRepository.cs" />
     <Compile Include="RepositoryInterfaces\ILineRepository.cs" />
-    <Compile Include="RepositoryInterfaces\ILoginEmployeeRepository.cs" />
     <Compile Include="RepositoryInterfaces\IPackageRepository.cs" />
     <Compile Include="RepositoryInterfaces\IPaymentRepository.cs" />
     <Compile Include="RepositoryInterfaces\IRepository.cs" />
