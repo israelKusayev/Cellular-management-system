@@ -3,6 +3,7 @@ using Common.Models;
 using Common.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,11 @@ namespace Db.Repositories
             line.Status = LineStatus.Removed;
             line.RemovedDate = DateTime.Now;
             return line;
+        }
+
+        public Line GetLineWithPackage(int lineId)
+        {
+            return CellularContext.LinesTable.Where(l => l.LineId == lineId).Include(p => p.Package).SingleOrDefault();
         }
 
         public CellularContext CellularContext

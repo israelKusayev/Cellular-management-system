@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Common.RepositoryInterfaces
 {
-    public interface ISmsRepository
+    public interface IPackageRepository : IRepository<Package>
     {
+        List<Package> GetPackageTemplate();
+        Package GetPackageWithFriends(int packageId);
     }
 }

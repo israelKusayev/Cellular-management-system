@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Common.RepositoryInterfaces
 {
-    interface ILoginEmployeeRepository
+    interface ILoginEmployeeRepository : IRepository<Employee>
     {
         Employee Login(LoginDTO loginEmployee);
     }
