@@ -12,11 +12,11 @@ namespace Db.Repositories
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext Context;
-        private DbSet<TEntity>_entities;
+        private DbSet<TEntity> _entities;
         public Repository(DbContext context)
         {
             Context = context;
-             _entities = Context.Set<TEntity>();
+            _entities = Context.Set<TEntity>();
         }
 
         public TEntity Get(int id)
@@ -70,6 +70,11 @@ namespace Db.Repositories
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
             _entities.RemoveRange(entities);
+        }
+
+        public void Edit(TEntity oldEntity, TEntity newEntity)
+        {
+            Context.Entry(oldEntity).CurrentValues.SetValues(newEntity);
         }
     }
 }

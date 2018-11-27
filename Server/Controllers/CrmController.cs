@@ -15,7 +15,7 @@ using System.Web.Http;
 namespace Server.Controllers
 {
     //fix the stutus code
-    public class CrmController : ApiController, ILoginApi, ICustomerApi, ILineApi, IPackageApi
+    public class CrmController : ApiController, ILoginApi, ILineApi, IPackageApi
     {
         LoginEmployeeDal _loginDbManager;
         CustomerDal _customerDbManage;
@@ -79,160 +79,160 @@ namespace Server.Controllers
 
         //------------------//
 
-        [HttpGet]
-        [Route("api/crm/customer/{idCard}")]
-        public IHttpActionResult GetCustomer(string idCard)
-        {
-            if (string.IsNullOrWhiteSpace(idCard))
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
-            }
-            Customer customer;
-            try
-            {
-                customer = _customerManager.GetActiveCustomer(idCard);
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
+        //[HttpGet]
+        //[Route("api/crm/customer/{idCard}")]
+        //public IHttpActionResult GetCustomer(string idCard)
+        //{
+        //    if (string.IsNullOrWhiteSpace(idCard))
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
+        //    }
+        //    Customer customer;
+        //    try
+        //    {
+        //        customer = _customerManager.GetActiveCustomer(idCard);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
 
-            if (customer != null)
-            {
-                return Ok(customer);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Customer not found"));
-            }
+        //    if (customer != null)
+        //    {
+        //        return Ok(customer);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Customer not found"));
+        //    }
 
-        }
+        //}
 
-        /// <summary>
-        /// Get customer value
-        /// </summary>
-        /// <param name="idCard">Ccustomer identity card</param>
-        [HttpGet]
-        [Route("api/crm/customer/customerValue/{idCard}")]
-        public IHttpActionResult GetCustomerValue(string idCard)
-        {
-            if (string.IsNullOrWhiteSpace(idCard))
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
-            }
-            double customerValue;
-            try
-            {
-                customerValue = _customerManager.GetCustomerValue(idCard);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
-            return Ok(customerValue);
+        ///// <summary>
+        ///// Get customer value
+        ///// </summary>
+        ///// <param name="idCard">Ccustomer identity card</param>
+        //[HttpGet]
+        //[Route("api/crm/customer/customerValue/{idCard}")]
+        //public IHttpActionResult GetCustomerValue(string idCard)
+        //{
+        //    if (string.IsNullOrWhiteSpace(idCard))
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
+        //    }
+        //    double customerValue;
+        //    try
+        //    {
+        //        customerValue = _customerManager.GetCustomerValue(idCard);
+        //    }
+        //    catch (KeyNotFoundException e)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
+        //    return Ok(customerValue);
 
-        }
+        //}
 
-        [HttpPost]
-        [Route("api/crm/customer")]
-        public IHttpActionResult AddNewCustomer(Customer newCustomer)
-        {
-            if (newCustomer == null)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
-            }
+        //[HttpPost]
+        //[Route("api/crm/customer")]
+        //public IHttpActionResult AddNewCustomer(Customer newCustomer)
+        //{
+        //    if (newCustomer == null)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
+        //    }
 
-            Customer addedCustomer;
-            try
-            {
-                addedCustomer = _customerManager.AddNewCustomer(newCustomer);
-            }
-            catch (AlreadyExistExeption e)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NonAuthoritativeInformation, e.Message));
-            }
-            catch (FaildToConnectDbExeption e)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
-            catch (Exception e)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Something went wrong"));
-            }
+        //    Customer addedCustomer;
+        //    try
+        //    {
+        //        addedCustomer = _customerManager.AddNewCustomer(newCustomer);
+        //    }
+        //    catch (AlreadyExistExeption e)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NonAuthoritativeInformation, e.Message));
+        //    }
+        //    catch (FaildToConnectDbExeption e)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Something went wrong"));
+        //    }
 
-            if (addedCustomer != null)
-            {
-                return Ok(addedCustomer);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User has not been added, please try again"));
-            }
-        }
+        //    if (addedCustomer != null)
+        //    {
+        //        return Ok(addedCustomer);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User has not been added, please try again"));
+        //    }
+        //}
 
-        [HttpPut]
-        [Route("api/crm/customer")]
-        public IHttpActionResult EditCustomerDetails(Customer customerToEdit)
-        {
-            if (customerToEdit == null)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
-            }
+        //[HttpPut]
+        //[Route("api/crm/customer")]
+        //public IHttpActionResult EditCustomerDetails(Customer customerToEdit)
+        //{
+        //    if (customerToEdit == null)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
+        //    }
 
-            Customer EditedCustomer;
+        //    Customer EditedCustomer;
 
-            try
-            {
-                EditedCustomer = _customerDbManage.EditCustomer(customerToEdit);
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
+        //    try
+        //    {
+        //        EditedCustomer = _customerDbManage.EditCustomer(customerToEdit);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
 
-            if (EditedCustomer != null)
-            {
-                return Ok(EditedCustomer);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not found this customer"));
-            }
-        }
+        //    if (EditedCustomer != null)
+        //    {
+        //        return Ok(EditedCustomer);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not found this customer"));
+        //    }
+        //}
 
-        [HttpDelete]
-        [Route("api/crm/customer/{idCard}")]
-        public IHttpActionResult DeactivateCustomer(string idCard)
-        {
-            if (string.IsNullOrWhiteSpace(idCard))
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
-            }
+        //[HttpDelete]
+        //[Route("api/crm/customer/{idCard}")]
+        //public IHttpActionResult DeactivateCustomer(string idCard)
+        //{
+        //    if (string.IsNullOrWhiteSpace(idCard))
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
+        //    }
 
-            Customer customerAfterDeactivate;
-            try
-            {
-                customerAfterDeactivate = _customerDbManage.DeactivateCustomer(idCard);
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
+        //    Customer customerAfterDeactivate;
+        //    try
+        //    {
+        //        customerAfterDeactivate = _customerDbManage.DeactivateCustomer(idCard);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
 
-            if (customerAfterDeactivate != null)
-            {
-                return Ok(customerAfterDeactivate);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not deactivate this customer"));
-            }
+        //    if (customerAfterDeactivate != null)
+        //    {
+        //        return Ok(customerAfterDeactivate);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not deactivate this customer"));
+        //    }
 
-        }
+        //}
 
         //------------------------//
 
