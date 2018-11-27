@@ -83,6 +83,7 @@
     <Compile Include="RepositoryInterfaces\IFriendsRepository.cs" />
     <Compile Include="RepositoryInterfaces\ILineRepository.cs" />
     <Compile Include="RepositoryInterfaces\ILoginEmployeeRepository.cs" />
+    <Compile Include="RepositoryInterfaces\IPackageRepository.cs" />
     <Compile Include="RepositoryInterfaces\IPaymentRepository.cs" />
     <Compile Include="RepositoryInterfaces\IRepository.cs" />
     <Compile Include="RepositoryInterfaces\ISmsRepository.cs" />
