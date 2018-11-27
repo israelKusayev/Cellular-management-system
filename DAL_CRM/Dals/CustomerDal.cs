@@ -175,7 +175,7 @@ namespace Crm.Dal.Dals
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
 
-        }
+        } 
 
     }
 }
