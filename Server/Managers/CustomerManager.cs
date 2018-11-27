@@ -125,10 +125,10 @@ namespace Server.Managers
                     {
                         customerToDeactivate.IsActive = false;
 
-                        //foreach (var line in customerToDeactivate.Lines)//deactive all customer lines.
-                        //{
-                        //    _lineManager.DeactivateLine(line.LineId);
-                        //}
+                        foreach (var line in customerToDeactivate.Lines)
+                        {
+                            context.Line.DeactivateLine(line);
+                        }
 
                         context.Complete();
                     }

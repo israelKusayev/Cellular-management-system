@@ -15,7 +15,7 @@ using System.Web.Http;
 namespace Server.Controllers
 {
     //fix the stutus code
-    public class CrmController : ApiController, ILoginApi, ILineApi, IPackageApi
+    public class CrmController : ApiController, ILoginApi , IPackageApi
     {
         LoginEmployeeDal _loginDbManager;
         CustomerDal _customerDbManage;
@@ -236,94 +236,94 @@ namespace Server.Controllers
 
         //------------------------//
 
-        [HttpGet]
-        [Route("api/crm/line/{idCard}")]
-        public IHttpActionResult GetCustomerLines(string idCard)
-        {
-            if (string.IsNullOrWhiteSpace(idCard))
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
-            }
+        //[HttpGet]
+        //[Route("api/crm/line/{idCard}")]
+        //public IHttpActionResult GetCustomerLines(string idCard)
+        //{
+        //    if (string.IsNullOrWhiteSpace(idCard))
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
+        //    }
 
-            List<Line> customerLines;
-            try
-            {
-                customerLines = _lineDbManager.GetCustomerLines(idCard);
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
+        //    List<Line> customerLines;
+        //    try
+        //    {
+        //        customerLines = _lineDbManager.GetCustomerLines(idCard);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
 
-            if (customerLines != null)
-            {
-                return Ok(customerLines);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Could not found lines to this customer"));
-            }
-        }
+        //    if (customerLines != null)
+        //    {
+        //        return Ok(customerLines);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Could not found lines to this customer"));
+        //    }
+        //}
 
-        [HttpPost]
-        [Route("api/crm/line/{customerId}")]
-        public IHttpActionResult AddNewLine(int customerId, Line lineToAdd)
-        {
-            if (lineToAdd == null || lineToAdd.LineNumber == null)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
-            }
-            Line addedLine;
-            try
-            {
-                addedLine = _lineDbManager.AddNewLine(lineToAdd, customerId);
-            }
-            catch (AlreadyExistExeption e) //this line already exists to this customer
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Found, e.Message));
-            }
-            catch (FoundLineExeption e) //this line already exists to another customer
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
+        //[HttpPost]
+        //[Route("api/crm/line/{customerId}")]
+        //public IHttpActionResult AddNewLine(int customerId, Line lineToAdd)
+        //{
+        //    if (lineToAdd == null || lineToAdd.LineNumber == null)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
+        //    }
+        //    Line addedLine;
+        //    try
+        //    {
+        //        addedLine = _lineDbManager.AddNewLine(lineToAdd, customerId);
+        //    }
+        //    catch (AlreadyExistExeption e) //this line already exists to this customer
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Found, e.Message));
+        //    }
+        //    catch (FoundLineExeption e) //this line already exists to another customer
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
 
-            if (addedLine != null)
-            {
-                return Ok(addedLine);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not add this line, please try again"));
-            }
-        }
+        //    if (addedLine != null)
+        //    {
+        //        return Ok(addedLine);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not add this line, please try again"));
+        //    }
+        //}
 
-        [HttpDelete]
-        [Route("api/crm/line/{lineId}")]
-        public IHttpActionResult DeactivateLine(int lineId)
-        {
-            Line editedLine;
-            try
-            {
-                editedLine = _lineDbManager.DeactivateLine(lineId);
-            }
-            catch (Exception)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
+        //[HttpDelete]
+        //[Route("api/crm/line/{lineId}")]
+        //public IHttpActionResult DeactivateLine(int lineId)
+        //{
+        //    Line editedLine;
+        //    try
+        //    {
+        //        editedLine = _lineDbManager.DeactivateLine(lineId);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
 
-            if (editedLine != null)
-            {
-                return Ok(editedLine);
-            }
-            else
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, could not change the customer's details"));
-            }
-        }
+        //    if (editedLine != null)
+        //    {
+        //        return Ok(editedLine);
+        //    }
+        //    else
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, could not change the customer's details"));
+        //    }
+        //}
 
         //---------------------//
 

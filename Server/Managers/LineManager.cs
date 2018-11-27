@@ -27,7 +27,7 @@ namespace Server.Managers
                 Customer customer;
                 using (var context = new UnitOfWork(new CellularContext()))
                 {
-                    customer =  context.Customer.GetActiveCustomerWithLines(idCard);
+                    customer = context.Customer.GetActiveCustomerWithLines(idCard);
                 }
                 return customer.Lines.Where(l => l.Status == LineStatus.Used).ToList();
 
@@ -41,23 +41,27 @@ namespace Server.Managers
 
         internal Line AddNewLine(Line lineToAdd, int customerId)
         {
-            Line existLine;
+            Line lineNumberExsists;
+            Customer customer;
+
             try
             {
-                using (var context = new CellularContext())
+                using (var context = new UnitOfWork(new CellularContext()))
                 {
-                    Customer customer = context.CustomerTable.SingleOrDefault((c) => c.CustomerId == customerId);
-                    existLine = LineNumberIsAvailable(newLine, context);
-                    if (existLine == null)
+                    customer = context.Customer.Get(customerId);
+                    lineNumberExsists = context.Line.LineNumberIsAvailable(lineToAdd.LineNumber);
+                    if (lineNumberExsists == null)
                     {
-                        newLine.Status = LineStatus.Used;
-                        newLine.CreatedDate = DateTime.Now;
-                        customer.Lines.Add(newLine);
-                        context.SaveChanges();
-                        Line addedLine = context.LinesTable.SingleOrDefault((l) => l.LineNumber == newLine.LineNumber && l.Status == LineStatus.Used);
+                        lineToAdd.Status = LineStatus.Used;
+                        lineToAdd.CreatedDate = DateTime.Now;
+                        context.Line.Add(lineToAdd);
+                        context.Complete();
+
+                        Line addedLine = context.Line.GetLineByLineNumber(lineToAdd.LineNumber);
                         return addedLine;
                     }
                 }
+                
             }
             catch (Exception e)
             {
@@ -65,13 +69,36 @@ namespace Server.Managers
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
 
-            if (existLine.CustomerId == customerId)
+            if (lineNumberExsists.CustomerId == customerId)
             {
                 throw new AlreadyExistExeption("this customer", "Line");
             }
             else
             {
                 throw new FoundLineExeption("other customer", "Line");
+            }
+        }
+
+        internal Line DeactivateLine(int lineId)
+        {
+            try
+            {
+                using (var context = new UnitOfWork(new CellularContext()))
+                {
+                    Line lineToEdit = context.Line.Get(lineId);
+
+                    if (lineToEdit != null)
+                    {
+                        context.Line.DeactivateLine(lineToEdit);
+                        context.Complete();
+                    }
+                    return lineToEdit;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
         }
     }

@@ -61,7 +61,7 @@ namespace Crm.Dal.Dals
             {
                 throw new FoundLineExeption("other customer", "Line");
             }
-        }
+        } //v
 
         public List<Line> GetCustomerLines(string customerIdCard)
         {
@@ -79,7 +79,7 @@ namespace Crm.Dal.Dals
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
 
-        }
+        } //v
 
         public Line DeactivateLine(int lineId)
         {
@@ -132,6 +132,8 @@ namespace Crm.Dal.Dals
                         {
                             if (newPackage != null)
                             {
+                                //newPackage.Lines.Add(foundLine);
+
                                 foundLine.Package = newPackage;
                                 addedPackage = newPackage;
                             }
@@ -184,6 +186,6 @@ namespace Crm.Dal.Dals
         {
             return context.LinesTable.SingleOrDefault((l) => l.LineNumber == newLine.LineNumber
                                                  && (!(l.Status == LineStatus.Avaliable) && !(l.Status == LineStatus.Removed)));
-        }
+        } //v
     }
 }

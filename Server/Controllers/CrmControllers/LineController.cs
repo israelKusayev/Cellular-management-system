@@ -47,7 +47,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Could not found lines to this customer"));
             }
-        } //v
+        } 
 
         [HttpPost]
         [Route("api/crm/line/{customerId}")]
@@ -83,7 +83,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not add this line, please try again"));
             }
-        }
+        } 
 
         [HttpDelete]
         [Route("api/crm/line/{lineId}")]
@@ -93,7 +93,7 @@ namespace Server.Controllers.CrmControllers
             Line editedLine;
             try
             {
-                editedLine = _lineDbManager.DeactivateLine(lineId);
+                editedLine = _lineManager.DeactivateLine(lineId);
             }
             catch (Exception)
             {
