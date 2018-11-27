@@ -18,6 +18,8 @@ namespace Common.RepositoryInterfaces
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
 
+        void Edit(TEntity oldEntity, TEntity newEntity);
+
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
     }

@@ -22,7 +22,12 @@ namespace Db.Repositories
 
         public Customer GetCustomerWithLinesAndPayments(string idCard)
         {
-          return CellularContext.CustomerTable.Where((c) => c.IdentityCard == idCard && c.IsActive == true).Include(l => l.Lines.Select(x => x.Payments)).SingleOrDefault();
+          return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).Include(l => l.Lines.Select(x => x.Payments)).SingleOrDefault();
+        }
+
+        public Customer GetActiveCustomerWithLines(string idCard)
+        {
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).Include(x => x.Lines).SingleOrDefault();
         }
 
         public CellularContext CellularContext

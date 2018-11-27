@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CrmController.cs" />
+    <Compile Include="Controllers\CrmControllers\CustomerController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
     <Compile Include="Controllers\SimulatorController.cs" />
     <Compile Include="Global.asax.cs">

@@ -10,7 +10,7 @@ namespace Db
 {
     public class CellularContext : DbContext
     {
-        public CellularContext() : base("Cellular8")
+        public CellularContext() : base("CellularTest8")
         {
         }
 

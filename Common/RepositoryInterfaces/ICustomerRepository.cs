@@ -11,5 +11,6 @@ namespace Common.RepositoryInterfaces
     {
         Customer GetActiveCustomerByIdCard(string idCard);
         Customer GetCustomerWithLinesAndPayments(string idCard);
+        Customer GetActiveCustomerWithLines(string idCard);
     }
 }
