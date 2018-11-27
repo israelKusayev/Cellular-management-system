@@ -153,7 +153,7 @@ namespace Server.Managers
                             {
                                 newPackage.PackageId = oldPackage.PackageId;
                                 context.Package.Edit(oldPackage, newPackage);
-                                oldPackage = newPackage;
+                                return context.Package.GetPackageWithFriends(oldPackage.PackageId);
                             }
                         }
                         context.Complete();
@@ -166,7 +166,6 @@ namespace Server.Managers
                 _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
-
             return oldPackage;
         }
 

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Common.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Server.Controllers.CrmControllers;
 
 namespace UnitTestServer
 {
@@ -30,6 +31,13 @@ namespace UnitTestServer
                 emplyee = result.Content.ReadAsAsync<Employee>().Result;
             }
             Assert.AreNotEqual("Shay", emplyee.UserName);
+        }
+
+        [TestMethod]
+        public void testy()
+        {
+            var controller = new CustomerController();
+            var res = controller.AddNewCustomer(new Customer()) as Customer;
         }
     }
 }
