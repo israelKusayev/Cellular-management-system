@@ -1,6 +1,5 @@
 ﻿using Common.Exeptions;
 using Common.ModelsDTO;
-using Crm.Dal.Dals;
 using Server.Interfaces;
 using Server.Managers;
 using System;
@@ -14,11 +13,9 @@ namespace Server.Controllers
 {
     public class SimulatorController : ApiController, ISimulatorApi
     {
-        SimulatorDal _simulatorDbManager;
         SimulatorManager _simulatorManager;
         public SimulatorController()
         {
-            _simulatorDbManager = new SimulatorDal();
             _simulatorManager = new SimulatorManager();
         }
 

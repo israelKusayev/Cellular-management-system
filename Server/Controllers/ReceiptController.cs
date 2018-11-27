@@ -1,5 +1,5 @@
 ﻿using Common.ModelsDTO;
-using Receipt.Dal.Dals;
+using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ namespace Server.Controllers
 {
     public class ReceiptController : ApiController
     {
-        ReceiptDal _receiptManager;
+        ReceiptManager _receiptManager;
         public ReceiptController()
         {
-            _receiptManager = new ReceiptDal();
+            _receiptManager = new ReceiptManager();
 
         }
 
