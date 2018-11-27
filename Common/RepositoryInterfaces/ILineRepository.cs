@@ -9,6 +9,7 @@ namespace Common.RepositoryInterfaces
 {
     public interface ILineRepository : IRepository<Line>
     {
+        Line GetLineWithPackageAndFriends(int lineId);
         Line GetLineByLineNumber(string lineNumber);
         Line LineNumberIsAvailable(string lineNumber);
         Line DeactivateLine(Line line);

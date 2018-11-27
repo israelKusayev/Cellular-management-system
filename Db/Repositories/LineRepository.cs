@@ -3,6 +3,7 @@ using Common.Models;
 using Common.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,11 @@ namespace Db.Repositories
         public LineRepository(CellularContext context) : base(context)
         {
 
+        }
+
+        public Line GetLineWithPackageAndFriends(int lineId)
+        {
+            return CellularContext.LinesTable.Where((l) => l.LineId == lineId && l.Status == LineStatus.Used).Include(y => y.Package).Include(x => x.Package.Friends).SingleOrDefault();
         }
 
         public Line GetLineByLineNumber(string lineNumber)

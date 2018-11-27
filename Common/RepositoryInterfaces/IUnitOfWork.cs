@@ -9,6 +9,11 @@ namespace Common.RepositoryInterfaces
     public interface IUnitOfWork : IDisposable
     {
         ICustomerRepository Customer { get; }
+        IPaymentRepository Payment { get; }
+        ICallRepository Call { get; }
+        ISmsRepository Sms { get; }
+        ILineRepository Line { get; }
+        IPackageRepository Package { get; }
         int Complete();
     }
 }

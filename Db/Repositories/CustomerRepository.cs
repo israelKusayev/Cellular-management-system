@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Enums;
+using Z.EntityFramework.Plus;
 
 namespace Db.Repositories
 {
@@ -22,12 +24,12 @@ namespace Db.Repositories
 
         public Customer GetCustomerWithLinesAndPayments(string idCard)
         {
-          return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).Include(l => l.Lines.Select(x => x.Payments)).SingleOrDefault();
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(v => v.Status == LineStatus.Used).Select(x => x.Payments)).SingleOrDefault();
         }
 
         public Customer GetActiveCustomerWithLines(string idCard)
         {
-            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).Include(x => x.Lines).SingleOrDefault();
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x=>x.Status == LineStatus.Used)).SingleOrDefault();
         }
 
         public CellularContext CellularContext

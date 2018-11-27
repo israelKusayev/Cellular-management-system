@@ -54,7 +54,7 @@ namespace Server.Managers
                     {
                         lineToAdd.Status = LineStatus.Used;
                         lineToAdd.CreatedDate = DateTime.Now;
-                        context.Line.Add(lineToAdd);
+                        customer.Lines.Add(lineToAdd);
                         context.Complete();
 
                         Line addedLine = context.Line.GetLineByLineNumber(lineToAdd.LineNumber);

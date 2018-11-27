@@ -2,6 +2,7 @@
 using Common.ModelsDTO;
 using Crm.Dal.Dals;
 using Server.Interfaces;
+using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,11 @@ namespace Server.Controllers
     public class SimulatorController : ApiController, ISimulatorApi
     {
         SimulatorDal _simulatorDbManager;
-
+        SimulatorManager _simulatorManager;
         public SimulatorController()
         {
             _simulatorDbManager = new SimulatorDal();
+            _simulatorManager = new SimulatorManager();
         }
 
         [HttpPost]
@@ -31,7 +33,7 @@ namespace Server.Controllers
 
             try
             {
-                _simulatorDbManager.SimulateCallsOrSms(simulateDTO);
+                _simulatorManager.SimulateCallsOrSms(simulateDTO);
                 return Ok();
             }
             catch (EmptyException e)
@@ -47,9 +49,6 @@ namespace Server.Controllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Something went wrong"));
             }
-
-
-
         }
     }
 }

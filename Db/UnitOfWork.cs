@@ -17,10 +17,16 @@ namespace Db
             _context = context;
             Customer = new CustomerRepository(_context);
             Line = new LineRepository(_context);
+            Sms = new SmsRepository(_context);
+            Call = new CallRepository(_context);
+            Payment = new PaymentRepository(_context);
         }
 
         public ICustomerRepository Customer { get; private set; }
         public ILineRepository Line { get; private set; }
+        public ISmsRepository Sms { get; private set; }
+        public ICallRepository Call { get; private set; }
+        public IPaymentRepository Payment { get; private set; }
 
         public int Complete()
         {
