@@ -113,6 +113,7 @@
     <Compile Include="Managers\CustomerManager.cs" />
     <Compile Include="Managers\LineManager.cs" />
     <Compile Include="Managers\SimulatorManager.cs" />
+    <Compile Include="Managers\PackageManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

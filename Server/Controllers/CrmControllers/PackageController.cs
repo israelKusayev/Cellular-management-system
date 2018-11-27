@@ -209,6 +209,6 @@ namespace Server.Controllers.CrmControllers
             //{
             //    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not edit your friends, please try again"));
             //}
-        }
+        } //v
     }
 }
