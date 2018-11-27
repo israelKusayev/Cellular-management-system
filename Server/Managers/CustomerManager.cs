@@ -5,6 +5,7 @@ using System.Web;
 using Common.DataConfig;
 using Common.Enums;
 using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Db;
@@ -12,7 +13,7 @@ using Db.Repositories;
 
 namespace Server.Managers
 {
-    public class CustomerManager
+    public class CustomerManager : ICustomerManager
     {
         private LoggerManager _logger;
 
@@ -20,7 +21,7 @@ namespace Server.Managers
         {
             _logger = new LoggerManager(new FileLogger(), "customerDal.txt");
         }
-        internal Customer GetActiveCustomer(string idCard)
+        public Customer GetActiveCustomer(string idCard)
         {
             using (var context = new UnitOfWork(new CellularContext()))
             {
@@ -28,7 +29,7 @@ namespace Server.Managers
             }
         }
 
-        internal double GetCustomerValue(string idCard)
+        public double GetCustomerValue(string idCard)
         {
             Customer customer;
             using (var context = new UnitOfWork(new CellularContext()))
@@ -57,7 +58,7 @@ namespace Server.Managers
             return num < 0 ? 0 : num;
         }
 
-        internal Customer AddNewCustomer(Customer newCustomer)
+        public Customer AddNewCustomer(Customer newCustomer)
         {
             newCustomer.IsActive = true;
             Customer addedCustomer = null;
@@ -89,7 +90,7 @@ namespace Server.Managers
             return addedCustomer;
         }
 
-        internal Customer EditCustomer(Customer customerToEdit)
+        public Customer EditCustomer(Customer customerToEdit)
         {
             customerToEdit.IsActive = true;
             try
@@ -114,7 +115,7 @@ namespace Server.Managers
             }
         }
 
-        internal Customer DeactivateCustomer(string idCard)
+        public Customer DeactivateCustomer(string idCard)
         {
             try
             {

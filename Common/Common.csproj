@@ -62,6 +62,7 @@
     <Compile Include="Exeptions\FoundLineExeption.cs" />
     <Compile Include="Exeptions\IncorrectExeption.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\ICustomerManager.cs" />
     <Compile Include="Logger\FileLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerManager.cs" />

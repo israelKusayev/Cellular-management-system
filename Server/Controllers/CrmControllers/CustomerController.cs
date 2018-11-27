@@ -1,4 +1,5 @@
 ﻿using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Models;
 using Server.Interfaces;
 using Server.Managers;
@@ -13,10 +14,10 @@ namespace Server.Controllers.CrmControllers
 {
     public class CustomerController : ApiController, ICustomerApi
     {
-        private CustomerManager _customerManager;
-        public CustomerController()
+        private ICustomerManager _customerManager;
+        public CustomerController(ICustomerManager customerManager)
         {
-            _customerManager = new CustomerManager();
+            _customerManager = customerManager;
         }
         [HttpGet]
         [Route("api/crm/customer/{idCard}")]
