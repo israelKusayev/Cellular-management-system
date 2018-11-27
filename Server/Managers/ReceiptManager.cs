@@ -1,5 +1,6 @@
 ﻿using Common.DataConfig;
 using Common.Enums;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
@@ -11,9 +12,9 @@ using System.Web;
 
 namespace Server.Managers
 {
-    public class ReceiptManager
+    public class ReceiptManager: IReceiptManager
     {
-        LoggerManager _logger;
+        readonly LoggerManager _logger;
         public ReceiptManager()
         {
             _logger = new LoggerManager(new FileLogger(), "invoiceDal.txt");

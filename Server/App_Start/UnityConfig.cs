@@ -45,6 +45,11 @@ namespace Server
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
             container.RegisterType<ICustomerManager, CustomerManager>();
+            container.RegisterType<IEmployeeManager, EmployeeManager>();
+            container.RegisterType<ILineManager, LineManager>();
+            container.RegisterType<IPackageManager, PackageManager>();
+            container.RegisterType<IReceiptManager, ReceiptManager>();
+            container.RegisterType<ISimulatorManager, SimulatorManager>();
         }
     }
 }

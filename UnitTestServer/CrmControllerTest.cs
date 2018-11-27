@@ -33,11 +33,11 @@ namespace UnitTestServer
             Assert.AreNotEqual("Shay", emplyee.UserName);
         }
 
-        [TestMethod]
-        public void testy()
-        {
-            var controller = new CustomerController();
-            var res = controller.AddNewCustomer(new Customer()) as Customer;
-        }
+        //[TestMethod]
+        //public void testy()
+        //{
+        //    var controller = new CustomerController();
+        //    var res = controller.AddNewCustomer(new Customer()) as Customer;
+        //}
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Models;
 using Common.ModelsDTO;
 using Server.Interfaces;
-using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +14,11 @@ namespace Server.Controllers.CrmControllers
 {
     public class EmployeeController : ApiController, IEmployeeLoginApi
     {
-        EmployeeManager _employeeManager;
+        IEmployeeManager _employeeManager;
 
-        public EmployeeController()
+        public EmployeeController(IEmployeeManager employeeManager)
         {
-            _employeeManager = new EmployeeManager();
+            _employeeManager = employeeManager;
         }
 
         [HttpPost]

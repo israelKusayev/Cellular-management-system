@@ -1,7 +1,7 @@
 ﻿using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.ModelsDTO;
 using Server.Interfaces;
-using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +13,10 @@ namespace Server.Controllers
 {
     public class SimulatorController : ApiController, ISimulatorApi
     {
-        SimulatorManager _simulatorManager;
-        public SimulatorController()
+        ISimulatorManager _simulatorManager;
+        public SimulatorController(ISimulatorManager simulatorManager)
         {
-            _simulatorManager = new SimulatorManager();
+            _simulatorManager = simulatorManager;
         }
 
         [HttpPost]

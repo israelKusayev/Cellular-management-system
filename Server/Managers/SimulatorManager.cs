@@ -1,6 +1,7 @@
 ﻿using Common.DataConfig;
 using Common.Enums;
 using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
@@ -12,7 +13,7 @@ using System.Web;
 
 namespace Server.Managers
 {
-    public class SimulatorManager
+    public class SimulatorManager: ISimulatorManager
     {
         private LoggerManager _logger;
         private Random _durationRand;
@@ -25,7 +26,7 @@ namespace Server.Managers
             _destinationRand = new Random();
         }
 
-        internal void SimulateCallsOrSms(SimulateDTO simulateDTO)
+        public void SimulateCallsOrSms(SimulateDTO simulateDTO)
         {
             Customer selectedCustomer;
             Line selectedLine;
