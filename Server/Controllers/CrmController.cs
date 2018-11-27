@@ -4,6 +4,7 @@ using Common.ModelsDTO;
 using Crm.Dal.Dals;
 using Db;
 using Server.Interfaces;
+using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace Server.Controllers
         CustomerDal _customerDbManage;
         LineDal _lineDbManager;
         PackageDal _packageDbManager;
+
+
+        //---
+
+        CustomerManager _customerManager = new CustomerManager();
+
 
         //Ctor
         public CrmController()
@@ -83,7 +90,7 @@ namespace Server.Controllers
             Customer customer;
             try
             {
-                customer = _customerDbManage.GetCustomer(idCard);
+                customer = _customerManager.GetActiveCustomer(idCard);
             }
             catch (Exception)
             {
@@ -116,7 +123,7 @@ namespace Server.Controllers
             double customerValue;
             try
             {
-                customerValue = _customerDbManage.GetCustomerValue(idCard);
+                customerValue = _customerManager.GetCustomerValue(idCard);
             }
             catch (KeyNotFoundException e)
             {
@@ -142,7 +149,7 @@ namespace Server.Controllers
             Customer addedCustomer;
             try
             {
-                addedCustomer = _customerDbManage.AddNewCustomer(newCustomer);
+                addedCustomer = _customerManager.AddNewCustomer(newCustomer);
             }
             catch (AlreadyExistExeption e)
             {

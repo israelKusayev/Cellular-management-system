@@ -52,7 +52,7 @@ namespace Crm.Dal.Dals
             }
 
             return addedCustomer;
-        }
+        }//
 
         public List<Customer> GetAllCustomers()
         {
@@ -87,7 +87,7 @@ namespace Crm.Dal.Dals
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
 
-        }
+        }//
 
         /// <summary>
         /// calculate customer value 
@@ -120,7 +120,7 @@ namespace Crm.Dal.Dals
                 num += customer.CallsToCenter * -0.1 > -3 ? customer.CallsToCenter * -0.1 : -3;
                 return num < 0 ? 0 : num;
             }
-        }
+        }//
 
         public Customer EditCustomer(Customer CustomerToEdit)
         {
