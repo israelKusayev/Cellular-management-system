@@ -127,32 +127,33 @@ namespace Server.Managers
             }
         }
 
-        internal Package EditPackage(int packageId, int lineId, Package packageToEdit)
+        internal Package EditPackage(int packageId, int lineId, Package newPackage)
         {
-            Package EditedPackage = null;
+            Package oldPackage = null;
 
             try
             {
                 using (var context = new UnitOfWork(new CellularContext()))
                 {
-                    if (packageToEdit.IsPackageTemplate)
+                    if (newPackage.IsPackageTemplate)
                     {
-                        EditedPackage = context.Package.Get(packageToEdit.PackageId);
-                        if (EditedPackage != null)
+                        oldPackage = context.Package.Get(newPackage.PackageId);
+                        if (oldPackage != null)
                         {
                             Line line = context.Line.Get(lineId);
-                            EditedPackage.Lines.Add(line);
+                            oldPackage.Lines.Add(line);
                         }
                     }
                     else
                     {
-                        EditedPackage = context.Package.GetPackageWithFriends(packageId);
-                        if (EditedPackage != null)
+                        oldPackage = context.Package.GetPackageWithFriends(packageId);
+                        if (oldPackage != null)
                         {
-                            if (EditedPackage != null)
+                            if (oldPackage != null)
                             {
-                                packageToEdit.PackageId = EditedPackage.PackageId;
-                                context.Package.Edit(packageToEdit, packageToEdit);
+                                newPackage.PackageId = oldPackage.PackageId;
+                                context.Package.Edit(oldPackage, newPackage);
+                                oldPackage = newPackage;
                             }
                         }
                         context.Complete();
@@ -166,7 +167,7 @@ namespace Server.Managers
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
 
-            return EditedPackage;
+            return oldPackage;
         }
 
         internal void RemoveLineFromTemplatePackage(int lineId)

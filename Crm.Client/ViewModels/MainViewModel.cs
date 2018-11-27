@@ -22,7 +22,7 @@ namespace Crm.Client.ViewModels
                     ?? (_loadedCommand = new RelayCommand(
                     () =>
                     {
-                        _navigationService.NavigateTo("Receipts");
+                        _navigationService.NavigateTo("Login");
                     }));
             }
         }

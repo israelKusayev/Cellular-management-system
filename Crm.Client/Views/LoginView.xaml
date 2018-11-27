@@ -13,7 +13,7 @@
         <Grid Width="800" Height="450" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#fffcf3">
             <TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="NoWrap"  FontWeight="Bold" FontSize="21" Text="Cellular Managment System"  VerticalAlignment="Top"  Margin="263,20,0,0"/>
 
-            <StackPanel FocusManager.FocusedElement="{Binding ElementName=username}">
+            <StackPanel>
                 <TextBox x:Name="username" Focusable="True" HorizontalAlignment="Left" Height="23" Margin="340,120,0,0" TextWrapping="Wrap"  Text="{Binding Username}" VerticalAlignment="Top" Width="120" ToolTip="Username"/>
             </StackPanel>
             <TextBox x:Name="password" HorizontalAlignment="Left" Height="23" Margin="340,209,0,0" TextWrapping="Wrap" Text="{Binding Password}" VerticalAlignment="Top" Width="120" ToolTip="Password"/>
