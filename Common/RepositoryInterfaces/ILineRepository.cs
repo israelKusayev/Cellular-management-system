@@ -14,5 +14,6 @@ namespace Common.RepositoryInterfaces
         Line LineNumberIsAvailable(string lineNumber);
         Line DeactivateLine(Line line);
         Line GetLineWithPackage(int lineId);
+        IEnumerable<Line> GetAllLinesWithAllEntities();
     }
 }

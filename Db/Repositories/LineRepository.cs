@@ -46,6 +46,11 @@ namespace Db.Repositories
             return CellularContext.LinesTable.Where(l => l.LineId == lineId).Include(p => p.Package).SingleOrDefault();
         }
 
+        public IEnumerable<Line> GetAllLinesWithAllEntities()
+        {
+            return CellularContext.LinesTable.Where((l) => l.Status == LineStatus.Used || l.Status == LineStatus.Removed).Include(x => x.Payments).Include(p => p.Package).Include(f => f.Package.Friends).Include(s => s.Calls).Include(m => m.Messages);
+        }
+
         public CellularContext CellularContext
         {
             get { return Context as CellularContext; }
