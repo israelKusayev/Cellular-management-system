@@ -107,6 +107,7 @@
     <Compile Include="Interfaces\ILoginApi.cs" />
     <Compile Include="Interfaces\IPackageApi.cs" />
     <Compile Include="Interfaces\ISimulatorApi.cs" />
+    <Compile Include="Managers\CustomerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
