@@ -1,0 +1,30 @@
+﻿<Application x:Class="Crm.Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"    
+             xmlns:local="clr-namespace:Crm.Client"
+             xmlns:vm ="clr-namespace:Crm.Client.ViewModels"
+             xmlns:converters ="clr-namespace:Crm.Client.Converters"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             StartupUri="MainWindow.xaml"
+             mc:Ignorable="d"
+             xmlns:enums="clr-namespace:Common.Enums;assembly=Common"
+             >
+    <Application.Resources>
+        <vm:ViewModelLocator x:Key="Locator"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:ConvertBoolToVisibility x:Key="VisibilityConverter"/>
+        <!--d:IsDataSourse ="True"-->
+
+
+        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:SimulateSendTo"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+    </Application.Resources>
+</Application>
+    
