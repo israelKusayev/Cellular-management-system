@@ -20,6 +20,8 @@ namespace Db
             Sms = new SmsRepository(_context);
             Call = new CallRepository(_context);
             Payment = new PaymentRepository(_context);
+            Package = new PackageRepository(_context);
+            Friends = new FriendsRepository(_context);
         }
 
         public ICustomerRepository Customer { get; private set; }
@@ -27,6 +29,8 @@ namespace Db
         public ISmsRepository Sms { get; private set; }
         public ICallRepository Call { get; private set; }
         public IPaymentRepository Payment { get; private set; }
+        public IPackageRepository Package { get; private set; }
+        public IFriendsRepository Friends { get; private set; }
 
         public int Complete()
         {

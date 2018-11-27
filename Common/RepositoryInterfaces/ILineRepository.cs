@@ -13,5 +13,6 @@ namespace Common.RepositoryInterfaces
         Line GetLineByLineNumber(string lineNumber);
         Line LineNumberIsAvailable(string lineNumber);
         Line DeactivateLine(Line line);
+        Line GetLineWithPackage(int lineId);
     }
 }

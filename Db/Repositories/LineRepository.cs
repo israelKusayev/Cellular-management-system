@@ -41,6 +41,11 @@ namespace Db.Repositories
             return line;
         }
 
+        public Line GetLineWithPackage(int lineId)
+        {
+            return CellularContext.LinesTable.Where(l => l.LineId == lineId).Include(p => p.Package).SingleOrDefault();
+        }
+
         public CellularContext CellularContext
         {
             get { return Context as CellularContext; }
