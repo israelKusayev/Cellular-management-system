@@ -1,5 +1,4 @@
 ﻿using Common.Models;
-using Common.ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Common.RepositoryInterfaces
 {
-    interface ILoginEmployeeRepository : IRepository<Employee>
+    public interface IEmployeeRepository
     {
-        Employee Login(LoginDTO loginEmployee);
+        Employee GetEmployeeByUserName(string userName);
     }
 }

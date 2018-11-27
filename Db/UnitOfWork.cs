@@ -22,6 +22,7 @@ namespace Db
             Payment = new PaymentRepository(_context);
             Package = new PackageRepository(_context);
             Friends = new FriendsRepository(_context);
+            Employee = new EmployeeRepository(_context);
         }
 
         public ICustomerRepository Customer { get; private set; }
@@ -31,6 +32,7 @@ namespace Db
         public IPaymentRepository Payment { get; private set; }
         public IPackageRepository Package { get; private set; }
         public IFriendsRepository Friends { get; private set; }
+        public IEmployeeRepository Employee { get; private set; }
 
         public int Complete()
         {

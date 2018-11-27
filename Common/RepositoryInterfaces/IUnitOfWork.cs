@@ -14,6 +14,7 @@ namespace Common.RepositoryInterfaces
         ISmsRepository Sms { get; }
         ILineRepository Line { get; }
         IPackageRepository Package { get; }
+        IEmployeeRepository Employee { get; }
         int Complete();
     }
 }

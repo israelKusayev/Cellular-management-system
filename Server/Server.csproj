@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CrmController.cs" />
+    <Compile Include="Controllers\CrmControllers\EmployeeController.cs" />
     <Compile Include="Controllers\CrmControllers\LineController.cs" />
     <Compile Include="Controllers\CrmControllers\CustomerController.cs" />
     <Compile Include="Controllers\CrmControllers\PackageController.cs" />
@@ -107,10 +107,11 @@
     </Compile>
     <Compile Include="Interfaces\ICustomerApi.cs" />
     <Compile Include="Interfaces\ILineApi.cs" />
-    <Compile Include="Interfaces\ILoginApi.cs" />
+    <Compile Include="Interfaces\IEmployeeLoginApi.cs" />
     <Compile Include="Interfaces\IPackageApi.cs" />
     <Compile Include="Interfaces\ISimulatorApi.cs" />
     <Compile Include="Managers\CustomerManager.cs" />
+    <Compile Include="Managers\EmployeeManager.cs" />
     <Compile Include="Managers\LineManager.cs" />
     <Compile Include="Managers\ReceiptManager.cs" />
     <Compile Include="Managers\SimulatorManager.cs" />
@@ -135,17 +136,9 @@
       <Project>{25af8a0a-00d4-4e37-a688-172bd5eea22a}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DAL_CRM\Crm.Dal.csproj">
-      <Project>{4136db58-9aca-4579-9c4d-5a2665a1811d}</Project>
-      <Name>Crm.Dal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Db\Db.csproj">
       <Project>{beb3e0bf-c311-4eaf-b055-f33cf7aff68a}</Project>
       <Name>Db</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Invoice.Dal\Receipt.Dal.csproj">
-      <Project>{75c6bcb5-1ebd-4743-a195-ab8e2b8122ac}</Project>
-      <Name>Receipt.Dal</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
