@@ -5,13 +5,14 @@ using System.Web;
 using Common.DataConfig;
 using Common.Enums;
 using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Db;
 
 namespace Server.Managers
 {
-    public class LineManager
+    public class LineManager: ILineManager
     {
         LoggerManager _logger;
 
@@ -20,7 +21,7 @@ namespace Server.Managers
             _logger = new LoggerManager(new FileLogger(), "lineManager.txt");
         }
 
-        internal List<Line> GetCustomerLines(string idCard)
+        public List<Line> GetCustomerLines(string idCard)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace Server.Managers
             }
         }
 
-        internal Line AddNewLine(Line lineToAdd, int customerId)
+        public Line AddNewLine(Line lineToAdd, int customerId)
         {
             Line lineNumberExsists;
             Customer customer;
@@ -79,7 +80,7 @@ namespace Server.Managers
             }
         }
 
-        internal Line DeactivateLine(int lineId)
+        public Line DeactivateLine(int lineId)
         {
             try
             {

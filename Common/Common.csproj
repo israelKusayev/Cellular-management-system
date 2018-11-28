@@ -63,6 +63,11 @@
     <Compile Include="Exeptions\IncorrectExeption.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\ICustomerManager.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\IEmployeeManager.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\ILineManager.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\IPackageManager.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\IReceiptManager.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\ISimulatorManager.cs" />
     <Compile Include="Logger\FileLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerManager.cs" />

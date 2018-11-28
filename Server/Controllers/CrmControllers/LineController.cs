@@ -1,7 +1,7 @@
 ﻿using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Models;
 using Server.Interfaces;
-using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ namespace Server.Controllers.CrmControllers
 {
     public class LineController : ApiController, ILineApi
     {
-        LineManager _lineManager;
+        ILineManager _lineManager;
 
-        public LineController()
+        public LineController(ILineManager lineManager)
         {
-            _lineManager = new LineManager();
+            _lineManager = lineManager;
         }
 
         [HttpGet]
@@ -47,7 +47,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Could not found lines to this customer"));
             }
-        } 
+        }
 
         [HttpPost]
         [Route("api/crm/line/{customerId}")]
@@ -83,7 +83,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not add this line, please try again"));
             }
-        } 
+        }
 
         [HttpDelete]
         [Route("api/crm/line/{lineId}")]

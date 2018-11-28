@@ -331,7 +331,7 @@ namespace Crm.Client.BL
                     var result = http.DeleteAsync($"{_url}/crm/package/{lineId}").Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        _customerLines.Remove(_customerLines.SingleOrDefault(l => l.LineId == lineId));
+                        //_customerLines.Remove(_customerLines.SingleOrDefault(l => l.LineId == lineId));
                         MessageBox.Show(Application.Current.MainWindow, "Package deleted successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else

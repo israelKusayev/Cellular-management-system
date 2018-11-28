@@ -1,5 +1,5 @@
-﻿using Common.ModelsDTO;
-using Server.Managers;
+﻿using Common.Interfaces.ServerManagersInterfaces;
+using Common.ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ namespace Server.Controllers
 {
     public class ReceiptController : ApiController
     {
-        ReceiptManager _receiptManager;
-        public ReceiptController()
+        IReceiptManager _receiptManager;
+        public ReceiptController(IReceiptManager receiptManager)
         {
-            _receiptManager = new ReceiptManager();
+            _receiptManager = receiptManager;
 
         }
 

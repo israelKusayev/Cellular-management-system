@@ -5,6 +5,7 @@ using System.Web;
 using Common.DataConfig;
 using Common.Enums;
 using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
@@ -12,7 +13,7 @@ using Db;
 
 namespace Server.Managers
 {
-    public class EmployeeManager
+    public class EmployeeManager: IEmployeeManager
     {
         LoggerManager _logger;
 
@@ -21,7 +22,7 @@ namespace Server.Managers
             _logger = new LoggerManager(new FileLogger(), "employeeManager.txt");
         }
 
-        internal Employee Login(LoginDTO loginEmployee)
+        public Employee Login(LoginDTO loginEmployee)
         {
             Employee requstedEmployee = null;
 

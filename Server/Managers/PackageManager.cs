@@ -1,6 +1,7 @@
 ﻿using Common.DataConfig;
 using Common.Enums;
 using Common.Exeptions;
+using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Db;
@@ -11,7 +12,7 @@ using System.Web;
 
 namespace Server.Managers
 {
-    public class PackageManager
+    public class PackageManager: IPackageManager
     {
         LoggerManager _logger;
 
@@ -21,7 +22,7 @@ namespace Server.Managers
 
         }
 
-        internal List<Package> GetPackageTemplates()
+        public List<Package> GetPackageTemplates()
         {
             try
             {
@@ -38,11 +39,11 @@ namespace Server.Managers
             }
         }
 
-        internal Package GetPackage(int lineId)
+        public Package GetPackage(int lineId)
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+               using (var context = new UnitOfWork(new CellularContext()))
                 {
                     Line line = context.Line.GetLineWithPackageAndFriends(lineId);
 
@@ -60,7 +61,7 @@ namespace Server.Managers
             }
         }
 
-        internal Package AddPackageToLine(int lineId, Package package)
+        public Package AddPackageToLine(int lineId, Package package)
         {
             try
             {
@@ -101,7 +102,7 @@ namespace Server.Managers
             }
         }
 
-        internal Package RemovePackageFromLine(int lineId)
+        public Package RemovePackageFromLine(int lineId)
         {
             try
             {
@@ -127,7 +128,7 @@ namespace Server.Managers
             }
         }
 
-        internal Package EditPackage(int packageId, int lineId, Package newPackage)
+        public Package EditPackage(int packageId, int lineId, Package newPackage)
         {
             Package oldPackage = null;
 
@@ -153,7 +154,7 @@ namespace Server.Managers
                             {
                                 newPackage.PackageId = oldPackage.PackageId;
                                 context.Package.Edit(oldPackage, newPackage);
-                                oldPackage = newPackage;
+                                return context.Package.GetPackageWithFriends(oldPackage.PackageId);
                             }
                         }
                         context.Complete();
@@ -166,11 +167,10 @@ namespace Server.Managers
                 _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
-
             return oldPackage;
         }
 
-        internal void RemoveLineFromTemplatePackage(int lineId)
+        public void RemoveLineFromTemplatePackage(int lineId)
         {
             try
             {
@@ -195,7 +195,7 @@ namespace Server.Managers
             }
         }
 
-        internal Friends AddFriends(int packageId, Friends friendsToAdd)
+        public Friends AddFriends(int packageId, Friends friendsToAdd)
         {
             Friends addedFriends = null;
 
@@ -222,7 +222,7 @@ namespace Server.Managers
             }
         }
 
-        internal Friends EditFriends(int packageId, Friends friendsToEdit)
+        public Friends EditFriends(int packageId, Friends friendsToEdit)
         {
             Package foundPackage = null;
 
