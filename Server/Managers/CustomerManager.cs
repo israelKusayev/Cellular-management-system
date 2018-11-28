@@ -17,10 +17,17 @@ namespace Server.Managers
     {
         private LoggerManager _logger;
 
+        //Ctor
         public CustomerManager()
         {
             _logger = new LoggerManager(new FileLogger(), "customerDal.txt");
         }
+
+        /// <summary>
+        /// summary
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <returns>return</returns>
         public Customer GetActiveCustomer(string idCard)
         {
             using (var context = new UnitOfWork(new CellularContext()))

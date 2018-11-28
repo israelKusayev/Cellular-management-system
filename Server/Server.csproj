@@ -134,6 +134,7 @@
     <Compile Include="Managers\SimulatorManager.cs" />
     <Compile Include="Managers\PackageManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="x.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
