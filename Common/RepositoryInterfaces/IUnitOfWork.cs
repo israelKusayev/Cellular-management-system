@@ -8,6 +8,7 @@ namespace Common.RepositoryInterfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+        //IRepository<Tentity> GetRepository<Tentity>() where Tentity : class;
         ICustomerRepository Customer { get; }
         IPaymentRepository Payment { get; }
         ICallRepository Call { get; }
@@ -15,6 +16,7 @@ namespace Common.RepositoryInterfaces
         ILineRepository Line { get; }
         IPackageRepository Package { get; }
         IEmployeeRepository Employee { get; }
+        IFriendsRepository Friends { get; }
         int Complete();
     }
 }

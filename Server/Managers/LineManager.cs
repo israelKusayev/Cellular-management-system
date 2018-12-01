@@ -8,16 +8,18 @@ using Common.Exeptions;
 using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
+using Common.RepositoryInterfaces;
 using Db;
 
 namespace Server.Managers
 {
-    public class LineManager: ILineManager
+    public class LineManager : ILineManager
     {
         LoggerManager _logger;
-
-        public LineManager()
+        private IUnitOfWork _unitOfWork;
+        public LineManager(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "lineManager.txt");
         }
 
@@ -25,13 +27,8 @@ namespace Server.Managers
         {
             try
             {
-                Customer customer;
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    customer = context.Customer.GetActiveCustomerWithLines(idCard);
-                }
+                Customer customer = _unitOfWork.Customer.GetActiveCustomerWithLinesAndPackages(idCard);
                 return customer.Lines.Where(l => l.Status == LineStatus.Used).ToList();
-
             }
             catch (Exception e)
             {
@@ -47,22 +44,19 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                customer = _unitOfWork.Customer.Get(customerId);
+                lineNumberExsists = _unitOfWork.Line.LineNumberIsAvailable(lineToAdd.LineNumber);
+                if (lineNumberExsists == null)
                 {
-                    customer = context.Customer.Get(customerId);
-                    lineNumberExsists = context.Line.LineNumberIsAvailable(lineToAdd.LineNumber);
-                    if (lineNumberExsists == null)
-                    {
-                        lineToAdd.Status = LineStatus.Used;
-                        lineToAdd.CreatedDate = DateTime.Now;
-                        customer.Lines.Add(lineToAdd);
-                        context.Complete();
+                    lineToAdd.Status = LineStatus.Used;
+                    lineToAdd.CreatedDate = DateTime.Now;
+                    customer.Lines.Add(lineToAdd);
+                    _unitOfWork.Complete();
 
-                        Line addedLine = context.Line.GetLineByLineNumber(lineToAdd.LineNumber);
-                        return addedLine;
-                    }
+                    Line addedLine = _unitOfWork.Line.GetLineByLineNumber(lineToAdd.LineNumber);
+                    return addedLine;
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -84,17 +78,14 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    Line lineToEdit = context.Line.Get(lineId);
+                Line lineToEdit = _unitOfWork.Line.Get(lineId);
 
-                    if (lineToEdit != null)
-                    {
-                        context.Line.DeactivateLine(lineToEdit);
-                        context.Complete();
-                    }
-                    return lineToEdit;
+                if (lineToEdit != null)
+                {
+                    _unitOfWork.Line.DeactivateLine(lineToEdit);
+                    _unitOfWork.Complete();
                 }
+                return lineToEdit;
             }
             catch (Exception e)
             {

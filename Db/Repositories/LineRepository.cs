@@ -12,13 +12,14 @@ namespace Db.Repositories
 {
     public class LineRepository : Repository<Line>, ILineRepository
     {
-        public LineRepository(CellularContext context) : base(context)
+        public LineRepository(DbContext context) : base(context)
         {
 
         }
 
         public Line GetLineWithPackageAndFriends(int lineId)
         {
+
             return CellularContext.LinesTable.Where((l) => l.LineId == lineId && l.Status == LineStatus.Used).Include(y => y.Package).Include(x => x.Package.Friends).SingleOrDefault();
         }
 

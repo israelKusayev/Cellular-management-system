@@ -12,6 +12,7 @@ namespace Common.RepositoryInterfaces
         Customer GetActiveCustomerByIdCard(string idCard);
         Customer GetCustomerWithLinesAndPayments(string idCard);
         Customer GetActiveCustomerWithLines(string idCard);
+        Customer GetActiveCustomerWithLinesAndPackages(string idCard);
         Customer GetCustomerWithTypeAndLines(int customerId);
         Customer GetCustomerWithTypeLinesAndPayment(string idCard);
     }

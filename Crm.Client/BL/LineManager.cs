@@ -19,7 +19,6 @@ namespace Crm.Client.BL
         private List<Line> _customerLines;
         private readonly Customer _currentCustomer;
 
-
         // ctor
         public LineManager(Customer customer)
         {
@@ -28,7 +27,10 @@ namespace Crm.Client.BL
             GetCustomerLinesFromDb(_currentCustomer.IdentityCard);
         }
 
-        // get all package template for display them in the combo box
+        /// <summary>
+        ///  Get all package template for display them in the combo box
+        /// </summary>
+        /// <returns><list type="Package" </returns>
         internal List<Package> GetPackageTemplates()
         {
             List<Package> packages = new List<Package>();
@@ -55,7 +57,10 @@ namespace Crm.Client.BL
             return packages;
         }
 
-        // get all user lines
+        /// <summary>
+        /// get all user lines
+        /// </summary>
+        /// <param name="identityCard">Customer identity card</param>
         private void GetCustomerLinesFromDb(string identityCard)//? id
         {
             try
@@ -93,7 +98,7 @@ namespace Crm.Client.BL
         }
 
         /// <summary>
-        /// get line package by line id
+        /// Get line package by line id
         /// </summary>
         /// <param name="lineId"> line id</param>
         /// <returns>package if exists or null if not</returns>
@@ -122,7 +127,12 @@ namespace Crm.Client.BL
             return null;
         }
 
-        // add new line to customer
+        /// <summary>
+        ///  Add new line to customer
+        /// </summary>
+        /// <param name="lineNumber">Line number</param>
+        /// <param name="customerId">Customer id</param>
+        /// <returns>true if succeeded otherwise fasle</returns>
         internal bool AddLine(string lineNumber, int customerId)
         {
             Line line = new Line() { LineNumber = lineNumber };
@@ -135,12 +145,6 @@ namespace Crm.Client.BL
                     {
                         _customerLines.Add(result.Content.ReadAsAsync<Line>().Result);
                         MessageBox.Show(Application.Current.MainWindow, "Line added successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                        return true;
-                    }
-                    else if (result.StatusCode == System.Net.HttpStatusCode.Found)
-                    {
-                        // line exists in customer lines
-                        // return true for continue to add package to this line
                         return true;
                     }
                     else
@@ -158,24 +162,33 @@ namespace Crm.Client.BL
 
         }
 
-        // add new package or edit exists package
-        internal Package SavePackage(string number, Package newPackage)
+        /// <summary>
+        /// Edit exists package
+        /// </summary>
+        /// <param name="lineNumber">Line number</param>
+        /// <param name="newPackage">new package to replace with old package</param>
+        /// <returns></returns>
+        internal Package EditPackage(string lineNumber, Package newPackage)
         {
-            int lineId = GetLineId(number);
+            int lineId = GetLineId(lineNumber);
             if (lineId == 0) MessageBox.Show("something went wrong");
             try
             {
                 using (var http = new HttpClient())
                 {
-                    var result = http.GetAsync($"{_url}/crm/package/{lineId}").Result;
+
+                    Package oldPackage = http.GetAsync($"{_url}/crm/package/{lineId}").Result.Content.ReadAsAsync<Package>().Result;
+                    var result = http.PutAsJsonAsync($"{_url}/crm/package/{oldPackage.PackageId}/{lineId}", newPackage).Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        Package oldPackage = result.Content.ReadAsAsync<Package>().Result;
-                        return EditPackage(newPackage, oldPackage, lineId, http);
+                        MessageBox.Show(Application.Current.MainWindow, "Package edited successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return result.Content.ReadAsAsync<Package>().Result;
                     }
                     else
                     {
-                        return AddPackage(newPackage, lineId, http);
+                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return null;
                     }
                 }
             }
@@ -186,41 +199,46 @@ namespace Crm.Client.BL
             return null;
         }
 
-        // edit exists package
-        private Package EditPackage(Package package, Package oldPackage, int lineId, HttpClient http)
+        /// <summary>
+        ///  Add new package
+        /// </summary>
+        /// <param name="lineNumber">Line number</param>
+        /// <param name="newPackage">New package to add</param>
+        /// <returns>package if secceeded otherwise null</returns>
+        internal Package AddPackage(string lineNumber, Package newPackage)
         {
-            var result = http.PutAsJsonAsync($"{_url}/crm/package/{oldPackage.PackageId}/{lineId}", package).Result;
-            if (result.IsSuccessStatusCode)
+            int lineId = GetLineId(lineNumber);
+            if (lineId == 0) MessageBox.Show("something went wrong");
+            try
             {
-                MessageBox.Show(Application.Current.MainWindow, "Package edited successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                return result.Content.ReadAsAsync<Package>().Result;
+                using (var http = new HttpClient())
+                {
+                    var result = http.PostAsJsonAsync($"{_url}/crm/package/{lineId}", newPackage).Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show(Application.Current.MainWindow, "Package added successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return result.Content.ReadAsAsync<Package>().Result;
+                    }
+                    else
+                    {
+                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return null;
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
-                MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                return null;
+                MessageBox.Show(Application.Current.MainWindow, "Server error");
             }
+            return null;
         }
 
-        // add new package
-        private Package AddPackage(Package package, int lineId, HttpClient http)
-        {
-            var result = http.PostAsJsonAsync($"{_url}/crm/package/{lineId}", package).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                MessageBox.Show(Application.Current.MainWindow, "Package added successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                return result.Content.ReadAsAsync<Package>().Result;
-            }
-            else
-            {
-                string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
-                MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                return null;
-            }
-        }
-
-        // add friends model to exists package
+        /// <summary>
+        ///  Add friends model to exists package
+        /// </summary>
+        /// <param name="packageId">Package id</param>
+        /// <param name="friends">Friend model to add </param>
         internal void AddFriends(int packageId, Friends friends)
         {
             try
@@ -242,7 +260,11 @@ namespace Crm.Client.BL
             }
         }
 
-        // edit friends model to exists package
+        /// <summary>
+        /// Edit friends model to exists package
+        /// </summary>
+        /// <param name="packageId">Package id</param>
+        /// <param name="friends">Friend model to edit </param>
         internal void EditFriends(int packageId, Friends friends)
         {
             try
@@ -264,7 +286,11 @@ namespace Crm.Client.BL
             }
         }
 
-        // get line number by line id
+        /// <summary>
+        ///  Get line number by line id
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <returns></returns>
         internal string GetLineNumber(int lineId)
         {
             return _customerLines.SingleOrDefault(l => l.LineId == lineId).LineNumber ?? null;
@@ -289,10 +315,9 @@ namespace Crm.Client.BL
         /// Delete exists line
         /// </summary>
         /// <param name="lineNumber">Line number</param>
-        internal void DeleteLine(string lineNumber)
+        internal void DeleteLine(int lineId)
         {
-            int lineId = GetLineId(lineNumber);
-            if (lineId != -1)
+            if (lineId > 0)
             {
                 try
                 {

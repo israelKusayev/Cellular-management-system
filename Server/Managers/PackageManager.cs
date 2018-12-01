@@ -4,6 +4,7 @@ using Common.Exeptions;
 using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
+using Common.RepositoryInterfaces;
 using Db;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,14 @@ using System.Web;
 
 namespace Server.Managers
 {
-    public class PackageManager: IPackageManager
+    public class PackageManager : IPackageManager
     {
+        private IUnitOfWork _unitOfWork;
         LoggerManager _logger;
 
-        public PackageManager()
+        public PackageManager(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "PackageManager.txt");
 
         }
@@ -26,11 +29,8 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    List<Package> packages = context.Package.GetPackageTemplate();
-                    return packages;
-                }
+                List<Package> packages = _unitOfWork.Package.GetPackageTemplate();
+                return packages;
             }
             catch (Exception e)
             {
@@ -43,16 +43,13 @@ namespace Server.Managers
         {
             try
             {
-               using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    Line line = context.Line.GetLineWithPackageAndFriends(lineId);
+                Line line = _unitOfWork.Line.GetLineWithPackageAndFriends(lineId);
 
-                    if (line != null)
-                    {
-                        return line.Package;
-                    }
-                    return null;
+                if (line != null)
+                {
+                    return line.Package;
                 }
+                return null;
             }
             catch (Exception e)
             {
@@ -65,35 +62,31 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Package addedPackage = null;
+
+                Line foundLine = _unitOfWork.Line.Get(lineId);
+                if (foundLine != null)
                 {
-                    Package addedPackage = null;
-
-                    Line foundLine = context.Line.Get(lineId);
-
-                    if (foundLine != null)
+                    if (package.IsPackageTemplate)
                     {
-                        if (package.IsPackageTemplate)
+                        Package existPackage = _unitOfWork.Package.Get(package.PackageId);
+                        existPackage.Lines.Add(foundLine);
+                        if (existPackage != null)
                         {
-                            Package existPackage = context.Package.Get(package.PackageId);
-                            existPackage.Lines.Add(foundLine);
-                            if (existPackage != null)
-                            {
-                                addedPackage = existPackage;
-                            }
+                            addedPackage = existPackage;
                         }
-                        else
-                        {
-                            if (package != null)
-                            {
-                                foundLine.Package = package;
-                                addedPackage = package;
-                            }
-                        }
-                        context.Complete();
                     }
-                    return addedPackage;
+                    else
+                    {
+                        if (package != null)
+                        {
+                            foundLine.Package = package;
+                            addedPackage = package;
+                        }
+                    }
+                    _unitOfWork.Complete();
                 }
+                return addedPackage;
             }
             catch (Exception e)
             {
@@ -106,20 +99,17 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Package removedPackage = null;
+
+                Line line = _unitOfWork.Line.GetLineWithPackageAndFriends(lineId);
+
+                if (line != null)
                 {
-                    Package removedPackage = null;
-
-                    Line line = context.Line.GetLineWithPackageAndFriends(lineId);
-
-                    if (line != null)
-                    {
-                        removedPackage = line.Package;
-                        line.Package = null;
-                        context.Complete();
-                    }
-                    return removedPackage;
+                    removedPackage = line.Package;
+                    line.Package = null;
+                    _unitOfWork.Complete();
                 }
+                return removedPackage;
             }
             catch (Exception e)
             {
@@ -134,32 +124,29 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                if (newPackage.IsPackageTemplate)
                 {
-                    if (newPackage.IsPackageTemplate)
+                    oldPackage = _unitOfWork.Package.Get(newPackage.PackageId);
+                    if (oldPackage != null)
                     {
-                        oldPackage = context.Package.Get(newPackage.PackageId);
+                        Line line = _unitOfWork.Line.Get(lineId);
+                        oldPackage.Lines.Add(line);
+                    }
+                }
+                else
+                {
+                    oldPackage = _unitOfWork.Package.GetPackageWithFriends(packageId);
+                    if (oldPackage != null)
+                    {
                         if (oldPackage != null)
                         {
-                            Line line = context.Line.Get(lineId);
-                            oldPackage.Lines.Add(line);
+                            newPackage.PackageId = oldPackage.PackageId;
+                            _unitOfWork.Package.Edit(oldPackage, newPackage);
+                            return _unitOfWork.Package.GetPackageWithFriends(oldPackage.PackageId);
                         }
                     }
-                    else
-                    {
-                        oldPackage = context.Package.GetPackageWithFriends(packageId);
-                        if (oldPackage != null)
-                        {
-                            if (oldPackage != null)
-                            {
-                                newPackage.PackageId = oldPackage.PackageId;
-                                context.Package.Edit(oldPackage, newPackage);
-                                return context.Package.GetPackageWithFriends(oldPackage.PackageId);
-                            }
-                        }
-                        context.Complete();
+                    _unitOfWork.Complete();
 
-                    }
                 }
             }
             catch (Exception e)
@@ -174,17 +161,14 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Line line = _unitOfWork.Line.GetLineWithPackage(lineId);
+                Package package = line.Package;
+                if (package.IsPackageTemplate)
                 {
-                    Line line = context.Line.GetLineWithPackage(lineId);
-                    Package package = line.Package;
-                    if (package.IsPackageTemplate)
+                    if (line != null)
                     {
-                        if (line != null)
-                        {
-                            package.Lines.Remove(line);
-                            context.Complete();
-                        }
+                        package.Lines.Remove(line);
+                        _unitOfWork.Complete();
                     }
                 }
             }
@@ -201,19 +185,16 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Package package = _unitOfWork.Package.Get(packageId);
+
+                if (package != null)
                 {
-                    Package package = context.Package.Get(packageId);
+                    package.Friends = friendsToAdd;
+                    _unitOfWork.Complete();
 
-                    if (package != null)
-                    {
-                        package.Friends = friendsToAdd;
-                        context.Complete();
-
-                        addedFriends = context.Package.GetPackageWithFriends(packageId).Friends;
-                    }
-                    return addedFriends;
+                    addedFriends = _unitOfWork.Package.GetPackageWithFriends(packageId).Friends;
                 }
+                return addedFriends;
             }
             catch (Exception e)
             {
@@ -228,25 +209,22 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    foundPackage = context.Package.GetPackageWithFriends(packageId);
+                foundPackage = _unitOfWork.Package.GetPackageWithFriends(packageId);
 
-                    if (foundPackage == null)
-                    {
-                        return null;
-                    }
-                    if (friendsToEdit != null)
-                    {
-                        friendsToEdit.FriendsId = foundPackage.Friends.FriendsId;
-                        context.Friends.Edit(foundPackage.Friends, friendsToEdit);
-                    }
-                    else
-                    {
-                        foundPackage.Friends.Package = null;
-                    }
-                    context.Complete();
+                if (foundPackage == null)
+                {
+                    return null;
                 }
+                if (friendsToEdit != null)
+                {
+                    friendsToEdit.FriendsId = foundPackage.Friends.FriendsId;
+                    _unitOfWork.Friends.Edit(foundPackage.Friends, friendsToEdit);
+                }
+                else
+                {
+                    foundPackage.Friends.Package = null;
+                }
+                _unitOfWork.Complete();
             }
             catch (Exception e)
             {

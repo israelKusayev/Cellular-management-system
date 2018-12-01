@@ -120,11 +120,14 @@
     <Compile Include="Views\CustomerDetailsView.xaml.cs">
       <DependentUpon>CustomerDetailsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LineView.xaml.cs">
-      <DependentUpon>LineView.xaml</DependentUpon>
+    <Compile Include="Views\AddLinesView.xaml.cs">
+      <DependentUpon>AddLinesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManageLinesView.xaml.cs">
+      <DependentUpon>ManageLinesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReceiptsView.xaml.cs">
       <DependentUpon>ReceiptsView.xaml</DependentUpon>
@@ -152,11 +155,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LineView.xaml">
+    <Page Include="Views\AddLinesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ManageLinesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

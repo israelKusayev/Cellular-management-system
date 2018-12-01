@@ -14,18 +14,14 @@ using System.Windows.Input;
 
 namespace Crm.Client.ViewModels
 {
+    /// <summary>
+    /// View model for AddLinesView and for ManageLinesView
+    /// </summary>
     class LineViewModel : ViewModelPropertyChanged
     {
         private readonly IFrameNavigationService _navigationService;
         private readonly LineManager _lineManager;
         private readonly Customer _currentCustomer;
-        public ICommand SaveCommand { get; set; }
-        public ICommand DeleteCommand { get; set; }
-        public ICommand ClearCommand { get; set; }
-        public ICommand GoBackCommand { get; set; }
-        public ICommand LineSelectedCommand { get; set; }
-        public ICommand PackageSelectedCommand { get; set; }
-        public ICommand UpdateTotalPriceCommand { get; set; }
 
         public List<Package> PackageTemplates { get; set; }
 
@@ -43,6 +39,19 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        #region commands
+        public ICommand AddCommand { get; set; }
+        public ICommand EditPackageCommand { get; set; }
+        public ICommand RemovePackageCommand { get; set; }
+        public ICommand DeleteLineCommand { get; set; }
+        public ICommand ClearCommand { get; set; }
+        public ICommand GoBackCommand { get; set; }
+        public ICommand LineSelectedCommand { get; set; }
+        public ICommand PackageSelectedCommand { get; set; }
+        public ICommand UpdateTotalPriceCommand { get; set; }
+        #endregion
+
+        #region props
         private string _number;
         public string Number
         {
@@ -162,10 +171,10 @@ namespace Crm.Client.ViewModels
                 _selectedLine = value;
                 OnPropertyChanged();
             }
-        }// need propf??
+        }
 
-        private int _selectedPackage;
-        public int SelectedPackage
+        private int? _selectedPackage;
+        public int? SelectedPackage
         {
             get { return _selectedPackage; }
             set
@@ -182,6 +191,25 @@ namespace Crm.Client.ViewModels
             set
             {
                 _isPackage = value;
+                if (value == true)
+                {
+                    LineWithoutPackage = false;
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _lineWithoutPackage;
+        public bool LineWithoutPackage
+        {
+            get { return _lineWithoutPackage; }
+            set
+            {
+                if (value == true)
+                {
+                    IsPackage = false;
+                }
+                _lineWithoutPackage = value;
                 OnPropertyChanged();
             }
         }
@@ -197,15 +225,53 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        #endregion
+
         // ctor
         public LineViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
             _currentCustomer = (Customer)_navigationService.Parameter;//?
             _lineManager = new LineManager((Customer)_navigationService.Parameter);
+
+            InitCommands();
+
+            CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
+            PackageTemplates = _lineManager.GetPackageTemplates();
+            PackageTemplates.Add(new Package() { PackageName = "Custom package", PackageId = 0 });
+            LineWithoutPackage = true;
+        }
+
+        /// <summary>
+        /// Initialize commands
+        /// </summary>
+        private void InitCommands()
+        {
             ClearCommand = new RelayCommand(Clear);
-            SaveCommand = new RelayCommand(Save);
-            DeleteCommand = new RelayCommand(DeleteLine);
+            AddCommand = new RelayCommand(() =>
+            {
+                if (SelectedPackage == null && IsPackage)
+                {
+                    MessageBox.Show("Please select package");
+                }
+                else
+                {
+                    AddLine();
+                }
+            });
+            EditPackageCommand = new RelayCommand(() =>
+            {
+                if (SelectedPackage == null)
+                {
+                    MessageBox.Show("Please select package");
+                }
+                else
+                {
+                    EditLine();
+                }
+            });
+            RemovePackageCommand = new RelayCommand(RemovePackage);
+            DeleteLineCommand = new RelayCommand(DeleteLine);
             GoBackCommand = new RelayCommand(() =>
             {
                 _navigationService.NavigateTo("CustomerDetails");
@@ -214,12 +280,193 @@ namespace Crm.Client.ViewModels
             LineSelectedCommand = new RelayCommand(HandleLineSelect);
             PackageSelectedCommand = new RelayCommand(HandlePackageSelect);
             UpdateTotalPriceCommand = new RelayCommand(UpdateTotalPrice);
-            CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
-            PackageTemplates = _lineManager.GetPackageTemplates();
-            PackageTemplates.Add(new Package() { PackageName = "Custom package", PackageId = 0 });
         }
 
-        // get selected line number and package
+        /// <summary>
+        /// remove package from exists line
+        /// </summary>
+        private void RemovePackage()
+        {
+            _lineManager.DeletePackage(SelectedLine ?? -1);
+            SelectedPackage = null;
+            Clear();
+        }
+
+        /// <summary>
+        /// Add Line to customer
+        /// </summary>
+        private void AddLine()
+        {
+            if (ValidateLineNumber())// if line number is valid
+            {
+                if (LineWithoutPackage)
+                {
+                    // add line without package
+                    _lineManager.AddLine(Number, _currentCustomer.CustomerId);
+                }
+                else
+                {
+                    // add line with package
+                    if (_lineManager.AddLine(Number, _currentCustomer.CustomerId))
+                    {
+                        AddPackageToLine();
+                    }
+                }
+                CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
+            }
+        }
+
+        /// <summary>
+        /// Edit package to exists line
+        /// </summary>
+        private void EditLine()
+        {
+            if (SelectedLine == null)
+            {
+                MessageBox.Show("Please select line");
+            }
+            else
+            {
+
+                Number = _lineManager.GetLineNumber(SelectedLine.Value);
+                Package package = _lineManager.GetLinePackage(SelectedLine.Value);
+
+                if (package == null)
+                {
+                    //add package to exists line
+                    AddPackageToLine();
+                }
+                else
+                {
+                    //edit package to exists line
+
+                    EditPackageToExistingLine();
+                }
+                CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
+            }
+        }
+
+        private void EditPackageToExistingLine()
+        {
+            if (SelectedPackage != 0) // template package
+            {
+                _lineManager.EditPackage(Number, PackageTemplates.SingleOrDefault(p => p.PackageId == SelectedPackage));
+            }
+            else // custom package
+            {
+                string error = ValidateFields();
+                if (error != null)
+                {
+                    MessageBox.Show(error);
+                    return;
+                }
+                Package package = CreateCustomPackage();
+
+                Package newPackage = _lineManager.EditPackage(Number, package);
+                if (newPackage != null)
+                {
+                    Friends friends = CreatePackageFriends();
+
+                    if (newPackage.Friends != null)
+                    {
+                        _lineManager.EditFriends(newPackage.PackageId, Friends ? friends : null);
+                    }
+                    else if (Friends) // if the friends check box is true
+                    {
+                        _lineManager.AddFriends(newPackage.PackageId, friends);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete line
+        /// </summary>
+        private void DeleteLine()
+        {
+            if (SelectedLine == null)
+            {
+                MessageBox.Show("Please select line");
+            }
+            else
+            {
+                _lineManager.DeleteLine(SelectedLine ?? -1);
+                SelectedLine = null;
+                SelectedPackage = null;
+                Clear();
+                CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
+            }
+        }
+
+        /// <summary>
+        /// Add custom or template package to exists line
+        /// </summary>
+        private void AddPackageToLine()
+        {
+            if (SelectedPackage != 0) // template package
+            {
+                _lineManager.AddPackage(Number, PackageTemplates.SingleOrDefault(p => p.PackageId == SelectedPackage));
+            }
+            else // custom package
+            {
+                string error = ValidateFields();
+                if (error != null)
+                {
+                    MessageBox.Show(error);
+                    return;
+                }
+                Package package = CreateCustomPackage();
+
+                Package newPackage = _lineManager.AddPackage(Number, package);
+                if (newPackage != null)
+                {
+                    if (Friends) // if the friends check box is true
+                    {
+                        Friends friends = CreatePackageFriends();
+                        _lineManager.AddFriends(newPackage.PackageId, friends);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create new friends model from props binding
+        /// </summary>
+        /// <returns>Friends model</returns>
+        private Friends CreatePackageFriends()
+        {
+            return new Friends()
+            {
+                FirstNumber = string.IsNullOrWhiteSpace(Friend1) ? null : Friend1,
+                SecondNumber = string.IsNullOrWhiteSpace(Friend2) ? null : Friend2,
+                ThirdNumber = string.IsNullOrWhiteSpace(Friend3) ? null : Friend3,
+            };
+        }
+
+        /// <summary>
+        /// Create new package model from props binding
+        /// </summary>
+        /// <returns>Package model</returns>
+        private Package CreateCustomPackage()
+        {
+            int.TryParse(Minute, out int minute);
+            int.TryParse(Sms, out int sms);
+
+            Package package = new Package()
+            {
+                PackageName = "Custom package",
+                TotalPrice = TotalPrice,
+                MaxMinute = minute,
+                MaxSms = sms,
+                InsideFamilyCalles = InsideFamilyCalles,
+                PriorityContact = PriorityContact,
+            };
+            return package;
+        }
+
+        /// <summary>
+        ///  Get selected line number and package
+        /// </summary>
         private void HandleLineSelect()
         {
             if (SelectedLine != null)
@@ -229,38 +476,39 @@ namespace Crm.Client.ViewModels
                 Package package = _lineManager.GetLinePackage((int)SelectedLine);
                 if (package != null)
                 {
-                    IsPackage = true;
-                    if (package.IsPackageTemplate)
-                    {
-                        SelectedPackage = package.PackageId;
-                    }
-                    else
-                    {
-                        SelectedPackage = 0;
-                    }
+                    SelectedPackage = package.IsPackageTemplate ? package.PackageId : 0;
                     DisplayPackage(package);
                 }
                 else
                 {
-                    IsPackage = false;
+                    SelectedPackage = null;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Update the view with selected package details
+        /// </summary>
+        private void HandlePackageSelect()
+        {
+            if (SelectedPackage != null)
+            {
+                string number = Number;
+                Clear();
+                Number = number;
+                if (SelectedPackage != 0) // template package
+                {
+                    Package package = PackageTemplates.FirstOrDefault(p => p.PackageId == SelectedPackage);
+                    DisplayPackage(package);
                 }
             }
         }
 
-        // update the view with selected package details
-        private void HandlePackageSelect()
-        {
-            string number = Number;
-            Clear();
-            Number = number;
-            if (SelectedPackage != 0) // template package
-            {
-                Package package = PackageTemplates.FirstOrDefault(p => p.PackageId == SelectedPackage);
-                DisplayPackage(package);
-            }
-        }
-
-        // display the given package on view
+        /// <summary>
+        /// Display the given package on view
+        /// </summary>
+        /// <param name="package"></param>
         private void DisplayPackage(Package package)
         {
             Minute = package.MaxMinute.ToString();
@@ -282,7 +530,9 @@ namespace Crm.Client.ViewModels
             Price = price.ToString();
         }
 
-        // update the total price if the customer choose special deals or not 
+        /// <summary>
+        /// update the total price, if the customer choose special deals or not 
+        /// </summary>
         private void UpdateTotalPrice()
         {
             int.TryParse(Price, out int price);
@@ -301,7 +551,10 @@ namespace Crm.Client.ViewModels
             }
         }
 
-        // validate the line number
+        /// <summary>
+        ///  validate the line number
+        /// </summary>
+        /// <returns>true if valid otherwise false</returns>
         private bool ValidateLineNumber()
         {
             if (string.IsNullOrWhiteSpace(Number))
@@ -317,7 +570,10 @@ namespace Crm.Client.ViewModels
             return true;
         }
 
-        // validate all package details
+        /// <summary>
+        ///  validate all package details
+        /// </summary>
+        /// <returns>true if valid otherwise false</returns>
         private string ValidateFields()
         {
             if (string.IsNullOrWhiteSpace(Price))
@@ -335,105 +591,9 @@ namespace Crm.Client.ViewModels
             return null;
         }
 
-        // add or edit line and/or package and/or friends
-        private void Save()
-        {
-            if (ValidateLineNumber())// if line number is valid
-            {
-                if (!IsPackage)
-                {
-                    int lineId = _lineManager.GetLineId(Number);
-                    Package package = _lineManager.GetLinePackage(lineId);
-                    if (package == null)
-                    {
-                        // add line without package
-                        _lineManager.AddLine(Number, _currentCustomer.CustomerId);
-                    }
-                    else
-                    {
-                        _lineManager.DeletePackage(lineId);
-                    }
-                }
-                else
-                {
-                    // add line with package
-                    if (SelectedPackage != 0) // template package
-                    {
-                        if (_lineManager.AddLine(Number, _currentCustomer.CustomerId))
-                        {
-                            _lineManager.SavePackage(Number, PackageTemplates.SingleOrDefault(p => p.PackageId == SelectedPackage));
-                        }
-                    }
-                    else // custom package
-                    {
-                        string error = ValidateFields();
-                        if (error != null)
-                        {
-                            MessageBox.Show(error);
-                            return;
-                        }
-                        int.TryParse(Minute, out int minute);
-                        int.TryParse(Sms, out int sms);
-
-                        Package package = new Package()
-                        {
-                            PackageName = "Custom package",
-                            TotalPrice = TotalPrice,
-                            MaxMinute = minute,
-                            MaxSms = sms,
-                            InsideFamilyCalles = InsideFamilyCalles,
-                            PriorityContact = PriorityContact,
-                        };
-
-                        if (_lineManager.AddLine(Number, _currentCustomer.CustomerId))
-                        {
-                            Package newPackage = _lineManager.SavePackage(Number, package);
-                            if (newPackage != null)
-                            {
-                                Friends friends = new Friends()
-                                {
-                                    FirstNumber = string.IsNullOrWhiteSpace(Friend1) ? null : Friend1,
-
-                                    SecondNumber = string.IsNullOrWhiteSpace(Friend2) ? null : Friend2,
-                                    ThirdNumber = string.IsNullOrWhiteSpace(Friend3) ? null : Friend3,
-                                };
-
-                                if (newPackage.Friends != null)
-                                {
-                                    if (Friends)
-                                    {
-                                        _lineManager.EditFriends(newPackage.PackageId, friends);
-                                    }
-                                    else
-                                    {
-                                        _lineManager.EditFriends(newPackage.PackageId, null);
-                                    }
-                                }
-                                else if (Friends) // if the friends check box is true
-                                {
-                                    _lineManager.AddFriends(newPackage.PackageId, friends);
-                                }
-                            }
-                        }
-                    }
-                }
-                CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
-
-            }
-        }
-
-        // --- //
-        private void DeleteLine()
-        {
-            if (ValidateLineNumber())
-            {
-                _lineManager.DeleteLine(Number);
-                SelectedLine = null;
-                CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
-            }
-        }
-
-        // clear the view
+        /// <summary>
+        ///  clear the view
+        /// </summary>
         private void Clear()
         {
             Number = "";

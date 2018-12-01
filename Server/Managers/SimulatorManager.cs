@@ -5,6 +5,7 @@ using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
+using Common.RepositoryInterfaces;
 using Db;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,16 @@ using System.Web;
 
 namespace Server.Managers
 {
-    public class SimulatorManager: ISimulatorManager
+    public class SimulatorManager : ISimulatorManager
     {
+        private IUnitOfWork _unitOfWork;
         private LoggerManager _logger;
         private Random _durationRand;
         private Random _destinationRand;
 
-        public SimulatorManager()
+        public SimulatorManager(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "simulatorDal.txt");
             _durationRand = new Random();
             _destinationRand = new Random();
@@ -33,14 +36,11 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    selectedCustomer = context.Customer.GetActiveCustomerWithLines(simulateDTO.IdentityCard);
-                    selectedLine = context.Line.GetLineWithPackageAndFriends(simulateDTO.LineId);
+                selectedCustomer = _unitOfWork.Customer.GetActiveCustomerWithLines(simulateDTO.IdentityCard);
+                selectedLine = _unitOfWork.Line.GetLineWithPackageAndFriends(simulateDTO.LineId);
 
-                    selectedCustomer.CallsToCenter += simulateDTO.CallToCenter;
-                    context.Complete();
-                }
+                selectedCustomer.CallsToCenter += simulateDTO.CallToCenter;
+                _unitOfWork.Complete();
             }
             catch (Exception e)
             {
@@ -113,10 +113,10 @@ namespace Server.Managers
                     {
                         try
                         {
-                            using (var context = new UnitOfWork(new CellularContext()))
-                            {
-                                return context.Line.GetAll().Where(l => l.LineNumber != line.LineNumber).Select(l => l.LineNumber).ToList();
-                            }
+                            IEnumerable<Line> lines;
+                            lines = _unitOfWork.Line.GetAll();
+                            var linesNumber = lines.Where(l => l.LineNumber != line.LineNumber).Select(l => l.LineNumber).ToList();
+                            return linesNumber;
                         }
                         catch (Exception e)
                         {
@@ -138,17 +138,14 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Sms sms = new Sms
                 {
-                    Sms sms = new Sms
-                    {
-                        LineId = from,
-                        DestinationNumber = to,
-                        DataOfMessage = DateTime.Now
-                    };
-                    context.Sms.Add(sms);
-                    context.Complete();
-                }
+                    LineId = from,
+                    DestinationNumber = to,
+                    DataOfMessage = DateTime.Now
+                };
+                _unitOfWork.Sms.Add(sms);
+                _unitOfWork.Complete();
             }
             catch (Exception e)
             {
@@ -161,18 +158,15 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Call call = new Call
                 {
-                    Call call = new Call
-                    {
-                        LineId = from,
-                        DestinationNumber = to,
-                        Duration = duration,
-                        DateOfCall = DateTime.Now
-                    };
-                    context.Call.Add(call);
-                    context.Complete();
-                }
+                    LineId = from,
+                    DestinationNumber = to,
+                    Duration = duration,
+                    DateOfCall = DateTime.Now
+                };
+                _unitOfWork.Call.Add(call);
+                _unitOfWork.Complete();
             }
             catch (Exception e)
             {

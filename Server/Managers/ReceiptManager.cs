@@ -4,6 +4,7 @@ using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
+using Common.RepositoryInterfaces;
 using Db;
 using System;
 using System.Collections.Generic;
@@ -12,52 +13,51 @@ using System.Web;
 
 namespace Server.Managers
 {
-    public class ReceiptManager: IReceiptManager
+    public class ReceiptManager : IReceiptManager
     {
+        private readonly IUnitOfWork _unitOfWork;
         readonly LoggerManager _logger;
-        public ReceiptManager()
+        public ReceiptManager(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "invoiceDal.txt");
         }
 
 
         public void GeneratePaymentsToAllLines(DateTime requstedTime)
         {
-            using (var context = new UnitOfWork(new CellularContext()))
+            List<Line> allLines = _unitOfWork.Line.GetAllLinesWithAllEntities().ToList();
+
+            foreach (var line in allLines)
             {
-                List<Line> allLines = context.Line.GetAllLinesWithAllEntities().ToList();
-
-                foreach (var line in allLines)
+                if (line.RemovedDate == null ||
+                    (line.RemovedDate.Value.Year == requstedTime.Year
+                    && line.RemovedDate.Value.Month == requstedTime.Month)) //add this if stetment to linq quary at line 29
                 {
-                    if (line.RemovedDate == null ||
-                        (line.RemovedDate.Value.Year == requstedTime.Year
-                        && line.RemovedDate.Value.Month == requstedTime.Month)) //add this if stetment to linq quary at line 29
+                    if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month))
                     {
-                        if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month))
+                        Payment newPayment = new Payment() { Date = requstedTime };
+                        Customer customer = _unitOfWork.Customer.GetCustomerWithTypeAndLines(line.CustomerId);
+                        newPayment.CustomerType = customer.CustomerType;
+                        newPayment.LineId = line.LineId;
+
+                        newPayment.UsageSms = GetTotalLineSmsPerMonth(line, requstedTime);
+                        newPayment.UsageCall = GetTotalLineCallsDurationPerMonth(line, requstedTime);
+
+                        if (line.Package != null)
                         {
-                            Payment newPayment = new Payment() { Date = requstedTime };
-                            Customer customer = context.Customer.GetCustomerWithTypeAndLines(line.CustomerId);
-                            newPayment.CustomerType = customer.CustomerType;
-                            newPayment.LineId = line.LineId;
-
-                            newPayment.UsageSms = GetTotalLineSmsPerMonth(line, requstedTime);
-                            newPayment.UsageCall = GetTotalLineCallsDurationPerMonth(line, requstedTime);
-
-                            if (line.Package != null)
-                            {
-                                newPayment.PackageMinute = line.Package.MaxMinute;
-                                newPayment.PackageSms = line.Package.MaxSms;
-                                newPayment.PackagePrice = line.Package.TotalPrice;
-                            }
-                            double totalMinutesPrice = CalculateLineTotalMinutesPrice(customer, line, newPayment, requstedTime);
-                            double totalSmsPrics = CalculateLineTotalSmsPrice(customer, line, newPayment);
-                            newPayment.LineTotalPrice = totalMinutesPrice + totalSmsPrics + newPayment.PackagePrice;
-                            line.Payments.Add(newPayment);
+                            newPayment.PackageMinute = line.Package.MaxMinute;
+                            newPayment.PackageSms = line.Package.MaxSms;
+                            newPayment.PackagePrice = line.Package.TotalPrice;
                         }
+                        double totalMinutesPrice = CalculateLineTotalMinutesPrice(customer, line, newPayment, requstedTime);
+                        double totalSmsPrics = CalculateLineTotalSmsPrice(customer, line, newPayment);
+                        newPayment.LineTotalPrice = totalMinutesPrice + totalSmsPrics + newPayment.PackagePrice;
+                        line.Payments.Add(newPayment);
                     }
                 }
-                context.Complete();
             }
+            _unitOfWork.Complete();
         }
 
         public List<LineReceiptDTO> GetCustomerReceipt(string idCard, DateTime date)
@@ -65,10 +65,7 @@ namespace Server.Managers
             List<LineReceiptDTO> receipts = new List<LineReceiptDTO>();
             Customer customer;
 
-            using (var context = new UnitOfWork(new CellularContext()))
-            {
-                customer = context.Customer.GetCustomerWithTypeLinesAndPayment(idCard);
-            }
+            customer = _unitOfWork.Customer.GetCustomerWithTypeLinesAndPayment(idCard);
 
             if (customer != null)
             {

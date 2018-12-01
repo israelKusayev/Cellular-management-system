@@ -1,4 +1,10 @@
-﻿using Db;
+﻿using Autofac;
+using Common.Interfaces.ServerManagersInterfaces;
+using Common.RepositoryInterfaces;
+using Db;
+using Db.Repositories;
+using Server.App_Start;
+using Server.Managers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -6,11 +12,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
+using Unity;
 
 namespace Server
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        public static IContainer container;
         protected void Application_Start()
         {
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;

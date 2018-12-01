@@ -25,7 +25,8 @@ namespace Crm.Client.ViewModels
         public ICommand ClearCommand { get; set; }
         public ICommand SearchCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
-        public ICommand LinesCommand { get; set; }
+        public ICommand AddLinesCommand { get; set; }
+        public ICommand ManageLinesCommand { get; set; }
 
         private string _searchText;
         public string SearchText
@@ -144,15 +145,13 @@ namespace Crm.Client.ViewModels
                 _navigationService.NavigateTo("Login");
                 ViewModelLocator.UnRegisterCustomerDetailsViewModel();
             });
-            LinesCommand = new RelayCommand(GoToLines);
+            AddLinesCommand = new RelayCommand(NavigateToAddLines);
+            ManageLinesCommand = new RelayCommand(NavigateToManageLines);
             Types = Enum.GetNames(typeof(CustomerTypeEnum)).ToList();
             CustomerValue = "-";
         }
 
-        /// <summary>
-        /// Navigate to line view(next page) if Id field matching to customer in DB
-        /// </summary>
-        private void GoToLines()
+        private void NavigateToManageLines()
         {
             if (string.IsNullOrWhiteSpace(Id))
             {
@@ -163,10 +162,28 @@ namespace Crm.Client.ViewModels
                 Customer customer = _customerManager.GetCustomerByIdCard(Id);
                 if (customer != null)
                 {
-                    _navigationService.NavigateTo("Line", customer);
+                    _navigationService.NavigateTo("ManageLines", customer);
                 }
             }
+        }
 
+        /// <summary>
+        /// Navigate to line view(next page) if Id field matching to customer in DB
+        /// </summary>
+        private void NavigateToAddLines()
+        {
+            if (string.IsNullOrWhiteSpace(Id))
+            {
+                MessageBox.Show("id field is required.");
+            }
+            else
+            {
+                Customer customer = _customerManager.GetCustomerByIdCard(Id);
+                if (customer != null)
+                {
+                    _navigationService.NavigateTo("AddLines", customer);
+                }
+            }
         }
 
         private void SaveCustomer()

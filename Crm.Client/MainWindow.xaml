@@ -14,7 +14,7 @@
             <command:EventToCommand Command="{Binding LoadedCommand, Mode=OneWay}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid>
+    <Grid >
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>

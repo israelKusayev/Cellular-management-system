@@ -2,6 +2,7 @@
 using Common.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Db.Repositories
 {
     public class FriendsRepository : Repository<Friends>, IFriendsRepository
     {
-        public FriendsRepository(CellularContext context) : base(context)
+        public FriendsRepository(DbContext context) : base(context)
         {
 
         }

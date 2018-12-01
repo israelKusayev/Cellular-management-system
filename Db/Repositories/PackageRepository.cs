@@ -11,7 +11,7 @@ namespace Db.Repositories
 {
     public class PackageRepository : Repository<Package>, IPackageRepository
     {
-        public PackageRepository(CellularContext context) : base(context)
+        public PackageRepository(DbContext context) : base(context)
         {
 
         }

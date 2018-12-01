@@ -2,15 +2,16 @@
 using Common.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Db.Repositories
 {
-    class PaymentRepository : Repository<Payment>, IPaymentRepository
+  public  class PaymentRepository : Repository<Payment>, IPaymentRepository
     {
-        public PaymentRepository(CellularContext context):base(context)
+        public PaymentRepository(DbContext context):base(context)
         {
 
         }

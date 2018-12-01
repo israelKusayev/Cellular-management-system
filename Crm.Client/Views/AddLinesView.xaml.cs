@@ -18,9 +18,9 @@ namespace Crm.Client.Views
     /// <summary>
     /// Interaction logic for LineView.xaml
     /// </summary>
-    public partial class LineView : Page
+    public partial class AddLinesView : Page
     {
-        public LineView()
+        public AddLinesView()
         {
             InitializeComponent();
         }

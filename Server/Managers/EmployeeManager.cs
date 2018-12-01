@@ -9,16 +9,19 @@ using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
+using Common.RepositoryInterfaces;
 using Db;
 
 namespace Server.Managers
 {
-    public class EmployeeManager: IEmployeeManager
+    public class EmployeeManager : IEmployeeManager
     {
+        private IUnitOfWork _unitOfWork;
         LoggerManager _logger;
 
-        public EmployeeManager()
+        public EmployeeManager(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "employeeManager.txt");
         }
 
@@ -28,10 +31,7 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    requstedEmployee = context.Employee.GetEmployeeByUserName(loginEmployee.UserName);
-                }
+                requstedEmployee = _unitOfWork.Employee.GetEmployeeByUserName(loginEmployee.UserName);
             }
             catch (Exception e)
             {

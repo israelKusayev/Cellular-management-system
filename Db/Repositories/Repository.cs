@@ -28,6 +28,7 @@ namespace Db.Repositories
 
         public IEnumerable<TEntity> GetAll()
         {
+
             // Note that here I've repeated Context.Set<TEntity>() in every method and this is causing
             // too much noise. I could get a reference to the DbSet returned from this method in the 
             // constructor and store it in a private field like _entities. This way, the implementation

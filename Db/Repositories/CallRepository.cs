@@ -2,6 +2,7 @@
 using Common.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Db.Repositories
 {
     public class CallRepository : Repository<Call>, ICallRepository
     {
-        public CallRepository(CellularContext context) : base(context)
+        public CallRepository(DbContext context) : base(context)
         {
 
         }

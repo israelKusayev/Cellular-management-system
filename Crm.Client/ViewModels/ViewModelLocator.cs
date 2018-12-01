@@ -56,7 +56,8 @@ namespace Crm.Client.ViewModels
             var navigationService = new FrameNavigationService();
             navigationService.Configure("Login", new Uri("../Views/LoginView.xaml", UriKind.Relative));
             navigationService.Configure("CustomerDetails", new Uri("../Views/CustomerDetailsView.xaml", UriKind.Relative));
-            navigationService.Configure("Line", new Uri("../Views/LineView.xaml", UriKind.Relative));
+            navigationService.Configure("AddLines", new Uri("../Views/AddLinesView.xaml", UriKind.Relative));
+            navigationService.Configure("ManageLines", new Uri("../Views/ManageLinesView.xaml", UriKind.Relative));
             navigationService.Configure("Simulator", new Uri("../Views/SimulatorView.xaml", UriKind.Relative));
             navigationService.Configure("ChooseReceipts", new Uri("../Views/ChooseReceiptsView.xaml", UriKind.Relative));
             navigationService.Configure("Receipts", new Uri("../Views/ReceiptsView.xaml", UriKind.Relative));

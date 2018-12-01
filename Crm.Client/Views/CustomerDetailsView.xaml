@@ -30,8 +30,9 @@
             <Button x:Name="saveBtn" Content="Save" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="236,348,0,0" VerticalAlignment="Top" Width="75" Background="#295367" Foreground="White" />
             <Button x:Name="deleteBtn" Content="Delete" Command="{Binding DeleteCommand}" HorizontalAlignment="Left" Margin="366,348,0,0" VerticalAlignment="Top" Width="75" Foreground="White" Background="#295367"/>
             <Button x:Name="clearBtn" Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="496,348,0,0" VerticalAlignment="Top" Width="75" Background="#295367" Foreground="White"/>
-            <Button x:Name="logoutBtn" Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="441,397,0,0" VerticalAlignment="Top" Width="50" Background="#295367" Foreground="White" />
-            <Button x:Name="linesBtn" Content="Lines" Command="{Binding LinesCommand}" HorizontalAlignment="Left" Margin="316,397,0,0" VerticalAlignment="Top" Width="50" Background="#295367" Foreground="White"/>
+            <Button x:Name="logoutBtn" Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="496,397,0,0" VerticalAlignment="Top" Width="75" Background="#295367" Foreground="White" />
+            <Button x:Name="addLineBtn" Content="Add Line" Command="{Binding AddLinesCommand}" HorizontalAlignment="Left" Margin="236,397,0,0" VerticalAlignment="Top" Width="75" Background="#295367" Foreground="White"/>
+            <Button x:Name="manageLineBtn" Content="Manage Lines" Command="{Binding ManageLinesCommand}" HorizontalAlignment="Left" Margin="361,397,0,0" VerticalAlignment="Top" Width="87" Background="#295367" Foreground="White"/>
             <StackPanel  Orientation="Horizontal" HorizontalAlignment="Left" Height="21" Margin="337,118,0,0" VerticalAlignment="Top" Width="125">
                 <TextBlock FontWeight="Bold">Customer value</TextBlock>
                 <TextBlock  Margin="5,0,0,0" Text="{Binding CustomerValue}"></TextBlock>

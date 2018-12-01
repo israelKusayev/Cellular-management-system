@@ -13,18 +13,18 @@ namespace Db.Repositories
 {
     public class CustomerRepository : Repository<Customer>, ICustomerRepository
     {
-        public CustomerRepository(CellularContext context) : base(context)
+        public CustomerRepository(DbContext context) : base(context)
         {
 
         }
-        public Customer GetActiveCustomerByIdCard(string idCard)
+        public virtual Customer GetActiveCustomerByIdCard(string idCard)
         {
             return CellularContext.CustomerTable.SingleOrDefault(c => c.IdentityCard == idCard && c.IsActive == true);
         }
 
         public Customer GetCustomerWithLinesAndPayments(string idCard)
         {
-            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(v => v.Status == LineStatus.Used).Select(x => x.Payments)).SingleOrDefault();
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(v => v.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(v => v.Status == LineStatus.Used).Select(x => x.Payments)).SingleOrDefault();
         }
 
         public Customer GetActiveCustomerWithLines(string idCard)
@@ -40,6 +40,11 @@ namespace Db.Repositories
         public Customer GetCustomerWithTypeLinesAndPayment(string idCard)
         {
             return CellularContext.CustomerTable.Where((c) => c.IdentityCard == idCard).Include((l) => l.Lines.Select(x => x.Payments)).Include(c => c.CustomerType).SingleOrDefault();
+        }
+
+        public Customer GetActiveCustomerWithLinesAndPackages(string idCard)
+        {
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used).Select(p=>p.Package)).SingleOrDefault();
         }
 
         public CellularContext CellularContext

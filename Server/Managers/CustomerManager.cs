@@ -8,6 +8,7 @@ using Common.Exeptions;
 using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
+using Common.RepositoryInterfaces;
 using Db;
 using Db.Repositories;
 
@@ -16,26 +17,22 @@ namespace Server.Managers
     public class CustomerManager : ICustomerManager
     {
         private LoggerManager _logger;
-
-        public CustomerManager()
+        private IUnitOfWork _unitOfWork;
+        public CustomerManager(IUnitOfWork unitOfWork)
         {
             _logger = new LoggerManager(new FileLogger(), "customerDal.txt");
+            _unitOfWork = unitOfWork;
         }
+
         public Customer GetActiveCustomer(string idCard)
         {
-            using (var context = new UnitOfWork(new CellularContext()))
-            {
-                return context.Customer.GetActiveCustomerByIdCard(idCard);
-            }
+            return _unitOfWork.Customer.GetActiveCustomerByIdCard(idCard);
         }
 
         public double GetCustomerValue(string idCard)
         {
             Customer customer;
-            using (var context = new UnitOfWork(new CellularContext()))
-            {
-                customer = context.Customer.GetCustomerWithLinesAndPayments(idCard);
-            }
+            customer = _unitOfWork.Customer.GetCustomerWithLinesAndPayments(idCard);
             if (customer == null)
             {
                 throw new KeyNotFoundException("Customer not found");
@@ -65,15 +62,12 @@ namespace Server.Managers
 
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                var customer = _unitOfWork.Customer.GetActiveCustomerByIdCard(newCustomer.IdentityCard);
+                if (customer == null)
                 {
-                    var customer = context.Customer.GetActiveCustomerByIdCard(newCustomer.IdentityCard);
-                    if (customer == null)
-                    {
-                        context.Customer.Add(newCustomer);
-                        context.Complete();
-                        addedCustomer = context.Customer.GetActiveCustomerByIdCard(newCustomer.IdentityCard);
-                    }
+                    _unitOfWork.Customer.Add(newCustomer);
+                    _unitOfWork.Complete();
+                    addedCustomer = _unitOfWork.Customer.GetActiveCustomerByIdCard(newCustomer.IdentityCard);
                 }
             }
             catch (Exception e)
@@ -95,18 +89,15 @@ namespace Server.Managers
             customerToEdit.IsActive = true;
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
-                {
-                    Customer foundCustomer = context.Customer.GetActiveCustomerByIdCard(customerToEdit.IdentityCard);
+                Customer foundCustomer = _unitOfWork.Customer.GetActiveCustomerByIdCard(customerToEdit.IdentityCard);
 
-                    if (foundCustomer != null)
-                    {
-                        context.Customer.Edit(foundCustomer, customerToEdit);
-                        context.Complete();
-                        return customerToEdit;
-                    }
-                    return null;
+                if (foundCustomer != null)
+                {
+                    _unitOfWork.Customer.Edit(foundCustomer, customerToEdit);
+                    _unitOfWork.Complete();
+                    return customerToEdit;
                 }
+                return null;
             }
             catch (Exception e)
             {
@@ -119,22 +110,19 @@ namespace Server.Managers
         {
             try
             {
-                using (var context = new UnitOfWork(new CellularContext()))
+                Customer customerToDeactivate = _unitOfWork.Customer.GetActiveCustomerWithLines(idCard);
+                if (customerToDeactivate != null)
                 {
-                    Customer customerToDeactivate = context.Customer.GetActiveCustomerWithLines(idCard);
-                    if (customerToDeactivate != null)
+                    customerToDeactivate.IsActive = false;
+
+                    foreach (var line in customerToDeactivate.Lines)
                     {
-                        customerToDeactivate.IsActive = false;
-
-                        foreach (var line in customerToDeactivate.Lines)
-                        {
-                            context.Line.DeactivateLine(line);
-                        }
-
-                        context.Complete();
+                        _unitOfWork.Line.DeactivateLine(line);
                     }
-                    return customerToDeactivate;
+
+                    _unitOfWork.Complete();
                 }
+                return customerToDeactivate;
             }
             catch (Exception e)
             {

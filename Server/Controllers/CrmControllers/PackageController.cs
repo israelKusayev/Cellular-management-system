@@ -147,7 +147,7 @@ namespace Server.Controllers.CrmControllers
             }
             else
             {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not rempve the package"));
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not remove the package"));
             }
         } //v
 

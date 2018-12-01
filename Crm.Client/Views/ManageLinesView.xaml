@@ -1,0 +1,83 @@
+﻿<Page x:Class="Crm.Client.Views.ManageLinesView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Crm.Client.Views"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Manage Lines"
+      DataContext="{Binding Path=LineViewModel, Source={StaticResource Locator}}">
+
+    <Grid Background="#225367">
+        <Grid Width="800" Height="450" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#fffcf3">
+            <TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="NoWrap"  FontWeight="Bold" FontSize="21" Text="Line information"  VerticalAlignment="Top"  Margin="319,10,0,0"/>
+            <ComboBox x:Name="lines"  ItemsSource="{Binding CustomerLines}"   DisplayMemberPath="LineNumber" SelectedValue="{Binding SelectedLine}" SelectedValuePath="LineId" HorizontalAlignment="Left" Margin="361,69,0,0" VerticalAlignment="Top" Width="157">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LineSelectedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </ComboBox>
+            <Label x:Name="linesLabel" Content="Select line" HorizontalAlignment="Left" Margin="283,65,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.993,0.298"/>
+            <Separator HorizontalAlignment="Left" Height="12"  Margin="159,97,0,0" VerticalAlignment="Top" Width="479"/>
+
+            <Grid >
+                <ComboBox x:Name="packages" ItemsSource="{Binding PackageTemplates}" DisplayMemberPath="PackageName" SelectedValue="{Binding SelectedPackage}" SelectedValuePath="PackageId"  HorizontalAlignment="Left" Margin="259,128,0,0" VerticalAlignment="Top" Width="379">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding PackageSelectedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                <Label x:Name="label2" Content="Select a package" HorizontalAlignment="Left" Margin="154,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.5,0.538"/>
+                <Label x:Name="minute" Content="Minute:" HorizontalAlignment="Left" Margin="158,179,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="minuteTextBox" Text="{Binding Minute}" HorizontalAlignment="Left" Height="23" Margin="216,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102"/>
+                <Label x:Name="sms" Content="Sms:" HorizontalAlignment="Left" Margin="335,178,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="smsTextBox"  Text="{Binding Sms}" HorizontalAlignment="Left" Height="23" Margin="373,180,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102"/>
+                <Label x:Name="price" Content="Price:" HorizontalAlignment="Left" Margin="490,178,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="priceTextBox" Text="{Binding Price}" HorizontalAlignment="Left" Height="23" Margin="536,180,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding UpdateTotalPriceCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <CheckBox x:Name="friends" IsChecked="{Binding Friends}" Content="Friends" HorizontalAlignment="Left" Margin="159,242,0,0" VerticalAlignment="Top">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding UpdateTotalPriceCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
+                <TextBox x:Name="friend1"  Text="{Binding Friend1}" IsEnabled="{Binding ElementName=friends,  Path=IsChecked}" HorizontalAlignment="Left" Height="23" Margin="251,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110"/>
+                <TextBox x:Name="friend2" Text="{Binding Friend2}" IsEnabled="{Binding ElementName=friends ,  Path=IsChecked }"  HorizontalAlignment="Left" Height="23" Margin="390,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110"/>
+                <TextBox x:Name="friend3" Text="{Binding Friend3}" IsEnabled="{Binding ElementName=friends ,  Path=IsChecked  }"  HorizontalAlignment="Left" Height="23" Margin="528,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110"/>
+                <CheckBox x:Name="familyDiscount" IsChecked="{Binding InsideFamilyCalles}" Content="Inside family calles" HorizontalAlignment="Left" Margin="159,294,0,0" VerticalAlignment="Top">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding UpdateTotalPriceCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
+                <CheckBox x:Name="priorityContact"  IsChecked="{Binding PriorityContact}" Content="Priority contact" HorizontalAlignment="Left" Margin="296,294,0,0" VerticalAlignment="Top">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding UpdateTotalPriceCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
+                <Label x:Name="totalPriceLabel" Content="Total price:" FontWeight="Black" HorizontalAlignment="Left" Margin="331,331,0,0" VerticalAlignment="Top"/>
+                <TextBlock x:Name="totalPrice" Width="50" Text="{Binding TotalPrice}" FontWeight="Black" HorizontalAlignment="Left" Margin="411,337,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            </Grid>
+            <Button x:Name="editBtn" Content="Edit package" Command="{Binding EditPackageCommand}" HorizontalAlignment="Left" Margin="200,373,0,0" VerticalAlignment="Top" Width="100" Background="#295367" Foreground="White" />
+            <Button x:Name="deleteBtn" Content="Delete line" Command="{Binding DeleteLineCommand}" HorizontalAlignment="Left" Margin="501,373,0,0" VerticalAlignment="Top" Width="100"  Background="#295367" Foreground="White"  />
+            <Button x:Name="removePackage" Content="Remove package" Command="{Binding RemovePackageCommand}" HorizontalAlignment="Left" Margin="350,373,0,0" VerticalAlignment="Top" Width="100" Background="#295367" Foreground="White" />
+            <Button x:Name="clearBtn" Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="292,414,0,0" VerticalAlignment="Top" Width="64"     Background="#295367" Foreground="White"  />
+            <Button x:Name="goBackBtn" Content="Go Back" Command="{Binding GoBackCommand}" HorizontalAlignment="Left" Margin="442,414,0,0" VerticalAlignment="Top" Width="65" Background="#295367" Foreground="White" RenderTransformOrigin="0.391,0.683"  />
+        </Grid>
+    </Grid>
+
+</Page>
