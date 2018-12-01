@@ -56,11 +56,11 @@
     <Compile Include="Enums\CustomerTypeEnum.cs" />
     <Compile Include="Enums\MessageType.cs" />
     <Compile Include="Enums\SimulateSendTo.cs" />
-    <Compile Include="Exeptions\AlreadyExistExeption.cs" />
-    <Compile Include="Exeptions\EmptyException.cs" />
-    <Compile Include="Exeptions\FaildToConnectDbExeption.cs" />
-    <Compile Include="Exeptions\FoundLineExeption.cs" />
-    <Compile Include="Exeptions\IncorrectExeption.cs" />
+    <Compile Include="Exceptions\AlreadyExistExeption.cs" />
+    <Compile Include="Exceptions\EmptyException.cs" />
+    <Compile Include="Exceptions\FaildToConnectDbExeption.cs" />
+    <Compile Include="Exceptions\FoundLineExeption.cs" />
+    <Compile Include="Exceptions\IncorrectExeption.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\ICustomerManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\IEmployeeManager.cs" />
@@ -84,16 +84,16 @@
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\Sms.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryInterfaces\ICallRepository.cs" />
-    <Compile Include="RepositoryInterfaces\ICustomerRepository.cs" />
-    <Compile Include="RepositoryInterfaces\IEmployeeRepository.cs" />
-    <Compile Include="RepositoryInterfaces\IFriendsRepository.cs" />
-    <Compile Include="RepositoryInterfaces\ILineRepository.cs" />
-    <Compile Include="RepositoryInterfaces\IPackageRepository.cs" />
-    <Compile Include="RepositoryInterfaces\IPaymentRepository.cs" />
-    <Compile Include="RepositoryInterfaces\IRepository.cs" />
-    <Compile Include="RepositoryInterfaces\ISmsRepository.cs" />
-    <Compile Include="RepositoryInterfaces\IUnitOfWork.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\ICallRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\ICustomerRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IEmployeeRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IFriendsRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\ILineRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IPackageRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IPaymentRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\ISmsRepository.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
