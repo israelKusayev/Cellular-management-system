@@ -30,6 +30,7 @@ namespace Server.Controllers.CrmControllers
             try
             {
                 customer = _customerManager.GetActiveCustomer(idCard);
+
             }
             catch (Exception)
             {
