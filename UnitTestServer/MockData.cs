@@ -30,6 +30,17 @@ namespace UnitTestServer
                 };
         }
 
+        internal List<Line> GetAllLinesWithPackageAndFriend()
+        {
+            List<Line> lines = GetLines(1);
+            foreach (var line in lines)
+            {
+                line.Package = GetCustomPackage();
+            }
+
+            return lines;
+        }
+
         public Customer GetCustomer()
         {
             return new Customer() { CallsToCenter = 1, Address = "Modi'in", CustomerTypeId = 2, CustomerId = 2, FirstName = "shay", LastName = "oo", IdentityCard = "124", IsActive = true, ContactNumber = "12341", EmplyeeId = 1, Lines = GetLines(2) };
@@ -68,9 +79,9 @@ namespace UnitTestServer
         {
             return new List<Line>
             {
-                new Line(){LineId=1+uniqueParamater,LineNumber ="1234567"+uniqueParamater.ToString(),CreatedDate = DateTime.Now,Status = Common.Enums.LineStatus.Used},
-                new Line(){LineId=2+uniqueParamater,LineNumber ="1234568"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-1),Status = Common.Enums.LineStatus.Used},
-                new Line(){LineId=3+uniqueParamater,LineNumber ="1234569"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-2),Status = Common.Enums.LineStatus.Removed},
+                new Line(){LineId=1+uniqueParamater,LineNumber ="1234567"+uniqueParamater.ToString(),CreatedDate = DateTime.Now,Status = Common.Enums.LineStatus.Used, Messages = GetSms("3456",1 + uniqueParamater), Calls = GetCalls("3556",1 + uniqueParamater)},
+                new Line(){LineId=2+uniqueParamater,LineNumber ="1234568"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-1),Status = Common.Enums.LineStatus.Used, Messages = GetSms("234",2 + uniqueParamater), Calls = GetCalls("3453456",2 + uniqueParamater)},
+                new Line(){LineId=3+uniqueParamater,LineNumber ="1234569"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-2),Status = Common.Enums.LineStatus.Removed,  Messages = GetSms("2345334",3 + uniqueParamater), Calls = GetCalls("2345",3 + uniqueParamater)},
             };
         }
 

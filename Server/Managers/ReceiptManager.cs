@@ -32,7 +32,7 @@ namespace Server.Managers
             {
                 if (line.RemovedDate == null ||
                     (line.RemovedDate.Value.Year == requstedTime.Year
-                    && line.RemovedDate.Value.Month == requstedTime.Month)) //add this if stetment to linq quary at line 29
+                    && line.RemovedDate.Value.Month == requstedTime.Month))
                 {
                     if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month))
                     {
@@ -81,12 +81,12 @@ namespace Server.Managers
 
                         newReceipt.CustomerName = $"{customer.FirstName} {customer.LastName}";
                         newReceipt.LineNumber = line.LineNumber;
-                        int usageCallMinute = newReceipt.UsageCall / 60;
+                        int usageCallMinute = newReceipt.UsageCall;
                         newReceipt.MinutesBeyondPackageLimit = TimeSpan.FromMinutes(linePayment.MinutesBeyondPackageLimit);
                         newReceipt.LeftMinutes = newReceipt.PackageMinute - usageCallMinute < 0 ? TimeSpan.Zero : TimeSpan.FromMinutes(newReceipt.PackageMinute - usageCallMinute);
                         newReceipt.LeftSms = newReceipt.PackageMinute - usageCallMinute < 0 ? 0 : newReceipt.PackageSms - newReceipt.UsageSms;
-                        newReceipt.MinutesUsagePrecent = newReceipt.PackageMinute == 0 ? 0 : (int)(newReceipt.LeftMinutes.TotalMinutes / newReceipt.PackageMinute) * 100;
-                        newReceipt.SmsUsagePrecent = newReceipt.PackageSms == 0 ? 0 : (newReceipt.LeftSms / newReceipt.PackageSms) * 100;
+                        newReceipt.MinutesUsagePrecent = newReceipt.PackageMinute == 0 ? 0 :(100 -  (int)((newReceipt.LeftMinutes.TotalMinutes / newReceipt.PackageMinute) * 100));
+                        newReceipt.SmsUsagePrecent = newReceipt.PackageSms == 0 ? 0 : (100 - (int)((newReceipt.LeftSms / newReceipt.PackageSms) * 100));
                         newReceipt.PricePerMinute = customer.CustomerType.MinutePrice;
                         newReceipt.PricePerSms = customer.CustomerType.SmsPrice;
                         newReceipt.ExceptionalMinutesPrice = newReceipt.MinutesBeyondPackageLimit.TotalMinutes * newReceipt.PricePerMinute;
