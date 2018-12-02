@@ -45,14 +45,5 @@ namespace Db
         {
             _context.Dispose();
         }
-
-        //public IRepository<Tentity> GetRepository<Tentity>() where Tentity : class
-        //{
-        //    if (_repositories.Keys.Contains(typeof(Tentity)))
-        //    {
-        //        return _repositories[typeof(Tentity)] as IRepository<Tentity>;
-        //    }
-        //    var repository = new Repository<Tentity>
-        //}
     }
 }

@@ -78,10 +78,14 @@ namespace UnitTestServer
         {
             return new List<Package>
             {
-            new Package() {PackageName="Soliders", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=100, MaxSms=1000, PriorityContact=false, TotalPrice=50},
-            new Package() {PackageName="Moms", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=200, MaxSms=5000, PriorityContact=false, TotalPrice=150},
-            new Package() {PackageName="SelaYahalom", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=300, MaxSms=10000, PriorityContact=false, TotalPrice=500},
+            new Package() {PackageId=1,PackageName="Soliders", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=100, MaxSms=1000, PriorityContact=false, TotalPrice=50},
+            new Package() {PackageId=2, PackageName="Moms", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=200, MaxSms=5000, PriorityContact=false, TotalPrice=150},
+            new Package() {PackageId=3, PackageName="SelaYahalom", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=300, MaxSms=10000, PriorityContact=false, TotalPrice=500},
             };
+        }
+        public Package GetPackageTemplate()
+        {
+            return GetPackageTemplates()[0];
         }
         public Package GetCustomPackage()
         {
@@ -111,6 +115,28 @@ namespace UnitTestServer
         public CustomerType GetCustomerType(CustomerTypeEnum type)
         {
             return GetCustomerTypes().Find(t => t.CustomerTypeEnum == type);
+        }
+
+        public List<Sms> GetSms(string destinationNumber, int unique)
+        {
+            return new List<Sms>() {
+             new Sms(){ DataOfMessage = DateTime.Now, DestinationNumber = destinationNumber, SmsId = 1 + unique },
+             new Sms() { DataOfMessage = DateTime.Now, DestinationNumber = destinationNumber, SmsId = 2 + unique },
+             new Sms() { DataOfMessage = DateTime.Now, DestinationNumber = destinationNumber, SmsId = 3 + unique },
+             new Sms() { DataOfMessage = DateTime.Now, DestinationNumber = destinationNumber, SmsId = 4 + unique },
+             new Sms() { DataOfMessage = DateTime.Now, DestinationNumber = destinationNumber, SmsId = 5 + unique }
+                    };
+        }
+
+        public List<Call> GetCalls(string destinationNumber, int unique)
+        {
+            return new List<Call>() {
+             new Call(){ DateOfCall = DateTime.Now, DestinationNumber = destinationNumber, CallId = 1 + unique ,Duration =434},
+             new Call() { DateOfCall= DateTime.Now, DestinationNumber = destinationNumber, CallId = 2 + unique ,Duration =9032},
+             new Call() { DateOfCall= DateTime.Now, DestinationNumber = destinationNumber, CallId = 3 + unique ,Duration =323},
+             new Call() { DateOfCall= DateTime.Now, DestinationNumber = destinationNumber, CallId = 4 + unique ,Duration =3403},
+             new Call() { DateOfCall= DateTime.Now, DestinationNumber = destinationNumber, CallId = 5 + unique ,Duration =2322}
+                    };
         }
     }
 }
