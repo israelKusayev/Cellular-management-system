@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Common.Models;
 using Common.RepositoryInterfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Server.Controllers.CrmControllers;
 using Server.Managers;
-using Db.Repositories;
-using Server;
-using Common.Interfaces.ServerManagersInterfaces;
-using System.Collections.Generic;
+using UnitTestServer;
 
-namespace UnitTestServer
+namespace UnitTestServer.ManagersTests
 {
     [TestClass]
-    public class CrmControllerTest
+    public class CustomerManagerTest
     {
+        MockData _data = new MockData();
         Mock<IUnitOfWork> mock = new Mock<IUnitOfWork>();
         CustomerManager manager;
 
@@ -51,22 +51,17 @@ namespace UnitTestServer
         }
 
         [TestMethod]
-        public void GetCustomerValue_ReturnZeroPointThree()
+        public void GetCustomerValue_ReturnZeroPointFive()
         {
             mock.Setup(s => s.Customer.GetCustomerWithLinesAndPayments(It.IsAny<string>()))
-                .Returns(GetCustomer());
+                .Returns(_data.GetCustomer());
             manager = new CustomerManager(mock.Object);
             double value = manager.GetCustomerValue("1");
-            Assert.AreEqual(0.3, Math.Round(value, 1));
+            Assert.AreEqual(0.5, Math.Round(value, 1));
             Assert.AreNotEqual(0.2, Math.Round(value, 1));
+
         }
 
-        private Customer GetCustomer()
-        {
-            List<Line> lines = new List<Line>()
-            { new Line{ LineNumber = "111", CreatedDate = DateTime.Now },
-            new Line() { LineNumber = "111", CreatedDate = DateTime.Now } };
-            return new Customer() { Lines = lines, CallsToCenter = 1 };
-        }
+
     }
 }

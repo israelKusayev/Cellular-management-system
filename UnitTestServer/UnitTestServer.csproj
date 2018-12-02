@@ -72,7 +72,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrmControllerTest.cs" />
+    <Compile Include="MockData.cs" />
+    <Compile Include="ManagersTests\CustomerManagerTest.cs" />
+    <Compile Include="ManagersTests\EmployeeManagerTest.cs" />
+    <Compile Include="ManagersTests\LineManagerTest.cs" />
+    <Compile Include="ManagersTests\PackageManagerTest.cs" />
+    <Compile Include="ManagersTests\ReceiptManagerTest.cs" />
+    <Compile Include="ManagersTests\SimulatorManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -17,27 +17,13 @@ namespace Server.Managers
     public class CustomerManager : ICustomerManager
     {
         private LoggerManager _logger;
-<<<<<<< HEAD
         private IUnitOfWork _unitOfWork;
         public CustomerManager(IUnitOfWork unitOfWork)
-=======
-
-        //Ctor
-        public CustomerManager()
->>>>>>> c67c90017f5f832f1292b5a75acb44385c1a009c
-        {
+        { 
             _logger = new LoggerManager(new FileLogger(), "customerDal.txt");
             _unitOfWork = unitOfWork;
         }
 
-<<<<<<< HEAD
-=======
-        /// <summary>
-        /// summary
-        /// </summary>
-        /// <param name="idCard">Customer identity card</param>
-        /// <returns>return</returns>
->>>>>>> c67c90017f5f832f1292b5a75acb44385c1a009c
         public Customer GetActiveCustomer(string idCard)
         {
             return _unitOfWork.Customer.GetActiveCustomerByIdCard(idCard);
