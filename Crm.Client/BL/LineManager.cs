@@ -132,7 +132,7 @@ namespace Crm.Client.BL
         /// </summary>
         /// <param name="lineNumber">Line number</param>
         /// <param name="customerId">Customer id</param>
-        /// <returns>true if succeeded otherwise fasle</returns>
+        /// <returns>true if succeeded otherwise false</returns>
         internal bool AddLine(string lineNumber, int customerId)
         {
             Line line = new Line() { LineNumber = lineNumber };

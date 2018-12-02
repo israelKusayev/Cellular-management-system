@@ -95,7 +95,7 @@ namespace Server.Managers
                 {
                     _unitOfWork.Customer.Edit(foundCustomer, customerToEdit);
                     _unitOfWork.Complete();
-                    return customerToEdit;
+                    return _unitOfWork.Customer.GetActiveCustomerWithLinesAndPackages(foundCustomer.IdentityCard);
                 }
                 return null;
             }

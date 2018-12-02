@@ -1,4 +1,5 @@
-﻿using Common.ModelsDTO;
+﻿using Common.Models;
+using Common.ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Common.Interfaces.ServerManagersInterfaces
 {
     public interface IReceiptManager
     {
-        void GeneratePaymentsToAllLines(DateTime requstedTime);
+        List<Payment> GeneratePaymentsToAllLines(DateTime requstedTime);
         List<LineReceiptDTO> GetCustomerReceipt(string idCard, DateTime date);
     }
 }

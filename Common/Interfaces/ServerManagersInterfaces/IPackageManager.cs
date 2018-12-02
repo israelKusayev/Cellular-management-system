@@ -14,7 +14,7 @@ namespace Common.Interfaces.ServerManagersInterfaces
         Package AddPackageToLine(int lineId, Package package);
         Package RemovePackageFromLine(int lineId);
         Package EditPackage(int packageId, int lineId, Package newPackage);
-        void RemoveLineFromTemplatePackage(int lineId);
+        bool RemoveLineFromTemplatePackage(int lineId);
         Friends AddFriends(int packageId, Friends friendsToAdd);
         Friends EditFriends(int packageId, Friends friendsToEdit);
     }

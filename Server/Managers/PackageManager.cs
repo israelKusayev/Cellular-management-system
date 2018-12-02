@@ -120,29 +120,29 @@ namespace Server.Managers
 
         public Package EditPackage(int packageId, int lineId, Package newPackage)
         {
-            Package oldPackage = null;
+            Package package = null;
 
             try
             {
                 if (newPackage.IsPackageTemplate)
                 {
-                    oldPackage = _unitOfWork.Package.Get(newPackage.PackageId);
-                    if (oldPackage != null)
+                    package = _unitOfWork.Package.Get(newPackage.PackageId);
+                    if (package != null)
                     {
                         Line line = _unitOfWork.Line.Get(lineId);
-                        oldPackage.Lines.Add(line);
+                        package.Lines.Add(line);
                     }
                 }
                 else
                 {
-                    oldPackage = _unitOfWork.Package.GetPackageWithFriends(packageId);
-                    if (oldPackage != null)
+                    package = _unitOfWork.Package.GetPackageWithFriends(packageId);
+                    if (package != null)
                     {
-                        if (oldPackage != null)
+                        if (package != null)
                         {
-                            newPackage.PackageId = oldPackage.PackageId;
-                            _unitOfWork.Package.Edit(oldPackage, newPackage);
-                            return _unitOfWork.Package.GetPackageWithFriends(oldPackage.PackageId);
+                            newPackage.PackageId = package.PackageId;
+                            _unitOfWork.Package.Edit(package, newPackage);
+                            return _unitOfWork.Package.GetPackageWithFriends(package.PackageId);
                         }
                     }
                     _unitOfWork.Complete();
@@ -154,10 +154,10 @@ namespace Server.Managers
                 _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
-            return oldPackage;
+            return package;
         }
 
-        public void RemoveLineFromTemplatePackage(int lineId)
+        public bool RemoveLineFromTemplatePackage(int lineId)
         {
             try
             {
@@ -169,6 +169,7 @@ namespace Server.Managers
                     {
                         package.Lines.Remove(line);
                         _unitOfWork.Complete();
+                        return true;
                     }
                 }
             }
@@ -177,6 +178,7 @@ namespace Server.Managers
                 _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
                 throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
             }
+            return false;
         }
 
         public Friends AddFriends(int packageId, Friends friendsToAdd)

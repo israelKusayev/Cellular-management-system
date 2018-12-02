@@ -24,10 +24,10 @@ namespace Server.Managers
         }
 
 
-        public void GeneratePaymentsToAllLines(DateTime requstedTime)
+        public List<Payment> GeneratePaymentsToAllLines(DateTime requstedTime)
         {
             List<Line> allLines = _unitOfWork.Line.GetAllLinesWithAllEntities().ToList();
-
+            List<Payment> payments = new List<Payment>();
             foreach (var line in allLines)
             {
                 if (line.RemovedDate == null ||
@@ -53,11 +53,13 @@ namespace Server.Managers
                         double totalMinutesPrice = CalculateLineTotalMinutesPrice(customer, line, newPayment, requstedTime);
                         double totalSmsPrics = CalculateLineTotalSmsPrice(customer, line, newPayment);
                         newPayment.LineTotalPrice = totalMinutesPrice + totalSmsPrics + newPayment.PackagePrice;
+                        payments.Add(newPayment);
                         line.Payments.Add(newPayment);
                     }
                 }
             }
             _unitOfWork.Complete();
+            return payments;
         }
 
         public List<LineReceiptDTO> GetCustomerReceipt(string idCard, DateTime date)
