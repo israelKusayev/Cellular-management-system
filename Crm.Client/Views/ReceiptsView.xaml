@@ -16,7 +16,7 @@
             <TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="NoWrap"  FontWeight="Bold" FontSize="21" Text="Receipt"  VerticalAlignment="Top"  Margin="364,10,0,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="19" Margin="114,51,0,0" VerticalAlignment="Top" Width="552">
                 <StackPanel Width="150" Orientation="Horizontal">
-                    <TextBlock FontWeight="Black" >Customer name</TextBlock>
+                    <TextBlock FontWeight="Black" > Customer name</TextBlock>
                     <TextBlock Margin="10,0" Text="{Binding CustomerName}"></TextBlock>
                 </StackPanel>
                 <StackPanel Width="130" Orientation="Horizontal">

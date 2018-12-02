@@ -3,10 +3,10 @@ using Crm.Client.BL;
 using Crm.Client.Helpers;
 using Crm.Client.Utils;
 using Crm.Client.Views;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using OfficeOpenXml;
+using PdfSharp;
+using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 using WPFCustomMessageBox;
 
 namespace Crm.Client.ViewModels
@@ -61,7 +62,7 @@ namespace Crm.Client.ViewModels
                 _navigationService.NavigateTo("Login");
             });
             ExportCommand = new RelayCommand(ExportReceipt);
-            Receipts = new ObservableCollection<LineReceiptDTO>() { new LineReceiptDTO() { LeftSms = 1 ,LeftMinutes = TimeSpan.FromSeconds(2000)} };
+            Receipts = new ObservableCollection<LineReceiptDTO>() { new LineReceiptDTO() { LeftSms = 1, LeftMinutes = TimeSpan.FromSeconds(2000) } };
             //Receipts[0].LeftMinutes.TotalMinutes.ToString().Substring(0,2);
         }
 
@@ -83,7 +84,7 @@ namespace Crm.Client.ViewModels
 
         }
 
-        private  void WriteToExcel()
+        private void WriteToExcel()
         {
             using (ExcelPackage excelPackage = new ExcelPackage())
             {
@@ -104,21 +105,26 @@ namespace Crm.Client.ViewModels
             }
         }
 
-        private static void WriteToPdf()
+        private void WriteToPdf()
         {
             SaveFileDialog sfd = new SaveFileDialog() { Filter = "PDF file|*.pdf", ValidateNames = true };
             if (sfd.ShowDialog() == true)
             {
-                iTextSharp.text.Document document = new iTextSharp.text.Document(PageSize.A4.Rotate());
                 try
                 {
-                    PdfWriter.GetInstance(document, new FileStream(sfd.FileName, FileMode.Create));
-                    document.Open();
-                    document.Add(new iTextSharp.text.Paragraph("lalalalalalal"));
+                    string html = "<!DOCTYPE html><html lang='en'> <head> <meta charset='UTF-8' /> <meta name='viewport' content='width=device-width, initial-scale=1.0' /> <meta http-equiv='X-UA-Compatible' content='ie=edge' /> <title>Document</title> </head> <body> <header> <h1 style='text-align: center'>Customer Name: 0</h1> <h2 style='text-align: center'>Year: 2001 ,month: 12</h2> <h3 style='text-align: center'>Total price: 100</h3> </header> <table style='width:100%'>";
+                    for (int i = 0; i < Receipts.Count; i++)
+                    {
+                        html += $@"<tr> <th colspan='3'><h2>Line Number: 10000</h2></th> </tr> <tr> <td><h2>line info</h2></td> </tr> <tr> <td> <div><b>Amount of minute you used: </b>0 |</div> </td> <td> <div><b>Amount of sms you used:</b>0 |</div> </td> <td> <div><b>Total line price:</b>0</div> </td> </tr> <tr> <td><h2>Package info</h2></td> </tr> <tr> <td> <div><b>Minute: </b>0</div> </td> <td> <div><b>Minute left in package:</b>0</div> </td> <td> <div><b>Package % usage:</b>0</div> </td> </tr> <tr> <td> <div><b>Sms: </b>0</div> </td> <td> <div><b>Sms left in package:</b>0</div> </td> <td> <div><b>Package % usage:</b>0</div> </td> </tr> <tr> <td> <div><b>Package price:</b>0</div> </td> </tr> <hr /> <tr> <td><h2>Out of package</h2></td> </tr> <tr> <td> <div><b>Minute beyond package limit: </b>0</div> </td> <td> <div><b>Price per minute:</b>0</div> </td> <td> <div><b>Total:</b>0</div> </td> </tr> <tr> <td> <div><b>Sms beyond package limit: </b>0</div> </td> <td> <div><b>Price per sms:</b>0</div> </td> <td> <div><b>Total:</b>0</div> </td> </tr> </table> <hr /> ";
+                    }
+                    html += "</body></html>";
+
+                    PdfDocument pdf = PdfGenerator.GeneratePdf(html, PageSize.A4);
+                    pdf.Save(sfd.FileName);
                 }
-                finally
+                catch (Exception e)
                 {
-                    document.Close();
+                    throw;
                 }
 
             }
@@ -132,10 +138,11 @@ namespace Crm.Client.ViewModels
                 MessageBox.Show(error);
                 return;
             }
-            if (_receiptsManager.GetReceipt(CustomerId,SelectedYear,SelectedMonth))
+            if (_receiptsManager.GetReceipt(CustomerId, SelectedYear, SelectedMonth))
             {
                 Receipts = new ObservableCollection<LineReceiptDTO>(_receiptsManager._receipts);
-                TotalPayment = Receipts.Sum(x => x.PackagePrice);
+                TotalPayment = Receipts.Sum(x => x.LineTotalPrice);
+                CustomerName = Receipts.Last().CustomerName;
                 _navigationService.NavigateTo("Receipts");
             }
         }
