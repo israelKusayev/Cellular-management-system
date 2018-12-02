@@ -9,6 +9,6 @@ namespace Common.Interfaces.ServerManagersInterfaces
 {
     public interface ISimulatorManager
     {
-        void SimulateCallsOrSms(SimulateDTO simulateDTO);
+        bool SimulateCallsOrSms(SimulateDTO simulateDTO);
     }
 }

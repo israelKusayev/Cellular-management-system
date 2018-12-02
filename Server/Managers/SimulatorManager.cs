@@ -29,7 +29,7 @@ namespace Server.Managers
             _destinationRand = new Random();
         }
 
-        public void SimulateCallsOrSms(SimulateDTO simulateDTO)
+        public bool SimulateCallsOrSms(SimulateDTO simulateDTO)
         {
             Customer selectedCustomer;
             Line selectedLine;
@@ -62,6 +62,7 @@ namespace Server.Managers
                     string destination = destinationNumbers[_destinationRand.Next(destinationNumbers.Count)];
                     AddSms(simulateDTO.LineId, destination);
                 }
+                return true;
             }
             else
             {
@@ -72,6 +73,7 @@ namespace Server.Managers
                     int douration = _durationRand.Next(simulateDTO.MinDuration, simulateDTO.MaxDuration + 1);
                     AddCall(simulateDTO.LineId, destination, douration);
                 }
+                return true;
             }
         }
 

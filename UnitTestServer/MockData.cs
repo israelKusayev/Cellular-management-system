@@ -44,10 +44,25 @@ namespace UnitTestServer
             };
             return customers;
         }
+        public Customer GetCustomerWithLinesAndPackage()
+        {
+            Customer customer = GetCustomer();
+            foreach (var item in customer.Lines)
+            {
+                item.Package = GetCustomPackage();
+            }
+            return customer;
+        }
 
         public Line GetLine()
         {
             return new Line() { LineId = 1, LineNumber = "1234567", CreatedDate = DateTime.Now, Status = Common.Enums.LineStatus.Used };
+        }
+        public Line GetLineWithPackageAndFriend()
+        {
+            Line line = GetLine();
+            line.Package = GetCustomPackage();
+            return line;
         }
         public List<Line> GetLines(int uniqueParamater)
         {
@@ -55,7 +70,7 @@ namespace UnitTestServer
             {
                 new Line(){LineId=1+uniqueParamater,LineNumber ="1234567"+uniqueParamater.ToString(),CreatedDate = DateTime.Now,Status = Common.Enums.LineStatus.Used},
                 new Line(){LineId=2+uniqueParamater,LineNumber ="1234568"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-1),Status = Common.Enums.LineStatus.Used},
-                new Line(){LineId=3+uniqueParamater,LineNumber ="1234569"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-2),Status = Common.Enums.LineStatus.Used},
+                new Line(){LineId=3+uniqueParamater,LineNumber ="1234569"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-2),Status = Common.Enums.LineStatus.Removed},
             };
         }
 
