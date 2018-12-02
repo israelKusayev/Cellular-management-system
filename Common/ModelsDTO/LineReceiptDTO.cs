@@ -17,7 +17,7 @@ namespace Common.ModelsDTO
             PackagePrice = payment.PackagePrice;
             PackageMinute = payment.PackageMinute;
             PackageSms = payment.PackageSms;
-            UsageCall = payment.UsageCall;
+            UsageCall = payment.UsageCall / 60;
             UsageSms = payment.UsageSms;
             CustomerType = payment.CustomerType;
             SmsBeyondPackageLimit = payment.SmsBeyondPackageLimit;
@@ -30,7 +30,7 @@ namespace Common.ModelsDTO
         public string LineNumber { get; set; }
 
         public TimeSpan LeftMinutes { get; set; }
-        public int LeftSms { get; set; }
+        public double LeftSms { get; set; }
 
         public int MinutesUsagePrecent { get; set; }
         public int SmsUsagePrecent { get; set; }

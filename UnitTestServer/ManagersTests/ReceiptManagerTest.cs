@@ -8,6 +8,7 @@ using Common.RepositoryInterfaces;
 using Moq;
 using Server.Managers;
 using Common.Models;
+using Common.Enums;
 
 namespace UnitTestServer.ManagersTests
 {
@@ -19,24 +20,17 @@ namespace UnitTestServer.ManagersTests
         ReceiptManager _manager;
 
         [TestMethod]
-        public void GeneratePaymentsToAllLines_ChangeFriendsToNull_ReturnReceiptDTO()
+        public void GeneratePaymentsToAllLines_CreatePaymentsforAllCustomerLines_ReturnListOfPayments()
         {
             //arrange
-            Package package = _data.GetCustomPackage();
-
-            var lines = _data.GetLines(1);
-            foreach (var item in lines)
-            {
-                item.Package = _data.GetCustomPackage();
-            }
-
-            _mock.Setup(s => s.Line.GetAllLinesWithAllEntities())
-                .Returns(_data.GetLines(1));
-
+            var lines = _data.GetAllLinesWithPackageAndFriend();
             var customer = _data.GetCustomer();
-            customer.CustomerType
+            customer.CustomerType = _data.GetCustomerType(CustomerTypeEnum.Private);
+            _mock.Setup(s => s.Line.GetAllLinesWithAllEntities())
+                .Returns(lines);
+
             _mock.Setup(s => s.Customer.GetCustomerWithTypeAndLines(It.IsAny<int>()))
-               .Returns();
+               .Returns(customer);
 
             _manager = new ReceiptManager(_mock.Object);
 
@@ -44,7 +38,7 @@ namespace UnitTestServer.ManagersTests
             var res = _manager.GeneratePaymentsToAllLines(DateTime.Now);
 
             //assert
-            Assert.IsNotNull(res);
+            Assert.AreEqual(3, res.Count);
         }
     }
 }

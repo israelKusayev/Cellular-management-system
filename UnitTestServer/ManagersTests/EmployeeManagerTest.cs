@@ -36,8 +36,5 @@ namespace UnitTestServer.ManagersTests
             Assert.AreEqual("israel", res.UserName);
             Assert.AreEqual("1", res.Password);
         }
-
-
-
     }
 }
