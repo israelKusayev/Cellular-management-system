@@ -14,10 +14,12 @@ namespace Server.Controllers.CrmControllers
     public class CustomerController : ApiController, ICustomerApi
     {
         private ICustomerManager _customerManager;
+
         public CustomerController(ICustomerManager customerManager)
         {
             _customerManager = customerManager;
         }
+
         [HttpGet]
         [Route("api/crm/customer/{idCard}")]
         public IHttpActionResult GetCustomer(string idCard)

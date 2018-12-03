@@ -24,7 +24,7 @@ namespace Server.Managers
         public SimulatorManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _logger = new LoggerManager(new FileLogger(), "simulatorDal.txt");
+            _logger = new LoggerManager(new FileLogger(), "simulatorManager.txt");
             _durationRand = new Random();
             _destinationRand = new Random();
         }

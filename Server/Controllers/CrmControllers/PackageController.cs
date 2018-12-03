@@ -41,7 +41,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not find template packages"));
             }
-        } //v
+        } 
 
         [HttpGet]
         [Route("api/crm/package/{lineId}")]
@@ -65,7 +65,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not find any packages for this line"));
             }
-        } //v
+        } 
 
         [HttpPost]
         [Route("api/crm/package/{lineId}")]
@@ -95,7 +95,7 @@ namespace Server.Controllers.CrmControllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not add the package"));
             }
 
-        } //v
+        } 
 
         [HttpPut]
         [Route("api/crm/package/{packageId}/{lineId}")]
@@ -149,7 +149,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we could not remove the package"));
             }
-        } //v
+        } 
 
         //---------------//
 
@@ -180,7 +180,7 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not add friends, please try again"));
             }
-        } //v
+        } 
 
         [HttpPut]
         [Route("api/crm/package/friends/{PackageId}")]
@@ -209,6 +209,6 @@ namespace Server.Controllers.CrmControllers
             //{
             //    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "We could not edit your friends, please try again"));
             //}
-        } //v
+        } 
     }
 }

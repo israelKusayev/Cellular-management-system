@@ -1,5 +1,6 @@
 ﻿using Common.Interfaces.ServerManagersInterfaces;
 using Common.ModelsDTO;
+using Server.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,12 @@ using System.Web.Http;
 
 namespace Server.Controllers
 {
-    public class ReceiptController : ApiController
+    public class ReceiptController : ApiController , IReceiptApi
     {
         IReceiptManager _receiptManager;
         public ReceiptController(IReceiptManager receiptManager)
         {
             _receiptManager = receiptManager;
-
         }
 
         [HttpGet]
@@ -54,7 +54,6 @@ namespace Server.Controllers
 
             }
         }
-
 
     }
 }
