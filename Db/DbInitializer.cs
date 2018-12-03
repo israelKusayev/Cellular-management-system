@@ -17,9 +17,10 @@ namespace Db
             {
                 List<Employee> emplyees = new List<Employee>()
                 {
-                new Employee() { UserName = "israel", Password = "1" },
-                new Employee() { UserName = "shay", Password = "1" },
-                new Employee() { UserName = "levi", Password = "1" }
+                new Employee() { UserName = "israel", Password = "1", IsManager = false},
+                new Employee() { UserName = "shay", Password = "1", IsManager = false },
+                new Employee() { UserName = "levi", Password = "1" , IsManager = false},
+                new Employee() { UserName = "admin", Password = "admin" , IsManager = true}
                 };
 
                 List<Package> packages = new List<Package>()

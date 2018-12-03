@@ -20,7 +20,7 @@ namespace Server.Managers
         public ReceiptManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _logger = new LoggerManager(new FileLogger(), "invoiceDal.txt");
+            _logger = new LoggerManager(new FileLogger(), "receiptManager.txt");
         }
 
 

@@ -129,6 +129,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BiController.cs" />
     <Compile Include="Controllers\CrmControllers\EmployeeController.cs" />
     <Compile Include="Controllers\CrmControllers\LineController.cs" />
     <Compile Include="Controllers\CrmControllers\CustomerController.cs" />
@@ -138,11 +139,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IBiApi.cs" />
     <Compile Include="Interfaces\ICustomerApi.cs" />
     <Compile Include="Interfaces\ILineApi.cs" />
     <Compile Include="Interfaces\IEmployeeLoginApi.cs" />
     <Compile Include="Interfaces\IPackageApi.cs" />
+    <Compile Include="Interfaces\IReceiptApi.cs" />
     <Compile Include="Interfaces\ISimulatorApi.cs" />
+    <Compile Include="Managers\BiManager.cs" />
     <Compile Include="Managers\CustomerManager.cs" />
     <Compile Include="Managers\EmployeeManager.cs" />
     <Compile Include="Managers\LineManager.cs" />

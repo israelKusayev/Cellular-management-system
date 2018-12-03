@@ -20,7 +20,7 @@ namespace Server.Managers
         private IUnitOfWork _unitOfWork;
         public CustomerManager(IUnitOfWork unitOfWork)
         { 
-            _logger = new LoggerManager(new FileLogger(), "customerDal.txt");
+            _logger = new LoggerManager(new FileLogger(), "customerManager.txt");
             _unitOfWork = unitOfWork;
         }
 

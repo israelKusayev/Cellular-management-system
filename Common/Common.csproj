@@ -62,6 +62,7 @@
     <Compile Include="Exceptions\FoundLineExeption.cs" />
     <Compile Include="Exceptions\IncorrectExeption.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\IBiManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\ICustomerManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\IEmployeeManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\ILineManager.cs" />
