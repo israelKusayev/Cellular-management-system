@@ -5,6 +5,7 @@ using Crm.Client.Utils;
 using Crm.Client.Views;
 using Microsoft.Win32;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using PdfSharp;
 using PdfSharp.Pdf;
 using System;
@@ -89,10 +90,47 @@ namespace Crm.Client.ViewModels
             using (ExcelPackage excelPackage = new ExcelPackage())
             {
                 //create a new Worksheet
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
+                
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Receipt");
+                worksheet.Column(1).Width = 40;
+                worksheet.Column(3).Width = 15;
+                worksheet.Column(3).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Row(1).Style.Font.Bold = true;
+                worksheet.Row(1).Style.Font.UnderLine = true;
+                worksheet.Row(2).Style.Font.Bold = true;
+                worksheet.Row(3).Style.Font.Bold = true;
+                worksheet.Cells["A1"].Value = "Customer name";
+                worksheet.Cells["C1"].Value = CustomerName;
+                worksheet.Cells["A2"].Value = "Date";
+                worksheet.Cells["C2"].Value = SelectedMonth + "/" + SelectedYear;
+                worksheet.Cells["A3"].Value = "Total price";
+                worksheet.Cells["C3"].Value = TotalPayment;
+                for (int i = 0, j = 5; i < Receipts.Count; i++, j += 12)
+                {
+                    worksheet.Cells["A" +( 0 + j)].Value = "Line Number";
+                    worksheet.Cells["A" +( 0 + j)].Style.Font.Bold = true;
+                    worksheet.Cells["C" +( 0 + j)].Value = Receipts[i].LineNumber;
+                    worksheet.Cells["A" + (0 + j)].Style.Font.Bold = true;
 
-                //add some text to cell A1
-                worksheet.Cells["A1"].Value = "My second EPPlus spreadsheet!";
+                    worksheet.Cells["A" +( 1 + j)].Value = "Line info";
+                    worksheet.Cells["A" +( 2 + j)].Value = "Amout of minute you used";
+                    worksheet.Cells["C" +( 2 + j)].Value = Receipts[i].UsageCall;
+                    worksheet.Cells["A" +( 3 + j)].Value = "Amout of sms you used";
+                    worksheet.Cells["C" +( 3 + j)].Value = Receipts[i].UsageSms;
+                    worksheet.Cells["A" +( 4 + j)].Value = "Total line price";
+                    worksheet.Cells["C" + (4 + j)].Value = Receipts[i].LineTotalPrice;
+
+                    worksheet.Cells["A" + (6 + j)].Value = "Package info";
+                    worksheet.Cells["A" + (6 + j)].Style.Font.Bold = true;
+                    worksheet.Cells["A" + (7 + j)].Value = "Minute";
+                    worksheet.Cells["C" + (7 + j)].Value = Receipts[i].PackageMinute;
+                    worksheet.Cells["A" + (8 + j)].Value = "Sms";
+                    worksheet.Cells["C" + (8 + j)].Value = Receipts[i].PackageSms;
+                    worksheet.Cells["A" + (9 + j)].Value = "Package price";
+                    worksheet.Cells["C" + (9 + j)].Value = Receipts[i].PackagePrice;
+
+
+                }
                 //the path of the file
                 string filePath = @"C:\\Cellular\ExcelDemo.xlsx";
 

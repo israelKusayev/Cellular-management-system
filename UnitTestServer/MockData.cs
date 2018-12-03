@@ -89,9 +89,9 @@ namespace UnitTestServer
         {
             return new List<Package>
             {
-            new Package() {PackageId=1,PackageName="Soliders", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=100, MaxSms=1000, PriorityContact=false, TotalPrice=50},
-            new Package() {PackageId=2, PackageName="Moms", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=200, MaxSms=5000, PriorityContact=false, TotalPrice=150},
-            new Package() {PackageId=3, PackageName="SelaYahalom", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=300, MaxSms=10000, PriorityContact=false, TotalPrice=500},
+            new Package() {PackageId=1,PackageName="Soliders", IsPackageTemplate=true, InsideFamilyCalles=false,MaxMinute=100, MaxSms=1000, PriorityContact=false, TotalPrice=50},
+            new Package() {PackageId=2, PackageName="Moms", IsPackageTemplate=true, InsideFamilyCalles=false, MaxMinute=200, MaxSms=5000, PriorityContact=false, TotalPrice=150},
+            new Package() {PackageId=3, PackageName="SelaYahalom", IsPackageTemplate=true, InsideFamilyCalles=false, MaxMinute=300, MaxSms=10000, PriorityContact=false, TotalPrice=500},
             };
         }
         public Package GetPackageTemplate()
@@ -100,7 +100,7 @@ namespace UnitTestServer
         }
         public Package GetCustomPackage()
         {
-            return new Package() { PackageName = "Custom", IsPackageTemplate = false, InsideFamilyCalles = true, DiscountPrecentage = 0, MaxMinute = 100, MaxSms = 1000, PriorityContact = true, TotalPrice = 50, PackageId = 1, Friends = GetFriends() };
+            return new Package() { PackageName = "Custom", IsPackageTemplate = false, InsideFamilyCalles = true, MaxMinute = 100, MaxSms = 1000, PriorityContact = true, TotalPrice = 50, PackageId = 1, Friends = GetFriends() };
         }
 
         public Friends GetFriends()

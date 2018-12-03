@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Exeptions;
 using Common.Models;
 using Common.RepositoryInterfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,18 +21,17 @@ namespace UnitTestServer.ManagersTests
         CustomerManager _manager;
 
         [TestMethod]
-        public void AddNewCustomer_AddCustomer_ReturnCustomer()
+        [ExpectedException(typeof(AlreadyExistExeption))]  //assert
+        public void AddNewCustomer_AddExistsCustomer_ReturnCustomer()
         {
             //arrange
-            _mock.Setup(s => s.Customer.GetActiveCustomerByIdCard("1"))
-                .Returns(new Customer());
+           
+            _mock.Setup(s => s.Customer.GetActiveCustomerByIdCard(It.IsAny<string>()))
+               .Returns(new Customer());
             _manager = new CustomerManager(_mock.Object);
 
             //act
-            var res = _manager.AddNewCustomer(new Customer() { IdentityCard = "1" });
-
-            //assert
-            Assert.IsNotNull(res);
+             _manager.AddNewCustomer(new Customer() { IdentityCard = "1" });
         }
 
         [TestMethod]

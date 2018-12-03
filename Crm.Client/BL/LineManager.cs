@@ -28,36 +28,6 @@ namespace Crm.Client.BL
         }
 
         /// <summary>
-        ///  Get all package template for display them in the combo box
-        /// </summary>
-        /// <returns><list type="Package" </returns>
-        internal List<Package> GetPackageTemplates()
-        {
-            List<Package> packages = new List<Package>();
-            try
-            {
-                using (var http = new HttpClient())
-                {
-                    var result = http.GetAsync($"{_url}/crm/package").Result;
-                    if (result.IsSuccessStatusCode)
-                    {
-                        packages = result.Content.ReadAsAsync<List<Package>>().Result;
-                    }
-                    else
-                    {
-                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
-                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Application.Current.MainWindow, "Server error");
-            }
-            return packages;
-        }
-
-        /// <summary>
         /// get all user lines
         /// </summary>
         /// <param name="identityCard">Customer identity card</param>
@@ -90,41 +60,6 @@ namespace Crm.Client.BL
             {
                 MessageBox.Show(Application.Current.MainWindow, "Server error");
             }
-        }
-
-        internal ICollection<Line> GetCustomerLines()
-        {
-            return _customerLines;
-        }
-
-        /// <summary>
-        /// Get line package by line id
-        /// </summary>
-        /// <param name="lineId"> line id</param>
-        /// <returns>package if exists or null if not</returns>
-        internal Package GetLinePackage(int lineId)
-        {
-            try
-            {
-                using (var http = new HttpClient())
-                {
-                    var result = http.GetAsync($"{_url}/crm/package/{lineId}").Result;
-                    if (result.IsSuccessStatusCode)
-                    {
-                        return result.Content.ReadAsAsync<Package>().Result;
-                    }
-                    else
-                    {
-                        //string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
-                        //MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Application.Current.MainWindow, "Server error");
-            }
-            return null;
         }
 
         /// <summary>
@@ -160,6 +95,74 @@ namespace Crm.Client.BL
             }
             return false;
 
+        }
+
+        /// <summary>
+        /// Delete exists line
+        /// </summary>
+        /// <param name="lineNumber">Line number</param>
+        internal void DeleteLine(int lineId)
+        {
+            if (lineId > 0)
+            {
+                try
+                {
+                    using (var http = new HttpClient())
+                    {
+                        var result = http.DeleteAsync($"{_url}/crm/line/{lineId}").Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            _customerLines.Remove(_customerLines.SingleOrDefault(l => l.LineId == lineId));
+                            MessageBox.Show(Application.Current.MainWindow, "Line deleted successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                            MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(Application.Current.MainWindow, "Server error");
+                }
+            }
+        }
+
+
+        /// <summary>
+        ///  Add new package
+        /// </summary>
+        /// <param name="lineNumber">Line number</param>
+        /// <param name="newPackage">New package to add</param>
+        /// <returns>package if secceeded otherwise null</returns>
+        internal Package AddPackage(string lineNumber, Package newPackage)
+        {
+            int lineId = GetLineId(lineNumber);
+            if (lineId == 0) MessageBox.Show("something went wrong");
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    var result = http.PostAsJsonAsync($"{_url}/crm/package/{lineId}", newPackage).Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show(Application.Current.MainWindow, "Package added successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return result.Content.ReadAsAsync<Package>().Result;
+                    }
+                    else
+                    {
+                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(Application.Current.MainWindow, "Server error");
+            }
+            return null;
         }
 
         /// <summary>
@@ -200,30 +203,25 @@ namespace Crm.Client.BL
         }
 
         /// <summary>
-        ///  Add new package
+        /// Delete package in line
         /// </summary>
-        /// <param name="lineNumber">Line number</param>
-        /// <param name="newPackage">New package to add</param>
-        /// <returns>package if secceeded otherwise null</returns>
-        internal Package AddPackage(string lineNumber, Package newPackage)
+        /// <param name="lineId">Line id</param>
+        internal void DeletePackage(int lineId)
         {
-            int lineId = GetLineId(lineNumber);
-            if (lineId == 0) MessageBox.Show("something went wrong");
             try
             {
                 using (var http = new HttpClient())
                 {
-                    var result = http.PostAsJsonAsync($"{_url}/crm/package/{lineId}", newPackage).Result;
+                    var result = http.DeleteAsync($"{_url}/crm/package/{lineId}").Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        MessageBox.Show(Application.Current.MainWindow, "Package added successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                        return result.Content.ReadAsAsync<Package>().Result;
+                        //_customerLines.Remove(_customerLines.SingleOrDefault(l => l.LineId == lineId));
+                        MessageBox.Show(Application.Current.MainWindow, "Package deleted successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
                         string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
                         MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return null;
                     }
                 }
             }
@@ -231,8 +229,8 @@ namespace Crm.Client.BL
             {
                 MessageBox.Show(Application.Current.MainWindow, "Server error");
             }
-            return null;
         }
+
 
         /// <summary>
         ///  Add friends model to exists package
@@ -286,6 +284,37 @@ namespace Crm.Client.BL
             }
         }
 
+
+        /// <summary>
+        ///  Get all package template for display them in the combo box
+        /// </summary>
+        /// <returns><list type="Package" </returns>
+        internal List<Package> GetPackageTemplates()
+        {
+            List<Package> packages = new List<Package>();
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    var result = http.GetAsync($"{_url}/crm/package").Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        packages = result.Content.ReadAsAsync<List<Package>>().Result;
+                    }
+                    else
+                    {
+                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(Application.Current.MainWindow, "Server error");
+            }
+            return packages;
+        }
+
         /// <summary>
         ///  Get line number by line id
         /// </summary>
@@ -312,64 +341,42 @@ namespace Crm.Client.BL
         }
 
         /// <summary>
-        /// Delete exists line
+        /// Get customer lines
         /// </summary>
-        /// <param name="lineNumber">Line number</param>
-        internal void DeleteLine(int lineId)
+        /// <returns>Customer lines</returns>
+        internal ICollection<Line> GetCustomerLines()
         {
-            if (lineId > 0)
-            {
-                try
-                {
-                    using (var http = new HttpClient())
-                    {
-                        var result = http.DeleteAsync($"{_url}/crm/line/{lineId}").Result;
-                        if (result.IsSuccessStatusCode)
-                        {
-                            _customerLines.Remove(_customerLines.SingleOrDefault(l => l.LineId == lineId));
-                            MessageBox.Show(Application.Current.MainWindow, "Line deleted successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                        else
-                        {
-                            string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
-                            MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(Application.Current.MainWindow, "Server error");
-                }
-            }
+            return _customerLines;
         }
 
         /// <summary>
-        /// Delete package in line
+        /// Get line package by line id
         /// </summary>
-        /// <param name="lineId">Line id</param>
-        internal void DeletePackage(int lineId)
+        /// <param name="lineId"> line id</param>
+        /// <returns>package if exists or null if not</returns>
+        internal Package GetLinePackage(int lineId)
         {
             try
             {
                 using (var http = new HttpClient())
                 {
-                    var result = http.DeleteAsync($"{_url}/crm/package/{lineId}").Result;
+                    var result = http.GetAsync($"{_url}/crm/package/{lineId}").Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        //_customerLines.Remove(_customerLines.SingleOrDefault(l => l.LineId == lineId));
-                        MessageBox.Show(Application.Current.MainWindow, "Package deleted successfully", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return result.Content.ReadAsAsync<Package>().Result;
                     }
                     else
                     {
-                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
-                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        //string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                        //MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show(Application.Current.MainWindow, "Server error");
             }
+            return null;
         }
     }
 }

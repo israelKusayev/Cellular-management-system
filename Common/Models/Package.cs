@@ -24,7 +24,6 @@ namespace Common.Models
         public double TotalPrice { get; set; }
         public int MaxMinute { get; set; }
         public int MaxSms { get; set; }
-        public int DiscountPrecentage { get; set; }
         public bool PriorityContact { get; set; }
         public bool InsideFamilyCalles { get; set; }
         public bool IsPackageTemplate { get; set; }

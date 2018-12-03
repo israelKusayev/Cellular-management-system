@@ -283,16 +283,6 @@ namespace Crm.Client.ViewModels
         }
 
         /// <summary>
-        /// remove package from exists line
-        /// </summary>
-        private void RemovePackage()
-        {
-            _lineManager.DeletePackage(SelectedLine ?? -1);
-            SelectedPackage = null;
-            Clear();
-        }
-
-        /// <summary>
         /// Add Line to customer
         /// </summary>
         private void AddLine()
@@ -343,39 +333,6 @@ namespace Crm.Client.ViewModels
                     EditPackageToExistingLine();
                 }
                 CustomerLines = new ObservableCollection<Line>(_lineManager.GetCustomerLines());
-            }
-        }
-
-        private void EditPackageToExistingLine()
-        {
-            if (SelectedPackage != 0) // template package
-            {
-                _lineManager.EditPackage(Number, PackageTemplates.SingleOrDefault(p => p.PackageId == SelectedPackage));
-            }
-            else // custom package
-            {
-                string error = ValidateFields();
-                if (error != null)
-                {
-                    MessageBox.Show(error);
-                    return;
-                }
-                Package package = CreateCustomPackage();
-
-                Package newPackage = _lineManager.EditPackage(Number, package);
-                if (newPackage != null)
-                {
-                    Friends friends = CreatePackageFriends();
-
-                    if (newPackage.Friends != null)
-                    {
-                        _lineManager.EditFriends(newPackage.PackageId, Friends ? friends : null);
-                    }
-                    else if (Friends) // if the friends check box is true
-                    {
-                        _lineManager.AddFriends(newPackage.PackageId, friends);
-                    }
-                }
             }
         }
 
@@ -462,6 +419,52 @@ namespace Crm.Client.ViewModels
                 PriorityContact = PriorityContact,
             };
             return package;
+        }
+
+        /// <summary>
+        /// edit package to exists line
+        /// </summary>
+        private void EditPackageToExistingLine()
+        {
+            if (SelectedPackage != 0) // template package
+            {
+                _lineManager.EditPackage(Number, PackageTemplates.SingleOrDefault(p => p.PackageId == SelectedPackage));
+            }
+            else // custom package
+            {
+                string error = ValidateFields();
+                if (error != null)
+                {
+                    MessageBox.Show(error);
+                    return;
+                }
+                Package package = CreateCustomPackage();
+
+                Package newPackage = _lineManager.EditPackage(Number, package);
+                if (newPackage != null)
+                {
+                    Friends friends = CreatePackageFriends();
+
+                    if (newPackage.Friends != null)
+                    {
+                        _lineManager.EditFriends(newPackage.PackageId, Friends ? friends : null);
+                    }
+                    else if (Friends) // if the friends check box is true
+                    {
+                        _lineManager.AddFriends(newPackage.PackageId, friends);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// remove package from exists line
+        /// </summary>
+        private void RemovePackage()
+        {
+            _lineManager.DeletePackage(SelectedLine ?? -1);
+            SelectedPackage = null;
+            Clear();
         }
 
         /// <summary>

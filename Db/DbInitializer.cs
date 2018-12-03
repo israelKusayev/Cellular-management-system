@@ -24,9 +24,9 @@ namespace Db
 
                 List<Package> packages = new List<Package>()
                 {
-                new Package() {PackageName="Soliders", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=100, MaxSms=1000, PriorityContact=false, TotalPrice=50},
-                new Package() {PackageName="Moms", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=200, MaxSms=5000, PriorityContact=false, TotalPrice=150},
-                new Package() {PackageName="SelaYahalom", IsPackageTemplate=true, InsideFamilyCalles=false, DiscountPrecentage=0, MaxMinute=300, MaxSms=10000, PriorityContact=false, TotalPrice=500},
+                new Package() {PackageName="Soliders", IsPackageTemplate=true, InsideFamilyCalles=false,  MaxMinute=100, MaxSms=1000, PriorityContact=false, TotalPrice=50},
+                new Package() {PackageName="Moms", IsPackageTemplate=true, InsideFamilyCalles=false,  MaxMinute=200, MaxSms=5000, PriorityContact=false, TotalPrice=150},
+                new Package() {PackageName="SelaYahalom", IsPackageTemplate=true, InsideFamilyCalles=false,  MaxMinute=300, MaxSms=10000, PriorityContact=false, TotalPrice=500},
                 };
 
                 List<CustomerType> clientTypes = new List<CustomerType>()

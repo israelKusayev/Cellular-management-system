@@ -49,7 +49,6 @@ namespace Crm.Client.ViewModels
         private void GoToReceipts()
         {
             _navigationService.NavigateTo("ChooseReceipts");
-
         }
 
         private void GoToSimulator()

@@ -14,8 +14,6 @@ namespace Common.Models
         public int LineId { get; set; }
         public Line Line { get; set; }
 
-
-
         public double LineTotalPrice { get ; set ; }
         public DateTime Date { get ; set ; }
         public double PackagePrice { get ; set ; }
@@ -23,9 +21,9 @@ namespace Common.Models
         public int PackageSms { get ; set ; }
         public int UsageCall { get ; set ; }
         public int UsageSms { get ; set ; }
-        public CustomerType CustomerType { get ; set ; }
         public int MinutesBeyondPackageLimit { get; set; }
         public int SmsBeyondPackageLimit { get ; set; }
+        public CustomerType CustomerType { get ; set ; }
     }
 
 }
