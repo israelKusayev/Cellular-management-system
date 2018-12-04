@@ -13,6 +13,8 @@ namespace Server.Controllers
     public class ReceiptController : ApiController , IReceiptApi
     {
         IReceiptManager _receiptManager;
+
+        //ctor
         public ReceiptController(IReceiptManager receiptManager)
         {
             _receiptManager = receiptManager;
@@ -32,11 +34,11 @@ namespace Server.Controllers
         [Route("api/receipt/{idCard}/{year}/{month}")]
         public IHttpActionResult GetCustomerReceipt(string idCard, int year, int month)
         {
-            List<LineReceiptDTO> _lineReceipts;
+            List<LineReceiptDTO> lineReceipts;
             DateTime date = new DateTime(year, month, 1);
             try
             {
-                _lineReceipts = _receiptManager.GetCustomerReceipt(idCard, date);
+                lineReceipts = _receiptManager.GetCustomerReceipt(idCard, date);
 
             }
             catch (Exception)
@@ -44,9 +46,9 @@ namespace Server.Controllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
             }
 
-            if (_lineReceipts != null)
+            if (lineReceipts != null)
             {
-                return Ok(_lineReceipts);
+                return Ok(lineReceipts);
             }
             else
             {
@@ -54,6 +56,5 @@ namespace Server.Controllers
 
             }
         }
-
     }
 }

@@ -16,6 +16,7 @@ namespace Server.Controllers.CrmControllers
     {
         IEmployeeManager _employeeManager;
 
+        //ctor
         public EmployeeController(IEmployeeManager employeeManager)
         {
             _employeeManager = employeeManager;

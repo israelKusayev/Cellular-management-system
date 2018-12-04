@@ -18,6 +18,7 @@ namespace Server.Managers
         private IUnitOfWork _unitOfWork;
         LoggerManager _logger;
 
+        //ctor
         public PackageManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -25,6 +26,10 @@ namespace Server.Managers
 
         }
 
+        /// <summary>
+        /// Get package templates
+        /// </summary>
+        /// <returns>List of Structured packages if succeeded otherwise null</returns>
         public List<Package> GetPackageTemplates()
         {
             try
@@ -39,6 +44,11 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Get the package that matches the line
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <returns>package if succeeded otherwise null</returns>
         public Package GetPackage(int lineId)
         {
             try
@@ -58,6 +68,12 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Add new package to the requested line
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <param name="package">Package details</param>
+        /// <returns>Added package if succeeded otherwise null</returns>
         public Package AddPackageToLine(int lineId, Package package)
         {
             try
@@ -95,6 +111,11 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Remove package from the requested line
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <returns>Removed package if succeeded otherwise null</returns>
         public Package RemovePackageFromLine(int lineId)
         {
             try
@@ -118,6 +139,13 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Edit an existing package belongs to the requested line 
+        /// </summary>
+        /// <param name="packageId">Old package</param>
+        /// <param name="lineId">Line id</param>
+        /// <param name="newPackage">New package details</param>
+        /// <returns>Edited package  if succeeded otherwise null</returns>
         public Package EditPackage(int packageId, int lineId, Package newPackage)
         {
             Package package = null;
@@ -138,12 +166,9 @@ namespace Server.Managers
                     package = _unitOfWork.Package.GetPackageWithFriends(packageId);
                     if (package != null)
                     {
-                        if (package != null)
-                        {
                             newPackage.PackageId = package.PackageId;
                             _unitOfWork.Package.Edit(package, newPackage);
                             return _unitOfWork.Package.GetPackageWithFriends(package.PackageId);
-                        }
                     }
                     _unitOfWork.Complete();
 
@@ -157,6 +182,11 @@ namespace Server.Managers
             return package;
         }
 
+        /// <summary>
+        /// Remove a specific line from specific package template list
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <returns>True if succeeded otherwise false</returns>
         public bool RemoveLineFromTemplatePackage(int lineId)
         {
             try
@@ -181,6 +211,12 @@ namespace Server.Managers
             return false;
         }
 
+        /// <summary>
+        /// Add friend's phone numbers to an exsiting package
+        /// </summary>
+        /// <param name="packageId">Package id</param>
+        /// <param name="friendsToAdd">Friends phone numbers</param>
+        /// <returns>Added friends if succeeded otherwise null</returns>
         public Friends AddFriends(int packageId, Friends friendsToAdd)
         {
             Friends addedFriends = null;
@@ -205,6 +241,12 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Edit friend's phone numbers inside exsiting package
+        /// </summary>
+        /// <param name="packageId">Package id</param>
+        /// <param name="friendsToEdit">Friends phone numbers</param>
+        /// <returns>Edited friends if succeeded otherwise null</returns>
         public Friends EditFriends(int packageId, Friends friendsToEdit)
         {
             Package foundPackage = null;

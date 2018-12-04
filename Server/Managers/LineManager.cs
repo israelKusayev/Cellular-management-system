@@ -17,12 +17,19 @@ namespace Server.Managers
     {
         LoggerManager _logger;
         private IUnitOfWork _unitOfWork;
+
+        //ctor
         public LineManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "lineManager.txt");
         }
 
+        /// <summary>
+        /// Get active customer's lines
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <returns>Customer's lines if succeeded otherwise null</returns>
         public List<Line> GetCustomerLines(string idCard)
         {
             try
@@ -37,6 +44,12 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Add a new line to the customer
+        /// </summary>
+        /// <param name="lineToAdd">Line details</param>
+        /// <param name="customerId">Customer identity card</param>
+        /// <returns>>Added line if succeeded otherwise null</returns>
         public Line AddNewLine(Line lineToAdd, int customerId)
         {
             Line lineNumberExsists;
@@ -74,6 +87,11 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Transfer the customer line to the deactive status
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <returns></returns>
         public Line DeactivateLine(int lineId)
         {
             try

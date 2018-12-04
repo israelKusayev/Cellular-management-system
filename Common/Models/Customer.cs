@@ -20,7 +20,6 @@ namespace Common.Models
         public int CustomerTypeId { get; set; }
         public CustomerType CustomerType { get; set; }
 
-        //[Index(IsUnique = true)]
         public string IdentityCard { get; set; }
 
         public int EmplyeeId { get; set; }
@@ -34,5 +33,7 @@ namespace Common.Models
         public string ContactNumber { get; set; }
         public int CallsToCenter { get; set; }
         public bool IsActive { get; set; }
+        public DateTime JoinDate { get; set; }
+
     }
 }

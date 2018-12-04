@@ -17,13 +17,19 @@ namespace Server.Managers
     {
         private readonly IUnitOfWork _unitOfWork;
         readonly LoggerManager _logger;
+
+        //ctor
         public ReceiptManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "receiptManager.txt");
         }
 
-
+        /// <summary>
+        /// Summarizes and generates an invoice to all the active lines according to the requested date
+        /// </summary>
+        /// <param name="requstedTime">Requested month and year</param>
+        /// <returns>List of invoices if succeeded otherwise null</returns>
         public List<Payment> GeneratePaymentsToAllLines(DateTime requstedTime)
         {
             List<Line> allLines = _unitOfWork.Line.GetAllLinesWithAllEntities().ToList();
@@ -34,8 +40,8 @@ namespace Server.Managers
                     (line.RemovedDate.Value.Year == requstedTime.Year
                     && line.RemovedDate.Value.Month == requstedTime.Month))
                 {
-                    if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month))
-                    {
+                    if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month)) //Make sure that the current line does not have an existing invoice
+                    {//Generates an invoice according to line data
                         Payment newPayment = new Payment() { Date = requstedTime };
                         Customer customer = _unitOfWork.Customer.GetCustomerWithTypeAndLines(line.CustomerId);
                         newPayment.CustomerType = customer.CustomerType;
@@ -62,6 +68,12 @@ namespace Server.Managers
             return payments;
         }
 
+        /// <summary>
+        /// Produces an invoice for the customer according to all the lines in his possession
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <param name="date">Requested month and year</param>
+        /// <returns>List of customer line's receipts  if succeeded otherwise null</returns>
         public List<LineReceiptDTO> GetCustomerReceipt(string idCard, DateTime date)
         {
             List<LineReceiptDTO> receipts = new List<LineReceiptDTO>();
@@ -75,7 +87,7 @@ namespace Server.Managers
                 {
                     Payment linePayment = line.Payments.Where((p) => p.Date.Year == date.Year && p.Date.Month == date.Month).SingleOrDefault();
 
-                    if (linePayment != null)
+                    if (linePayment != null) //Create new receipt according to payment details
                     {
                         LineReceiptDTO newReceipt = new LineReceiptDTO(linePayment);
 
@@ -94,12 +106,18 @@ namespace Server.Managers
 
                         receipts.Add(newReceipt);
                     }
-
                 }
             }
             return receipts;
         }
 
+        /// <summary>
+        /// Calculates the amount payable for messages sent from the line
+        /// </summary>
+        /// <param name="customer">Owner of the line</param>
+        /// <param name="line">Line details</param>
+        /// <param name="newPayment">The invoice generated for the line</param>
+        /// <returns>The amount of payment for the messages for the requested month</returns>
         private double CalculateLineTotalSmsPrice(Customer customer, Line line, Payment newPayment)
         {
             if (line.Package != null)
@@ -118,9 +136,16 @@ namespace Server.Managers
             {
                 return newPayment.UsageSms * customer.CustomerType.SmsPrice;
             }
-
         }
 
+        /// <summary>
+        /// Calculate the amount to pay for total call's minutes at a specific line
+        /// </summary>
+        /// <param name="customer">Owner of the line</param>
+        /// <param name="line">Line details</param>
+        /// <param name="newPayment">The invoice generated for the line</param>
+        /// <param name="requstedTime">Requsted month and year</param>
+        /// <returns>The amount to be paid for the minutes in the requested month</returns>
         private double CalculateLineTotalMinutesPrice(Customer customer, Line line, Payment newPayment, DateTime requstedTime)
         {
             int friendsDuration = 0;
@@ -129,14 +154,14 @@ namespace Server.Managers
 
             if (line.Package != null)
             {
-                if (line.Package.MaxMinute != 0 && line.Package.MaxMinute < (newPayment.UsageCall / 60))
+                if (line.Package.MaxMinute != 0 && line.Package.MaxMinute < (newPayment.UsageCall / 60)) //Calculation of minutes outside the package
                 {
                     newPayment.MinutesBeyondPackageLimit = (newPayment.UsageCall / 60) - line.Package.MaxMinute;
                 }
 
                 if (newPayment.MinutesBeyondPackageLimit > 0)
                 {
-                    if (line.Package.Friends != null)
+                    if (line.Package.Friends != null) //Calculates the total call time in friend package
                     {
                         friendsDuration = line.Calls.Where((c) => c.DateOfCall.Year == requstedTime.Year
                                         && c.DateOfCall.Month == requstedTime.Month
@@ -148,7 +173,7 @@ namespace Server.Managers
                         friendsDuration = (int)(friendsDuration * (PackagePrices.FriendsNumbersPrecent / 100));
                     }
 
-                    if (line.Package.PriorityContact)
+                    if (line.Package.PriorityContact) ////Calculates the total call time in a Priority contact package
                     {
                         string PriorityContact = line.Calls.Where((c) => c.DateOfCall.Year == requstedTime.Year
                                                                   && c.DateOfCall.Month == requstedTime.Month)
@@ -161,7 +186,7 @@ namespace Server.Managers
                         PriorityContactDuration = (int)(PriorityContactDuration * (PackagePrices.PriorityContactPrecent / 100));
                     }
 
-                    if (line.Package.InsideFamilyCalles)
+                    if (line.Package.InsideFamilyCalles) //Calculates the total call time in family package
                     {
                         List<Line> familyLines = customer.Lines.Where((l) => l.LineNumber != line.LineNumber).ToList();
 
@@ -194,12 +219,24 @@ namespace Server.Managers
 
         }
 
+        /// <summary>
+        /// Get the number of minutes the line spoke during the requested month
+        /// </summary>
+        /// <param name="line">Line details</param>
+        /// <param name="requstedTime">Requested month and year</param>
+        /// <returns>The amount of minutes that the line spoke during the requested month</returns>
         private int GetTotalLineCallsDurationPerMonth(Line line, DateTime requstedTime)
         {
             return line.Calls.Where((c) => c.DateOfCall.Year == requstedTime.Year && c.DateOfCall.Month == requstedTime.Month)
                 .Sum(s => s.Duration);
         }
 
+        /// <summary>
+        /// Get the number of messages thet sent during the requested month
+        /// </summary>
+        /// <param name="line">Line id</param>
+        /// <param name="requstedTime">Requested month and year</param>
+        /// <returns>Number of messages sent this month</returns>
         private int GetTotalLineSmsPerMonth(Line line, DateTime requstedTime)
         {
             return line.Messages.Count((m) => m.DataOfMessage.Year == requstedTime.Year && m.DataOfMessage.Month == requstedTime.Month);

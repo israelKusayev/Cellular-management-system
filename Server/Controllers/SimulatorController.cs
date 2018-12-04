@@ -14,6 +14,8 @@ namespace Server.Controllers
     public class SimulatorController : ApiController, ISimulatorApi
     {
         ISimulatorManager _simulatorManager;
+
+        //ctor
         public SimulatorController(ISimulatorManager simulatorManager)
         {
             _simulatorManager = simulatorManager;

@@ -72,8 +72,12 @@
     <Compile Include="Logger\FileLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerManager.cs" />
+    <Compile Include="ModelsDTO\CustomerBiDTO.cs" />
+    <Compile Include="ModelsDTO\EmployeeBiDTO.cs" />
     <Compile Include="ModelsDTO\LineReceiptDTO.cs" />
     <Compile Include="ModelsDTO\LoginDTO.cs" />
+    <Compile Include="ModelsDTO\MostCallCustomerDTO.cs" />
+    <Compile Include="ModelsDTO\ProfitableCustomerDTO.cs" />
     <Compile Include="ModelsDTO\SimulateDTO.cs" />
     <Compile Include="Models\Call.cs" />
     <Compile Include="Models\Customer.cs" />

@@ -18,12 +18,18 @@ namespace Server.Managers
         private LoggerManager _logger;
         private IUnitOfWork _unitOfWork;
 
+        //ctor
         public BiManager(IUnitOfWork unitOfWork)
         {
             _logger = new LoggerManager(new FileLogger(), "biManager.txt");
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Check if employee of manager type details are valid for login to the system
+        /// </summary>
+        /// <param name="loginEmployee">Contains username and password</param>
+        /// <returns>Employee if succeeded otherwise null</returns>
         public Employee Login(LoginDTO loginEmployee)
         {
             Employee requstedEmployee = null;
@@ -53,6 +59,40 @@ namespace Server.Managers
             }
 
             return requstedEmployee;
+        }
+
+        public List<MostCallCustomerDTO> GetMostCallingToCenterCustomers()
+        {
+            List<Customer> customers;
+            List<MostCallCustomerDTO> customersDTO = null;
+
+            try
+            {
+                customers = _unitOfWork.Customer.GetMostCallToCenterCustomers(DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+            }
+
+            if (customers != null)
+                {
+                    customersDTO = new List<MostCallCustomerDTO>();
+
+                    foreach (var customer in customers)
+                    {
+                        MostCallCustomerDTO customerDTO = new MostCallCustomerDTO();
+                        customerDTO.FirstName = customer.FirstName;
+                        customerDTO.LastName = customer.LastName;
+                        customerDTO.IdentityCard = customer.IdentityCard;
+                        customerDTO.CallsToCenter = customer.CallsToCenter;
+                        customersDTO.Add(customerDTO);
+                    }
+
+                    _unitOfWork.Complete();
+            }
+            return customersDTO;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Server.Managers
         private Random _durationRand;
         private Random _destinationRand;
 
+        //ctor
         public SimulatorManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -29,6 +30,11 @@ namespace Server.Managers
             _destinationRand = new Random();
         }
 
+        /// <summary>
+        /// Simulate calls or sms to the specific line
+        /// </summary>
+        /// <param name="simulateDTO">Simulate detalis</param>
+        /// <returns>True if succeeded otherwise false</returns>
         public bool SimulateCallsOrSms(SimulateDTO simulateDTO)
         {
             Customer selectedCustomer;
@@ -77,6 +83,13 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Get the destination numbers according to the selected group of send to
+        /// </summary>
+        /// <param name="simulateDTO">Simulate details</param>
+        /// <param name="customer">Customer details</param>
+        /// <param name="line">Line details</param>
+        /// <returns>List of destination number if succeeded otherwise null</returns>
         private List<string> GetDestinationNumbers(SimulateDTO simulateDTO, Customer customer, Line line)
         {
             List<string> numbers = new List<string>();
@@ -99,7 +112,7 @@ namespace Server.Managers
                         return customer.Lines.Where((l) => l.LineNumber != line.LineNumber).Select((x) => x.LineNumber).ToList();
                     }
 
-                case SimulateSendTo.General:
+                case SimulateSendTo.General: //Get destination numbers without family and friends
                     {
                         simulateDTO.SendTo = SimulateSendTo.Family;
                         List<string> family = GetDestinationNumbers(simulateDTO, customer, line);
@@ -132,7 +145,7 @@ namespace Server.Managers
         }
 
         /// <summary>
-        /// Add sms
+        /// Create new Sms 
         /// </summary>
         /// <param name="from">sender</param>
         /// <param name="to">reciver</param>
@@ -156,6 +169,12 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Create new call
+        /// </summary>
+        /// <param name="from">sender</param>
+        /// <param name="to">Reciver</param>
+        /// <param name="duration">Call duration in seconds</param>
         private void AddCall(int from, string to, int duration)
         {
             try

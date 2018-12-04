@@ -19,12 +19,18 @@ namespace Server.Managers
         private IUnitOfWork _unitOfWork;
         LoggerManager _logger;
 
+        //ctor
         public EmployeeManager(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _logger = new LoggerManager(new FileLogger(), "employeeManager.txt");
         }
 
+        /// <summary>
+        /// Check if employee details are valid for login to the system
+        /// </summary>
+        /// <param name="loginEmployee">Contains username and password</param>
+        /// <returns>Employee if succeeded otherwise null</returns>
         public Employee Login(LoginDTO loginEmployee)
         {
             Employee requstedEmployee = null;

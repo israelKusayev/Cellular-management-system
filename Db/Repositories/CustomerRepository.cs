@@ -47,6 +47,13 @@ namespace Db.Repositories
             return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used).Select(p=>p.Package)).SingleOrDefault();
         }
 
+        public List<Customer> GetMostCallToCenterCustomers(DateTime requestedTime)
+        {
+            int month = requestedTime.Month;
+            int year = requestedTime.Year;
+            return CellularContext.CustomerTable.Where(c => c.JoinDate.Year == year && c.JoinDate.Month == month).OrderBy(c => c.CallsToCenter).Take(10).ToList();
+        }
+
         public CellularContext CellularContext
         {
             get { return Context as CellularContext; }

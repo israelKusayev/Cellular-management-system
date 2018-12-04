@@ -11,5 +11,6 @@ namespace Common.Interfaces.ServerManagersInterfaces
     public interface IBiManager
     {
         Employee Login(LoginDTO loginEmployee);
+        List<MostCallCustomerDTO> GetMostCallingToCenterCustomers();
     }
 }

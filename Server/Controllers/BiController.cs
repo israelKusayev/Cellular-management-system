@@ -16,6 +16,7 @@ namespace Server.Controllers
     {
         IBiManager _biManager;
 
+        //ctor
         public BiController(IBiManager biManager)
         {
             _biManager = biManager;
@@ -85,7 +86,25 @@ namespace Server.Controllers
         [Route("api/bi/mostCallingToCenterCustomers")]
         public IHttpActionResult GetMostCallingToCenterCustomers()
         {
-            throw new NotImplementedException();
+            List<Customer> customers;
+            try
+            {
+                customers = _biManager.GetMostCallingToCenterCustomers();
+
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (customers != null)
+            {
+                return Ok(customers);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate receipts for the requested customer"));
+            }
         }
 
         [HttpGet]
