@@ -61,6 +61,10 @@ namespace Server.Managers
             return requstedEmployee;
         }
 
+        /// <summary>
+        /// Get the customers who made the most calls to the service center
+        /// </summary>
+        /// <returns>List of most calling customer if succeeded otherwise null</returns>
         public List<MostCallCustomerDTO> GetMostCallingToCenterCustomers()
         {
             List<Customer> customers;
@@ -89,10 +93,38 @@ namespace Server.Managers
                         customerDTO.CallsToCenter = customer.CallsToCenter;
                         customersDTO.Add(customerDTO);
                     }
-
-                    _unitOfWork.Complete();
             }
             return customersDTO;
+        }
+
+        public List<EmployeeBiDTO> GetBestSellerEmployees()
+        {
+            List<Employee> employees;
+            List<EmployeeBiDTO> employeesDTO = null;
+
+            try
+            {
+                employees = _unitOfWork.Employee.GetBestSellerEmployees(DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+            }
+
+            if (employees != null)
+            {
+                employeesDTO = new List<EmployeeBiDTO>();
+
+                foreach (var employee in employees)
+                {
+                    EmployeeBiDTO employeeDTO = new EmployeeBiDTO();
+                    employeeDTO.UserName = employee.UserName;
+                    //employeeDTO.LastMonthSells ???
+                    employeesDTO.Add(employeeDTO);
+                }
+            }
+            return employeesDTO;
         }
     }
 }

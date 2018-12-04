@@ -11,7 +11,7 @@ namespace Server.Interfaces
     interface IBiApi
     {
         IHttpActionResult LoginManager(LoginDTO loginDTO);
-        IHttpActionResult GetMostprofitablecustomers(); //list<profilablrCustomerDTO> include first name last name id and profit
+        IHttpActionResult GetMostProfitableCustomers(); //list<profilablrCustomerDTO> include first name last name id and profit
         IHttpActionResult GetMostCallingToCenterCustomers();//list<customer>
         IHttpActionResult GetOpinionLeadersCustomers(); //list<customer>
         IHttpActionResult GetLinesAtRiskOfAbandonment();//list<customer>

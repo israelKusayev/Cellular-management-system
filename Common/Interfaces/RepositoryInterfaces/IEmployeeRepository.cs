@@ -10,5 +10,6 @@ namespace Common.RepositoryInterfaces
     public interface IEmployeeRepository
     {
         Employee GetEmployeeByUserName(string userName);
+        List<Employee> GetBestSellerEmployees(DateTime requestedDate);
     }
 }

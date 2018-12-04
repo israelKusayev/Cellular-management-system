@@ -23,7 +23,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/bi/login")]
+        [Route("api/bi/login")] //v
         public IHttpActionResult LoginManager(LoginDTO loginEmployee)
         {
             if (loginEmployee == null
@@ -65,7 +65,25 @@ namespace Server.Controllers
         [Route("api/bi/bestSellerEmployees")]
         public IHttpActionResult GetBestSellerEmployees()
         {
-            throw new NotImplementedException();
+            List<EmployeeBiDTO> employees;
+            try
+            {
+                employees = _biManager.GetBestSellerEmployees();
+
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (employees != null)
+            {
+                return Ok(employees);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate best seller employees report"));
+            }
         }
 
         [HttpGet]
@@ -83,10 +101,10 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/bi/mostCallingToCenterCustomers")]
+        [Route("api/bi/mostCallingToCenterCustomers")] //v
         public IHttpActionResult GetMostCallingToCenterCustomers()
         {
-            List<Customer> customers;
+            List<MostCallCustomerDTO> customers;
             try
             {
                 customers = _biManager.GetMostCallingToCenterCustomers();
@@ -103,13 +121,13 @@ namespace Server.Controllers
             }
             else
             {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate receipts for the requested customer"));
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate most calling to center customer report"));
             }
         }
 
         [HttpGet]
-        [Route("api/bi/mostprofitablecustomers")]
-        public IHttpActionResult GetMostprofitablecustomers()
+        [Route("api/bi/mostProfitableCustomers")]
+        public IHttpActionResult GetMostProfitableCustomers()
         {
             throw new NotImplementedException();
         }

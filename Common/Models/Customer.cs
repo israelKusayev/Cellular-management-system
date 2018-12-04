@@ -33,7 +33,8 @@ namespace Common.Models
         public string ContactNumber { get; set; }
         public int CallsToCenter { get; set; }
         public bool IsActive { get; set; }
-        public DateTime JoinDate { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime? JoinDate { get; set; }
 
     }
 }
