@@ -15,7 +15,7 @@
                 <DataGrid x:Name="dataGrid"  ItemsSource="{Binding CustomersOpinionLeaders}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
             </TabItem>
             <TabItem Header="Optional abendoment customers" >
-                <!--<DataGrid x:Name="dataGrid1" ItemsSource="{Binding Employees}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>-->
+                <DataGrid x:Name="dataGrid1" ItemsSource="{Binding DisconnectionRiskClient}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
             </TabItem>
             <TabItem Header="Most profitable customers" >
                 <DataGrid x:Name="dataGrid2" ItemsSource="{Binding ProfitableCustomers}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>

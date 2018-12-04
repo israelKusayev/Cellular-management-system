@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.ModelsDTO
 {
+    /// <summary>
+    /// Best sellers
+    /// </summary>
     public class EmployeeBiDTO
     {
         public string UserName { get; set; }
