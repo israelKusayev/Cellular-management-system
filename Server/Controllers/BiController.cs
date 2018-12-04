@@ -21,7 +21,7 @@ namespace Server.Controllers
             _biManager = biManager;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/bi/login")]
         public IHttpActionResult LoginManager(LoginDTO loginEmployee)
         {

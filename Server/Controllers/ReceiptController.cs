@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace Server.Controllers
 {
-    public class ReceiptController : ApiController , IReceiptApi
+    public class ReceiptController : ApiController, IReceiptApi
     {
         IReceiptManager _receiptManager;
         public ReceiptController(IReceiptManager receiptManager)
@@ -37,14 +37,13 @@ namespace Server.Controllers
             try
             {
                 _lineReceipts = _receiptManager.GetCustomerReceipt(idCard, date);
-
             }
             catch (Exception)
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
             }
 
-            if (_lineReceipts != null)
+            if (_lineReceipts != null && _lineReceipts.Count != 0)
             {
                 return Ok(_lineReceipts);
             }

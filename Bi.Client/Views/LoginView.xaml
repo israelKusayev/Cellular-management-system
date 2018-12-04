@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:gif="http://wpfanimatedgif.codeplex.com"
       xmlns:local="clr-namespace:Bi.Client.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -16,10 +17,11 @@
             <StackPanel>
                 <TextBox x:Name="username" Focusable="True" HorizontalAlignment="Left" Height="23" Margin="340,120,0,0" TextWrapping="Wrap"  Text="{Binding Username}" VerticalAlignment="Top" Width="120" ToolTip="Username"/>
             </StackPanel>
-            <TextBox Text="{Binding password}"  x:Name="password" HorizontalAlignment="Left" Height="23" Margin="340,209,0,0"  VerticalAlignment="Top" Width="120" ToolTip="Password"/>
+            <TextBox Text="{Binding Password}"  x:Name="password" HorizontalAlignment="Left" Height="23" Margin="340,209,0,0"  VerticalAlignment="Top" Width="120" ToolTip="Password"/>
             <Label x:Name="usernameLabel" Target="{Binding ElementName=username}" Content="Username" HorizontalAlignment="Left" Margin="373,89,0,0" VerticalAlignment="Top"/>
             <Label x:Name="passwordLabel" Target="{Binding ElementName=password}"  Content="Password" HorizontalAlignment="Left" Margin="373,181,0,0" VerticalAlignment="Top"/>
             <Button x:Name="button" Command="{Binding LoginCommand}" Content="Login" HorizontalAlignment="Left" Margin="362,276,0,0" VerticalAlignment="Top" Width="74" Background="#225367" Foreground="White" />
+            <Image gif:ImageBehavior.AnimatedSource="../Assets/loading_aqua.gif" Width="Auto" Height="Auto" Visibility="{Binding LoadingVisibility}" Margin="76,54,76,154"  />
         </Grid>
     </Grid>
         
