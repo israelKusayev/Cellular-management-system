@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace Server.Controllers
 {
-    public class ReceiptController : ApiController , IReceiptApi
+    public class ReceiptController : ApiController, IReceiptApi
     {
         IReceiptManager _receiptManager;
 

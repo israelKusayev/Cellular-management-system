@@ -64,7 +64,6 @@ namespace Crm.Client.ViewModels
             });
             ExportCommand = new RelayCommand(ExportReceipt);
             Receipts = new ObservableCollection<LineReceiptDTO>() { new LineReceiptDTO() { LeftSms = 1, LeftMinutes = TimeSpan.FromSeconds(2000) } };
-            //Receipts[0].LeftMinutes.TotalMinutes.ToString().Substring(0,2);
         }
 
         private void ExportReceipt()
@@ -85,12 +84,14 @@ namespace Crm.Client.ViewModels
 
         }
 
+        /// <summary>
+        /// Write receipt to excel file.
+        /// </summary>
         private void WriteToExcel()
         {
             using (ExcelPackage excelPackage = new ExcelPackage())
             {
-                //create a new Worksheet
-                
+
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Receipt");
                 worksheet.Column(1).Width = 40;
                 worksheet.Column(3).Width = 15;
@@ -105,51 +106,52 @@ namespace Crm.Client.ViewModels
                 worksheet.Cells["C2"].Value = SelectedMonth + "/" + SelectedYear;
                 worksheet.Cells["A3"].Value = "Total price";
                 worksheet.Cells["C3"].Value = TotalPayment;
-                for (int i = 0, j = 5; i < Receipts.Count; i++, j += 12)
+                for (int i = 0, j = 5; i < Receipts.Count; i++, j += 18)
                 {
-                    worksheet.Cells["A" +( 0 + j)].Value = "Line Number";
-                    worksheet.Cells["A" +( 0 + j)].Style.Font.Bold = true;
-                    worksheet.Cells["C" +( 0 + j)].Value = Receipts[i].LineNumber;
-                    worksheet.Cells["A" + (0 + j)].Style.Font.Bold = true;
+                    worksheet.Cells["A" + (1 + j)].Value = "Line info";
+                    worksheet.Cells["A" + (1 + j)].Style.Font.Bold = true;
+                    worksheet.Cells["A" + (2 + j)].Value = "Line Number";
+                    worksheet.Cells["C" + (2 + j)].Value = Receipts[i].LineNumber;
+                    worksheet.Cells["A" + (3 + j)].Value = "Amout of minute you used";
+                    worksheet.Cells["C" + (3 + j)].Value = Receipts[i].UsageCall;
+                    worksheet.Cells["A" + (4 + j)].Value = "Amout of sms you used";
+                    worksheet.Cells["C" + (4 + j)].Value = Receipts[i].UsageSms;
+                    worksheet.Cells["A" + (5 + j)].Value = "Total line price";
+                    worksheet.Cells["C" + (5 + j)].Value = Receipts[i].LineTotalPrice;
 
-                    worksheet.Cells["A" +( 1 + j)].Value = "Line info";
-                    worksheet.Cells["A" +( 2 + j)].Value = "Amout of minute you used";
-                    worksheet.Cells["C" +( 2 + j)].Value = Receipts[i].UsageCall;
-                    worksheet.Cells["A" +( 3 + j)].Value = "Amout of sms you used";
-                    worksheet.Cells["C" +( 3 + j)].Value = Receipts[i].UsageSms;
-                    worksheet.Cells["A" +( 4 + j)].Value = "Total line price";
-                    worksheet.Cells["C" + (4 + j)].Value = Receipts[i].LineTotalPrice;
+                    worksheet.Cells["A" + (7 + j)].Value = "Package info";
+                    worksheet.Cells["A" + (7 + j)].Style.Font.Bold = true;
+                    worksheet.Cells["A" + (8 + j)].Value = "Minute";
+                    worksheet.Cells["C" + (8 + j)].Value = Receipts[i].PackageMinute;
+                    worksheet.Cells["A" + (9 + j)].Value = "Sms";
+                    worksheet.Cells["C" + (9 + j)].Value = Receipts[i].PackageSms;
+                    worksheet.Cells["A" + (10 + j)].Value = "Package price";
+                    worksheet.Cells["C" + (10 + j)].Value = Receipts[i].PackagePrice;
 
-                    worksheet.Cells["A" + (6 + j)].Value = "Package info";
-                    worksheet.Cells["A" + (6 + j)].Style.Font.Bold = true;
-                    worksheet.Cells["A" + (7 + j)].Value = "Minute";
-                    worksheet.Cells["C" + (7 + j)].Value = Receipts[i].PackageMinute;
-                    worksheet.Cells["A" + (8 + j)].Value = "Sms";
-                    worksheet.Cells["C" + (8 + j)].Value = Receipts[i].PackageSms;
-                    worksheet.Cells["A" + (9 + j)].Value = "Package price";
-                    worksheet.Cells["C" + (9 + j)].Value = Receipts[i].PackagePrice;
-
-
+                    worksheet.Cells["A" + (12 + j)].Value = "Out of package ";
+                    worksheet.Cells["A" + (12 + j)].Style.Font.Bold = true;
+                    worksheet.Cells["A" + (13 + j)].Value = "Minute beyond package limit";
+                    worksheet.Cells["C" + (13 + j)].Value = Receipts[i].MinutesBeyondPackageLimit.TotalMinutes;
+                    worksheet.Cells["A" + (14 + j)].Value = "Sms beyond package limit";
+                    worksheet.Cells["C" + (14 + j)].Value = Receipts[i].SmsBeyondPackageLimit;
                 }
-                //the path of the file
-                string filePath = @"C:\\Cellular\ExcelDemo.xlsx";
-
-                //or if you use asp.net, get the relative path
-                //filePath = Server.MapPath("ExcelDemo.xlsx");
-
-                //Write the file to the disk
-                FileInfo fi = new FileInfo(filePath);
-                excelPackage.SaveAs(fi);
+                SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel file|*.xlsx", ValidateNames = true };
+                if (sfd.ShowDialog() == true)
+                {
+                    FileInfo fi = new FileInfo(sfd.FileName);
+                    excelPackage.SaveAs(fi);
+                }
             }
         }
 
+        /// <summary>
+        /// Write receipt to excel file.
+        /// </summary>
         private void WriteToPdf()
         {
             SaveFileDialog sfd = new SaveFileDialog() { Filter = "PDF file|*.pdf", ValidateNames = true };
             if (sfd.ShowDialog() == true)
             {
-                try
-                {
                     string html = "<!DOCTYPE html><html lang='en'> <head> <meta charset='UTF-8' /> <meta name='viewport' content='width=device-width, initial-scale=1.0' /> <meta http-equiv='X-UA-Compatible' content='ie=edge' /> <title>Document</title> </head> <body> <header> <h1 style='text-align: center'>Customer Name: 0</h1> <h2 style='text-align: center'>Year: 2001 ,month: 12</h2> <h3 style='text-align: center'>Total price: 100</h3> </header> <table style='width:100%'>";
                     for (int i = 0; i < Receipts.Count; i++)
                     {
@@ -159,12 +161,6 @@ namespace Crm.Client.ViewModels
 
                     PdfDocument pdf = PdfGenerator.GeneratePdf(html, PageSize.A4);
                     pdf.Save(sfd.FileName);
-                }
-                catch (Exception e)
-                {
-                    throw;
-                }
-
             }
         }
 

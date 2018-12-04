@@ -10,6 +10,28 @@
       DataContext="{Binding Path=ReportsViewModel, Source={StaticResource Locator}}">
 
     <Grid>
-        
+        <TabControl>
+            <TabItem Header="Customer opinion leaders">
+                <DataGrid x:Name="dataGrid"  ItemsSource="{Binding CustomersOpinionLeaders}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
+            </TabItem>
+            <TabItem Header="Optional abendoment customers" >
+                <!--<DataGrid x:Name="dataGrid1" ItemsSource="{Binding Employees}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>-->
+            </TabItem>
+            <TabItem Header="Most profitable customers" >
+                <DataGrid x:Name="dataGrid2" ItemsSource="{Binding ProfitableCustomers}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
+            </TabItem>
+            <TabItem Header="Most calling to center">
+                <DataGrid x:Name="dataGrid3"  ItemsSource="{Binding MostCallCustomes}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
+            </TabItem >
+            <TabItem Header="Best sellers">
+                <DataGrid x:Name="dataGrid4"  ItemsSource="{Binding BestSellers}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
+            </TabItem>
+            <TabItem Header="Groops">
+                <!--<DataGrid x:Name="dataGrid5"  ItemsSource="{Binding MostCallCustomes}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>-->
+            </TabItem>
+        </TabControl>
+
+
+
     </Grid>
 </Page>

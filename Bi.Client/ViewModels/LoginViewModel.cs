@@ -1,44 +1,71 @@
-﻿using Bi.Client.Halpers;
+﻿using Bi.Client.BL;
+using Bi.Client.Halpers;
+using Bi.Client.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Bi.Client.ViewModels
 {
     public class LoginViewModel : ViewModelPropertyChanged
     {
-        private IFrameNavigationService _frameNavigationService;
+        private readonly IFrameNavigationService _navigationService;
+        private readonly LoginManager _loginManager;
 
-        public LoginViewModel(IFrameNavigationService frameNavigationService)
-        {
-            _frameNavigationService = frameNavigationService;
-        }
-        private string _username;
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public ICommand LoginCommand { get; set; }
 
-        public string Username
+        private Visibility _loadingVisibility;
+        public Visibility LoadingVisibility
         {
-            get { return _username; }
+            get { return _loadingVisibility; }
             set
             {
-                _username = value;
+                _loadingVisibility = value;
                 OnPropertyChanged();
             }
         }
 
-
-        private string _password;
-
-        public string Password
+        public LoginViewModel(IFrameNavigationService navigationService)
         {
-            get { return _password; }
-            set
-            {
-                _password = value;
-                OnPropertyChanged();
-            }
+            _navigationService = navigationService;
+            _loginManager = new LoginManager();
+            LoginCommand = new RelayCommand(Login);
+            LoadingVisibility = Visibility.Collapsed;
         }
 
+        private bool CanLogin()
+        {
+            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private async void Login()
+        {
+            _navigationService.NavigateTo("Reports");
+
+            //if (!CanLogin())
+            //{
+            //    MessageBox.Show("All fields are required.");
+            //    return;
+            //}
+            //LoadingVisibility = Visibility.Visible;
+
+            //if (await _loginManager.Login(Username, Password))
+            //{
+            //    ViewModelLocator.UnRegisterLoginViewModel();
+            //    _navigationService.NavigateTo("Reports");
+            //}
+            //LoadingVisibility = Visibility.Collapsed;
+
+        }
     }
 }
