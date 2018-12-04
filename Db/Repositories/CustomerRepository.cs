@@ -51,7 +51,7 @@ namespace Db.Repositories
         {
             int month = requestedTime.Month;
             int year = requestedTime.Year;
-            return CellularContext.CustomerTable.Where(c => c.JoinDate.Year == year && c.JoinDate.Month == month).OrderBy(c => c.CallsToCenter).Take(10).ToList();
+            return CellularContext.CustomerTable.Where(c => c.JoinDate.Value.Year == year && c.JoinDate.Value.Month == month).OrderByDescending(c => c.CallsToCenter).Take(10).ToList();
         }
 
         public CellularContext CellularContext
