@@ -29,8 +29,11 @@ namespace Db.Repositories
 
         public List<Employee> GetBestSellerEmployees(DateTime requestedDate)
         {
-            List<Employee> e = CellularContext.EmplyeesTable.OrderByDescending(c => c.Customers.Where(x => x.JoinDate.Value.Year == requestedDate.Year && x.JoinDate.Value.Month == requestedDate.Month).Count()).ToList();
-            return e;
+            List<Employee> allEmployees = CellularContext.EmplyeesTable.IncludeFilter(c => c.Customers.Where(x=> x.JoinDate.Value.Year == requestedDate.Year && x.JoinDate.Value.Month == requestedDate.Month)).ToList();
+            List<Employee> employeesAfterOrderBy = allEmployees.OrderByDescending(c => c.Customers.Count).Take(10).ToList();
+            List<Employee> employeesAfterClean = employeesAfterOrderBy.Where(c => c.Customers.Count != 0).ToList();
+
+            return employeesAfterClean;
         }
     }
 }

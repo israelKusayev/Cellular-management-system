@@ -97,6 +97,10 @@ namespace Server.Managers
             return customersDTO;
         }
 
+        /// <summary>
+        /// Get the employees who have added the most customers
+        /// </summary>
+        /// <returns>List of best seller employees if succeeded otherwise null</returns>
         public List<EmployeeBiDTO> GetBestSellerEmployees()
         {
             List<Employee> employees;
@@ -120,11 +124,43 @@ namespace Server.Managers
                 {
                     EmployeeBiDTO employeeDTO = new EmployeeBiDTO();
                     employeeDTO.UserName = employee.UserName;
-                    //employeeDTO.LastMonthSells ???
+                    employeeDTO.LastMonthSells = employee.Customers.Count;
                     employeesDTO.Add(employeeDTO);
                 }
             }
             return employeesDTO;
+        }
+
+        public List<ProfitableCustomerDTO> GetMostProfitableCustomers()
+        {
+            List<Customer> customers;
+            List<ProfitableCustomerDTO> profitableCustomersDTO = null;
+
+            try
+            {
+                customers = _unitOfWork.Customer.GetMostProfitableCustomers();
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+            }
+
+            if (customers != null)
+            {
+                profitableCustomersDTO = new List<ProfitableCustomerDTO>();
+
+                foreach (var customer in customers)
+                {
+                    ProfitableCustomerDTO customerDTO = new ProfitableCustomerDTO();
+                    customerDTO.FirstName = customer.FirstName;
+                    customerDTO.LastName = customer.LastName;
+                    customerDTO.IdentityCard = customer.IdentityCard;
+                    //customerDTO.LastMonthProfit = customer.Lines.
+                    profitableCustomersDTO.Add(customerDTO);
+                }
+            }
+            return profitableCustomersDTO;
         }
     }
 }

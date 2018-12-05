@@ -44,7 +44,7 @@ namespace Db.Repositories
 
         public Customer GetActiveCustomerWithLinesAndPackages(string idCard)
         {
-            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used).Select(p=>p.Package)).SingleOrDefault();
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used).Select(p => p.Package)).SingleOrDefault();
         }
 
         public List<Customer> GetMostCallToCenterCustomers(DateTime requestedTime)
@@ -52,6 +52,14 @@ namespace Db.Repositories
             int month = requestedTime.Month;
             int year = requestedTime.Year;
             return CellularContext.CustomerTable.Where(c => c.JoinDate.Value.Year == year && c.JoinDate.Value.Month == month).OrderByDescending(c => c.CallsToCenter).Take(10).ToList();
+        }
+
+        public List<Customer> GetMostProfitableCustomers()
+        {
+            List<Customer> customers = CellularContext.CustomerTable.Include(l => l.Lines).Include(l => l.Lines.Select(x => x.Payments)).ToList();
+            List<Customer> mostProfitableCustomers = customers.OrderByDescending(x => x.Lines.Sum(q => q.Payments.Sum(w => w.LineTotalPrice)) / x.Lines.Sum(a=>a.Payments.Count)).Take(10).ToList();
+
+            return mostProfitableCustomers;
         }
 
         public CellularContext CellularContext

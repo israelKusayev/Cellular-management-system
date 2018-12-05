@@ -62,7 +62,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/bi/bestSellerEmployees")]
+        [Route("api/bi/bestSellerEmployees")] //v
         public IHttpActionResult GetBestSellerEmployees()
         {
             List<EmployeeBiDTO> employees;
@@ -129,7 +129,25 @@ namespace Server.Controllers
         [Route("api/bi/mostProfitableCustomers")]
         public IHttpActionResult GetMostProfitableCustomers()
         {
-            throw new NotImplementedException();
+            List<ProfitableCustomerDTO> customers;
+            try
+            {
+                customers = _biManager.GetMostProfitableCustomers();
+
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (customers != null)
+            {
+                return Ok(customers);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate most profitable customers report"));
+            }
         }
 
         [HttpGet]

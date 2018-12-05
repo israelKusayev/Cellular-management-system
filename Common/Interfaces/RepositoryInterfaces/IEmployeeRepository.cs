@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common.RepositoryInterfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository:IRepository<Employee>
     {
         Employee GetEmployeeByUserName(string userName);
         List<Employee> GetBestSellerEmployees(DateTime requestedDate);

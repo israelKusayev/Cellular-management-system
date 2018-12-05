@@ -13,5 +13,6 @@ namespace Common.Interfaces.ServerManagersInterfaces
         Employee Login(LoginDTO loginEmployee);
         List<MostCallCustomerDTO> GetMostCallingToCenterCustomers();
         List<EmployeeBiDTO> GetBestSellerEmployees();
+        List<ProfitableCustomerDTO> GetMostProfitableCustomers();
     }
 }

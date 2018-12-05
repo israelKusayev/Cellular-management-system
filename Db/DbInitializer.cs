@@ -94,7 +94,6 @@ namespace Db
                 FirstNumber = r.Next(1, 1000000).ToString(),
                 SecondNumber = r.Next(1, 1000000).ToString(),
                 ThirdNumber = r.Next(1, 1000000).ToString(),
-                FriendsId = 1
             };
         }
     }
