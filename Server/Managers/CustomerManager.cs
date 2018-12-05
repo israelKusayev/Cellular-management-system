@@ -100,7 +100,8 @@ namespace Server.Managers
                 var customer = _unitOfWork.Customer.GetActiveCustomerByIdCard(newCustomer.IdentityCard); //Check whether the customer already exists
                 if (customer == null)
                 {
-                    _unitOfWork.Customer.Add(newCustomer);
+                    _unitOfWork.Employee.Get(newCustomer.EmplyeeId).Customers.Add(newCustomer);
+               
                     _unitOfWork.Complete();
                     addedCustomer = _unitOfWork.Customer.GetActiveCustomerByIdCard(newCustomer.IdentityCard);
                 }

@@ -62,6 +62,13 @@ namespace Db.Repositories
              .Count()).ToList();
             return res;
         }
+        public List<Customer> GetMostProfitableCustomers()
+        {
+            List<Customer> customers = CellularContext.CustomerTable.Include(l => l.Lines).Include(l => l.Lines.Select(x => x.Payments)).ToList();
+            List<Customer> mostProfitableCustomers = customers.OrderByDescending(x => x.Lines.Sum(q => q.Payments.Sum(w => w.LineTotalPrice)) / x.Lines.Sum(a=>a.Payments.Count)).Take(10).ToList();
+
+            return mostProfitableCustomers;
+        }
 
         public CellularContext CellularContext
         {

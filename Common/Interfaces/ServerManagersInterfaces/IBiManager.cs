@@ -14,5 +14,6 @@ namespace Common.Interfaces.ServerManagersInterfaces
         List<MostCallCustomerDTO> GetMostCallingToCenterCustomers();
         List<EmployeeBiDTO> GetBestSellerEmployees();
         List<CustomerBiDTO> GetOpinionLeadersCustomers();
+        List<ProfitableCustomerDTO> GetMostProfitableCustomers();
     }
 }
