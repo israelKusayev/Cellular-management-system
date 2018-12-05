@@ -16,5 +16,6 @@ namespace Common.RepositoryInterfaces
         Customer GetCustomerWithTypeAndLines(int customerId);
         Customer GetCustomerWithTypeLinesAndPayment(string idCard);
         List<Customer> GetMostCallToCenterCustomers(DateTime requestedTime);
+        List<Customer> GetTop10TalkingCustomers();
     }
 }

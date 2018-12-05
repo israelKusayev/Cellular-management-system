@@ -53,7 +53,7 @@ namespace Server.Managers
                 throw new IncorrectExeption("Password");
             }
 
-            if(!requstedEmployee.IsManager)
+            if (!requstedEmployee.IsManager)
             {
                 throw new IncorrectExeption("Employee level");
             }
@@ -81,18 +81,18 @@ namespace Server.Managers
             }
 
             if (customers != null)
-                {
-                    customersDTO = new List<MostCallCustomerDTO>();
+            {
+                customersDTO = new List<MostCallCustomerDTO>();
 
-                    foreach (var customer in customers)
-                    {
-                        MostCallCustomerDTO customerDTO = new MostCallCustomerDTO();
-                        customerDTO.FirstName = customer.FirstName;
-                        customerDTO.LastName = customer.LastName;
-                        customerDTO.IdentityCard = customer.IdentityCard;
-                        customerDTO.CallsToCenter = customer.CallsToCenter;
-                        customersDTO.Add(customerDTO);
-                    }
+                foreach (var customer in customers)
+                {
+                    MostCallCustomerDTO customerDTO = new MostCallCustomerDTO();
+                    customerDTO.FirstName = customer.FirstName;
+                    customerDTO.LastName = customer.LastName;
+                    customerDTO.IdentityCard = customer.IdentityCard;
+                    customerDTO.CallsToCenter = customer.CallsToCenter;
+                    customersDTO.Add(customerDTO);
+                }
             }
             return customersDTO;
         }
@@ -125,6 +125,29 @@ namespace Server.Managers
                 }
             }
             return employeesDTO;
+        }
+
+        public List<CustomerBiDTO> GetOpinionLeadersCustomers()
+        {
+            List<CustomerBiDTO> customerBiDTOs = new List<CustomerBiDTO>();
+            List<Customer> customers;
+            try
+            {
+                customers = _unitOfWork.Customer.GetTop10TalkingCustomers();
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+            }
+            if (customers != null)
+            {
+                customers.ForEach(c =>
+                        {
+                            customerBiDTOs.Add(new CustomerBiDTO() { FirstName = c.FirstName, LastName = c.LastName, IdentityCard = c.IdentityCard });
+                        });
+            }
+            return customerBiDTOs;
         }
     }
 }

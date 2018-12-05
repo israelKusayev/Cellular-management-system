@@ -136,7 +136,25 @@ namespace Server.Controllers
         [Route("api/bi/opinionLeadersCustomers")]
         public IHttpActionResult GetOpinionLeadersCustomers()
         {
-            throw new NotImplementedException();
+            List<CustomerBiDTO> customers;
+
+            try
+            {
+                customers = _biManager.GetOpinionLeadersCustomers();
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (customers != null)
+            {
+                return Ok(customers);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate most calling to center customer report"));
+            }
         }
 
 

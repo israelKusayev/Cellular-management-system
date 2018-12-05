@@ -44,7 +44,7 @@ namespace Db.Repositories
 
         public Customer GetActiveCustomerWithLinesAndPackages(string idCard)
         {
-            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used).Select(p=>p.Package)).SingleOrDefault();
+            return CellularContext.CustomerTable.Where(c => c.IdentityCard == idCard && c.IsActive == true).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used)).IncludeFilter(l => l.Lines.Where(x => x.Status == LineStatus.Used).Select(p => p.Package)).SingleOrDefault();
         }
 
         public List<Customer> GetMostCallToCenterCustomers(DateTime requestedTime)
@@ -52,6 +52,15 @@ namespace Db.Repositories
             int month = requestedTime.Month;
             int year = requestedTime.Year;
             return CellularContext.CustomerTable.Where(c => c.JoinDate.Value.Year == year && c.JoinDate.Value.Month == month).OrderByDescending(c => c.CallsToCenter).Take(10).ToList();
+        }
+
+        public List<Customer> GetTop10TalkingCustomers()
+        {
+            List<Customer> res = CellularContext.CustomerTable.OrderByDescending(c => c.Lines.SelectMany(l => l.Calls)
+             .Select(x => x.DestinationNumber)
+             .Distinct()
+             .Count()).ToList();
+            return res;
         }
 
         public CellularContext CellularContext
