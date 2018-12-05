@@ -16,6 +16,6 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid >
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>

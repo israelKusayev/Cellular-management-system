@@ -36,6 +36,7 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        // ctor
         public LoginViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -46,17 +47,27 @@ namespace Crm.Client.ViewModels
             LoadingVisibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Navigate to customer receipts
+        /// </summary>
         private void GoToReceipts()
         {
             _navigationService.NavigateTo("ChooseReceipts");
         }
 
+        /// <summary>
+        /// Namvigate to simulator
+        /// </summary>
         private void GoToSimulator()
         {
             _navigationService.NavigateTo("Simulator");
             ViewModelLocator.UnRegisterLoginViewModel();
         }
 
+        /// <summary>
+        /// Validate fields for login
+        /// </summary>
+        /// <returns>true if valid. otherwise, false </returns>
         private bool CanLogin()
         {
             if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
@@ -66,6 +77,9 @@ namespace Crm.Client.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Login and navigate to CRM system
+        /// </summary>
         private async void Login()
         {
             if (!CanLogin())
@@ -78,7 +92,7 @@ namespace Crm.Client.ViewModels
             if (await _loginManager.Login(Username, Password))
             {
                 ViewModelLocator.UnRegisterLoginViewModel();
-                _navigationService.NavigateTo("CustomerDetails",_loginManager._currentEmployee);
+                _navigationService.NavigateTo("CustomerDetails", _loginManager._currentEmployee);
             }
             LoadingVisibility = Visibility.Collapsed;
 

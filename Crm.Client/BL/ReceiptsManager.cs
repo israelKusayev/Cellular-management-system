@@ -15,6 +15,14 @@ namespace Crm.Client.BL
     {
         private readonly string _baseUrl = Config.Default.BaseUrl;
         internal List<LineReceiptDTO> _receipts;
+
+        /// <summary>
+        /// Get customer receipts from api
+        /// </summary>
+        /// <param name="customerId">Customer identity card</param>
+        /// <param name="year">Receipt year</param>
+        /// <param name="month">Receipt month</param>
+        /// <returns>True if succeeded. otherwise, false</returns>
         internal bool GetReceipt(string customerId, int year, int month)
         {
             try

@@ -51,6 +51,7 @@ namespace Crm.Client.ViewModels
         public string CustomerName { get; set; }
         public double TotalPayment { get; set; }
 
+        // ctor
         public ReceiptsViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -66,6 +67,9 @@ namespace Crm.Client.ViewModels
             Receipts = new ObservableCollection<LineReceiptDTO>() { new LineReceiptDTO() { LeftSms = 1, LeftMinutes = TimeSpan.FromSeconds(2000) } };
         }
 
+        /// <summary>
+        /// Export receipt to pdf or excel
+        /// </summary>
         private void ExportReceipt()
         {
             var result = CustomMessageBox.ShowOKCancel(
@@ -164,6 +168,9 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Get and show receipt
+        /// </summary>
         private void ShowReceipt()
         {
             string error = ValidateFields();
@@ -181,6 +188,10 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Validate fields to get receipt
+        /// </summary>
+        /// <returns>Error if invalid. otherwise null</returns>
         private string ValidateFields()
         {
             if (string.IsNullOrWhiteSpace(CustomerId))

@@ -151,6 +151,9 @@ namespace Crm.Client.ViewModels
             CustomerValue = "-";
         }
 
+        /// <summary>
+        /// Navigate to manage line view if Id field matching to customer in DB
+        /// </summary>
         private void NavigateToManageLines()
         {
             if (string.IsNullOrWhiteSpace(Id))
@@ -168,7 +171,7 @@ namespace Crm.Client.ViewModels
         }
 
         /// <summary>
-        /// Navigate to line view(next page) if Id field matching to customer in DB
+        /// Navigate to add line view if Id field matching to customer in DB
         /// </summary>
         private void NavigateToAddLines()
         {
@@ -186,6 +189,9 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Add or edit customer
+        /// </summary>
         private void SaveCustomer()
         {
             if (CanSaveCustomer())
@@ -203,6 +209,10 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Validate some fields to save customer
+        /// </summary>
+        /// <returns>true if valid. otherwise, false</returns>
         private bool CanSaveCustomer()
         {
             if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName) || string.IsNullOrWhiteSpace(Address) || string.IsNullOrWhiteSpace(Id) || string.IsNullOrWhiteSpace(ContactNumber))
@@ -223,6 +233,9 @@ namespace Crm.Client.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Delete customer 
+        /// </summary>
         private void DeleteCustomer()
         {
             if (String.IsNullOrWhiteSpace(Id))
@@ -256,6 +269,10 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Bind customer props to view
+        /// </summary>
+        /// <param name="customer">Customer model</param>
         private void UpdateFields(Customer customer)
         {
             FirstName = customer.FirstName;
@@ -266,7 +283,9 @@ namespace Crm.Client.ViewModels
             SelectedClientType = customer.CustomerTypeId - 1;
         }
 
-        // Clear all the text
+        /// <summary>
+        ///  Clear fields on view
+        /// </summary>
         private void Clear()
         {
             SearchText = "";

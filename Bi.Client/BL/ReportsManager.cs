@@ -42,7 +42,34 @@ namespace Bi.Client.BL
             {
                 MessageBox.Show(Application.Current.MainWindow, "Server error");
             }
-            return null;
+            return new List<T>();
+        }
+
+        /// <summary>
+        /// create payments for this month
+        /// </summary>
+        internal void GeneratePayments()
+        {
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    var result = http.GetAsync($"{_url}/receipt/generatePayments").Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Payments was created successfully");
+                    }
+                    else
+                    {
+                        string message = result.Content.ReadAsAsync<ResponseMessage>().Result.Message;
+                        MessageBox.Show(Application.Current.MainWindow, message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(Application.Current.MainWindow, "Server error");
+            }
         }
     }
 }

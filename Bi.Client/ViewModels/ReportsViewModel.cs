@@ -1,5 +1,6 @@
 ﻿using Bi.Client.BL;
 using Bi.Client.Halpers;
+using Bi.Client.Utils;
 using Common.Models;
 using Common.ModelsDTO;
 using System;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Bi.Client.ViewModels
 {
@@ -16,6 +18,10 @@ namespace Bi.Client.ViewModels
     {
         private IFrameNavigationService _frameNavigationService;
         private ReportsManager _reportsManager;
+
+        public ICommand LogoutCommand { get; set; }
+        public ICommand GeneratePaymentsCommand { get; set; }
+        
 
         private ObservableCollection<MostCallCustomerDTO> _mostCallCustomes;
         public ObservableCollection<MostCallCustomerDTO> MostCallCustomes
@@ -74,21 +80,37 @@ namespace Bi.Client.ViewModels
             }
         }
 
-
+        // ctor
         public ReportsViewModel(IFrameNavigationService frameNavigationService)
         {
             _frameNavigationService = frameNavigationService;
             _reportsManager = new ReportsManager();
+            LogoutCommand = new RelayCommand(() =>
+            {
+                _frameNavigationService.NavigateTo("Login");
+            });
+            GeneratePaymentsCommand = new RelayCommand(() => {
+                _reportsManager.GeneratePayments();
+            });
             GetReports();
         }
 
         private void GetReports()
         {
-            MostCallCustomes = new ObservableCollection<MostCallCustomerDTO>(_reportsManager.GetReports<MostCallCustomerDTO>("mostCallingToCenterCustomers"));
-            BestSellers = new ObservableCollection<EmployeeBiDTO>(_reportsManager.GetReports<EmployeeBiDTO>("bestSellerEmployees"));
-            ProfitableCustomers = new ObservableCollection<ProfitableCustomerDTO>(_reportsManager.GetReports<ProfitableCustomerDTO>("mostProfitableCustomers"));
-            DisconnectionRiskClient = new ObservableCollection<CustomerBiDTO>(_reportsManager.GetReports<CustomerBiDTO>("linesAtRiskOfAbandonment"));
-            CustomersOpinionLeaders = new ObservableCollection<CustomerBiDTO>(_reportsManager.GetReports<CustomerBiDTO>("opinionLeadersCustomers"));
+            try
+            {
+
+                MostCallCustomes = new ObservableCollection<MostCallCustomerDTO>(_reportsManager.GetReports<MostCallCustomerDTO>("mostCallingToCenterCustomers"));
+                BestSellers = new ObservableCollection<EmployeeBiDTO>(_reportsManager.GetReports<EmployeeBiDTO>("bestSellerEmployees"));
+                ProfitableCustomers = new ObservableCollection<ProfitableCustomerDTO>(_reportsManager.GetReports<ProfitableCustomerDTO>("mostProfitableCustomers"));
+                DisconnectionRiskClient = new ObservableCollection<CustomerBiDTO>(_reportsManager.GetReports<CustomerBiDTO>("linesAtRiskOfAbandonment"));
+                CustomersOpinionLeaders = new ObservableCollection<CustomerBiDTO>(_reportsManager.GetReports<CustomerBiDTO>("opinionLeadersCustomers"));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("failed to get the date");
+                //_frameNavigationService.NavigateTo("Login");
+            }
         }
     }
 }

@@ -20,12 +20,8 @@ namespace Crm.Client.ViewModels
         private readonly IFrameNavigationService _navigationService;
         private readonly SimulatorManager _simulatorManager;
         private string _lastIdCardSearch;
-        public ICommand SearchCommand { get; set; }
-        public ICommand SimulateCommand { get; set; }
-        public ICommand LineSelectedCommand { get; set; }
-        public ICommand GoBackCommand { get; set; }
-        public ICommand ClearCommand { get; set; }
 
+        #region props
         private ObservableCollection<Line> _lines;
         public ObservableCollection<Line> Lines
         {
@@ -38,7 +34,6 @@ namespace Crm.Client.ViewModels
         }
 
         private ObservableCollection<string> _enumSendTo;
-
         public ObservableCollection<string> EnumSendTo
         {
             get { return _enumSendTo; }
@@ -116,7 +111,6 @@ namespace Crm.Client.ViewModels
         }
 
         private string _callToCenter;
-
         public string CallToCenter
         {
             get { return _callToCenter; }
@@ -127,9 +121,19 @@ namespace Crm.Client.ViewModels
             }
         }
 
-
         public string SelectedSendTo { get; set; }
+        #endregion
 
+        #region commands
+        public ICommand SearchCommand { get; set; }
+        public ICommand SimulateCommand { get; set; }
+        public ICommand LineSelectedCommand { get; set; }
+        public ICommand GoBackCommand { get; set; }
+        public ICommand ClearCommand { get; set; }
+
+        #endregion
+
+        // ctor
         public SimulatorViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -145,31 +149,10 @@ namespace Crm.Client.ViewModels
             });
         }
 
-        private void Clear()
-        {
-            SelectedLine = 0;
-            MinDuration = null;
-            MaxDuration = null;
-            IsSms = false;
-            Count = null;
-            CallToCenter = null;
-            SelectedSendTo = null;
-            EnumSendTo = null;
-            Lines = null;
-
-        }
-
-        private void ChackIfPackageHasFriends()
-        {
-            Package package = _simulatorManager.GetPackage(SelectedLine);
-            EnumSendTo.Remove(Enum.GetName(typeof(SimulateSendTo), SimulateSendTo.Friends));
-            if (package != null && package.Friends != null)
-            {
-                EnumSendTo.Add(Enum.GetName(typeof(SimulateSendTo), SimulateSendTo.Friends));
-
-            }
-        }
-
+        /// <summary>
+        /// Validate fields to search customer
+        /// </summary>
+        /// <returns> True if valid. otherwise, false</returns>
         private bool CanSearch()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
@@ -180,6 +163,9 @@ namespace Crm.Client.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Search customer and get his lines
+        /// </summary>
         private void Search()
         {
             if (CanSearch())
@@ -200,6 +186,24 @@ namespace Crm.Client.ViewModels
             }
         }
 
+        /// <summary>
+        /// Checking if package contains friends discount
+        /// </summary>
+        private void ChackIfPackageHasFriends()
+        {
+            Package package = _simulatorManager.GetPackage(SelectedLine);
+            EnumSendTo.Remove(Enum.GetName(typeof(SimulateSendTo), SimulateSendTo.Friends));
+            if (package != null && package.Friends != null)
+            {
+                EnumSendTo.Add(Enum.GetName(typeof(SimulateSendTo), SimulateSendTo.Friends));
+
+            }
+        }
+
+        /// <summary>
+        ///  Validate fields to simulate calls or sms
+        /// </summary>
+        /// <returns>Error if invalid. otherwise, null</returns>
         private string CanSimulate()
         {
             if (SelectedLine == 0)
@@ -227,6 +231,9 @@ namespace Crm.Client.ViewModels
             return null;
         }
 
+        /// <summary>
+        /// Simulate calls or sms
+        /// </summary>
         private void Simulate()
         {
             string error = CanSimulate();
@@ -257,6 +264,23 @@ namespace Crm.Client.ViewModels
                 simulateDTO.MaxDuration = maxDuration;
             }
             _simulatorManager.Simulate(simulateDTO);
+
+        }
+
+        /// <summary>
+        /// Clear the view
+        /// </summary>
+        private void Clear()
+        {
+            SelectedLine = 0;
+            MinDuration = null;
+            MaxDuration = null;
+            IsSms = false;
+            Count = null;
+            CallToCenter = null;
+            SelectedSendTo = null;
+            EnumSendTo = null;
+            Lines = null;
 
         }
     }

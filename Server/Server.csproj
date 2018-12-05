@@ -134,6 +134,7 @@
     <Compile Include="Controllers\CrmControllers\LineController.cs" />
     <Compile Include="Controllers\CrmControllers\CustomerController.cs" />
     <Compile Include="Controllers\CrmControllers\PackageController.cs" />
+    <Compile Include="Controllers\CustomerWebsiteController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
     <Compile Include="Controllers\SimulatorController.cs" />
     <Compile Include="Global.asax.cs">

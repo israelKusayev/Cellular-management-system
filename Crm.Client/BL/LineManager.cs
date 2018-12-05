@@ -31,7 +31,7 @@ namespace Crm.Client.BL
         /// get all user lines
         /// </summary>
         /// <param name="identityCard">Customer identity card</param>
-        private void GetCustomerLinesFromDb(string identityCard)//? id
+        private void GetCustomerLinesFromDb(string identityCard)
         {
             try
             {

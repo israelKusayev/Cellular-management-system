@@ -23,6 +23,7 @@ namespace Bi.Client
         public MainWindow()
         {
             InitializeComponent();
+            
         }
     }
 }

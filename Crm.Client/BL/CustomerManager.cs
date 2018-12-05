@@ -18,12 +18,18 @@ namespace Crm.Client.BL
         private readonly string _url = Config.Default.BaseUrl;
         private readonly Employee _currentEmployee;
 
+        // ctor
         public CustomerManager(Employee employee)
         {
             _currentEmployee = employee;
             string url = Config.Default.BaseUrl;
         }
 
+        /// <summary>
+        /// Get Customer from api
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <returns>Founded customer or null</returns>
         internal Customer GetCustomerByIdCard(string idCard)
         {
             Customer customer;
@@ -53,7 +59,7 @@ namespace Crm.Client.BL
         }
 
         /// <summary>
-        /// Get customer value
+        /// Get customer value from api
         /// </summary>
         /// <param name="idCard">customer identity card</param>
         /// <returns>customer value if customer exists otherwise -1</returns>
@@ -78,6 +84,10 @@ namespace Crm.Client.BL
             return -1;
         }
 
+        /// <summary>
+        /// Add or edit customer dependent if exists or not
+        /// </summary>
+        /// <param name="customer">Customer to add or edit</param>
         internal void SaveCustomer(Customer customer)
         {
             customer.EmplyeeId = _currentEmployee.EmployeeId;
@@ -104,6 +114,10 @@ namespace Crm.Client.BL
             }
         }
 
+        /// <summary>
+        /// Sending delete cutomer request to api
+        /// </summary>
+        /// <param name="idCard">customer identity card</param>
         internal void DeleteCustomer(string idCard)
         {
             try
@@ -128,6 +142,11 @@ namespace Crm.Client.BL
             }
         }
 
+        /// <summary>
+        /// Sending add customer request to api
+        /// </summary>
+        /// <param name="http">Http conecction</param>
+        /// <param name="customer">Customer to add</param>
         private void AddCustomer(HttpClient http, Customer customer)
         {
             var result = http.PostAsJsonAsync($"{_url}/crm/Customer", customer).Result;
@@ -142,6 +161,11 @@ namespace Crm.Client.BL
             }
         }
 
+        /// <summary>
+        /// Sending edit customer request to api
+        /// </summary>
+        /// <param name="http">Http conecction</param>
+        /// <param name="customer">Customer to edit</param>
         private void EditCustomer(HttpClient http, Customer customer)
         {
             var result = http.PutAsJsonAsync($"{_url}/crm/customer", customer).Result;

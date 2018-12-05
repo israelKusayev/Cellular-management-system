@@ -16,6 +16,11 @@ namespace Crm.Client.BL
     {
         private readonly string _baseUrl = Config.Default.BaseUrl;
 
+        /// <summary>
+        /// Get customer lines from api
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <returns>Collection of founded lines, or null</returns>
         internal ICollection<Line> GetLines(string idCard)
         {
             try
@@ -41,6 +46,10 @@ namespace Crm.Client.BL
             return null;
         }
 
+        /// <summary>
+        /// Sending to api SimulateDTO model to simulate calls or sms
+        /// </summary>
+        /// <param name="simulateDTO">simulateDTO model</param>
         internal void Simulate(SimulateDTO simulateDTO)
         {
             try
@@ -65,13 +74,18 @@ namespace Crm.Client.BL
             }
         }
 
-        internal Package GetPackage(int selectedLine)
+        /// <summary>
+        /// Get package of specified line id
+        /// </summary>
+        /// <param name="lineId">Line id</param>
+        /// <returns>Founded package, or null</returns>
+        internal Package GetPackage(int lineId)
         {
             try
             {
                 using (var http = new HttpClient())
                 {
-                    var result = http.GetAsync($"{_baseUrl}/crm/package/{selectedLine}").Result;
+                    var result = http.GetAsync($"{_baseUrl}/crm/package/{lineId}").Result;
                     if (result.IsSuccessStatusCode)
                     {
                         return result.Content.ReadAsAsync<Package>().Result;

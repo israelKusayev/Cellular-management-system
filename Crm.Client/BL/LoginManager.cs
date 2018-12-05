@@ -16,6 +16,13 @@ namespace Crm.Client.BL
     {
         private readonly string _url = Config.Default.BaseUrl;
         internal Employee _currentEmployee { get; set; }
+
+        /// <summary>
+        /// Sending login request to api
+        /// </summary>
+        /// <param name="username">Employee username</param>
+        /// <param name="password">Employee password</param>
+        /// <returns>True if succeeded. otherwise, false</returns>
         public Task<bool> Login(string username, string password)
         {
             Task<bool> task = Task.Run(() =>
