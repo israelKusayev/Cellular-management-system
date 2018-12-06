@@ -25,5 +25,6 @@ namespace Server
             GlobalConfiguration.Configure(WebApiConfig.Register);
             new CellularContext().InitDataBase();
         }
+
     }
 }

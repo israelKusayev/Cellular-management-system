@@ -48,9 +48,6 @@ namespace Server
             // Make sure to add a Unity.Configuration to the using statements.
             // container.LoadConfiguration();
 
-            //TODO: Register your type's mappings here.
-            // container.RegisterType<IProductRepository, ProductRepository>();
-
             container.RegisterType<IEmployeeManager, EmployeeManager>(new HierarchicalLifetimeManager());
             container.RegisterType<ICustomerManager, CustomerManager>(new HierarchicalLifetimeManager());
             container.RegisterType<ILineManager, LineManager>(new HierarchicalLifetimeManager());

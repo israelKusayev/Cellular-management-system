@@ -57,7 +57,7 @@
     <Compile Include="Enums\MessageType.cs" />
     <Compile Include="Enums\SimulateSendTo.cs" />
     <Compile Include="Exceptions\AlreadyExistExeption.cs" />
-    <Compile Include="Exceptions\EmptyException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\FaildToConnectDbExeption.cs" />
     <Compile Include="Exceptions\FoundLineExeption.cs" />
     <Compile Include="Exceptions\IncorrectExeption.cs" />

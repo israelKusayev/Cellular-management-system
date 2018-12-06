@@ -58,7 +58,7 @@ namespace Server.Managers
 
             if (destinationNumbers == null)
             {
-                throw new EmptyException("System can not find any destination number");
+                throw new NotFoundException("destination number");
             }
 
             if (simulateDTO.IsSms)

@@ -35,7 +35,7 @@ namespace Server.Controllers
                 _simulatorManager.SimulateCallsOrSms(simulateDTO);
                 return Ok();
             }
-            catch (EmptyException e)
+            catch (NotFoundException e)
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, e.Message));
 
