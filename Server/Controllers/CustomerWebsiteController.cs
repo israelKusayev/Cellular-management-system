@@ -80,29 +80,29 @@ namespace Server.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/customerWebsite/getPackageRecommendation/{lineId}")]
-        public IHttpActionResult GetPackageRecommendation(int lineId)
-        {
-            Customer customer;
-            try
-            {
-                customer = _customerWebsiteManager.GetCustomerLines(lineId);
-            }
-            catch (NotFoundException e)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
-            }
-            catch (Exception e)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-            }
-            var response = JsonConvert.SerializeObject(customer, Formatting.Indented,
-                                new JsonSerializerSettings
-                                {
-                                      ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                                });
-            return Ok(response);
-        }
+        //[HttpGet]
+        //[Route("api/customerWebsite/getPackageRecommendation/{lineId}")]
+        //public IHttpActionResult GetPackageRecommendation(int lineId)
+        //{
+        //    Customer customer;
+        //    try
+        //    {
+        //        customer = _customerWebsiteManager.GetCustomerLines(lineId);
+        //    }
+        //    catch (NotFoundException e)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+        //    }
+        //    var response = JsonConvert.SerializeObject(customer, Formatting.Indented,
+        //                        new JsonSerializerSettings
+        //                        {
+        //                              ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        //                        });
+        //    return Ok(response);
+        //}
     }
 }

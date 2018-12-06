@@ -11,6 +11,6 @@ namespace Server.Interfaces
     {
         IHttpActionResult GetCustomerLines(string idCard);
         IHttpActionResult GetLineDetails(int lineId);
-        IHttpActionResult GetPackageRecommendation(int lineId);
+        //IHttpActionResult GetPackageRecommendation(int lineId);
     }
 }
