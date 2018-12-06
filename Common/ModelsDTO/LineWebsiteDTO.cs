@@ -9,6 +9,7 @@ namespace Common.ModelsDTO
 {
     public class LineWebsiteDTO
     {
+        public double TotalLinePrice { get; set; }
         public int TotalMinutes { get; set; }
         public int TotalSms { get; set; }
         public int TotalMinutesTopNumber { get; set; }
