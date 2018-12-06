@@ -54,21 +54,38 @@ namespace Server.Managers
 
                     List<Payment> payments = new List<Payment>(foundedLine.Payments);
                     Payment payment = payments[payments.Count - 1];
+                    List<int> totalMinutesTopNumbers = new List<int>();
 
-                    lineWithCalls = _unitOfWork.Line.GetLineWithCalls(lineNumber, payment.Date);
+                    lineWithCalls = _unitOfWork.Line.GetLineWithCalls(lineNumber, payment.Date); //Get the calls of the line per month requested
 
-                    //var totalMinutesTopNumber = lineWithCalls.Calls.GroupBy(c => c.DestinationNumber).Select(d=>d.OrderByDescending(c => c.DestinationNumber)).Take(3).ToList();
+                    var Top3Numbers = lineWithCalls.Calls //Retrieve the top numbers
+                                                   .GroupBy(c => c.DestinationNumber)
+                                                   .Select(d => new { count = d.Count(), des = d.Key })
+                                                   .OrderByDescending(x => x.count)
+                                                   .Take(3);
 
-                    var totalMinutesTopNumber = lineWithCalls.Calls.GroupBy(c => c.DestinationNumber).Select(d => new { count = d.Count(), des = d.Key }).OrderByDescending(x => x.count);
+                    foreach (var item in Top3Numbers)//Calculates total call minutes for top numbers
+                    {
+                        int total = lineWithCalls.Calls.Where(c => c.DestinationNumber == item.des).Sum(d => d.Duration) / 60;
+                        totalMinutesTopNumbers.Add(total);
+                    }
 
+                    Customer customer = _unitOfWork.Customer.GetCustomerWithTypeAndLines(lineWithCalls.CustomerId); //Calculates total call minutes within the family
+                    int totalFamilyMinutes = 0;
+                    foreach (var item in customer.Lines)
+                    {
+                        totalFamilyMinutes += lineWithCalls.Calls.Where(c => c.DestinationNumber == item.LineNumber).Sum(d => d.Duration) / 60;
+                    }
 
                     if (payment != null)
                     {
                         lineWebsiteDTO.TotalLinePrice = payment.LineTotalPrice;
                         lineWebsiteDTO.TotalMinutes = payment.UsageCall / 60;
                         lineWebsiteDTO.TotalSms = payment.UsageSms;
+                        lineWebsiteDTO.TotalMinutesTopNumber = totalMinutesTopNumbers[0];
+                        lineWebsiteDTO.TotalMinutesTop3Numbers = totalMinutesTopNumbers.Sum();
+                        lineWebsiteDTO.TotalMinutesWithFamily = totalFamilyMinutes;
                     }
-
                 }
             }
             catch (Exception e)
