@@ -1,6 +1,7 @@
-﻿using Common.Exeptions;
+using Common.Exeptions;
 using Common.Interfaces.ServerManagersInterfaces;
 using Common.Models;
+using Common.ModelsDTO;
 using Newtonsoft.Json;
 using Server.Interfaces;
 using System;
@@ -14,23 +15,79 @@ using System.Web.Script.Serialization;
 
 namespace Server.Controllers
 {
-    //[EnableCors(origins: "file:///C:/Users/Home/Downloads/index.html", headers: "*", methods: "*")]
     public class CustomerWebsiteController : ApiController, ICustomerWebsiteApi
     {
-        ICustomerWebsiteManager _websiteManager;
-        public CustomerWebsiteController(ICustomerWebsiteManager websiteManager)
+        ICustomerWebsiteManager _customerWebsiteManager;
+
+        //ctor
+        public CustomerWebsiteController(ICustomerWebsiteManager customerWebsiteManager)
         {
-            _websiteManager = websiteManager;
+            _customerWebsiteManager = customerWebsiteManager;
         }
 
         [HttpGet]
-        [Route("api/customerWebsite/getLines/{idCard}")]
-        public IHttpActionResult GetData(string idCard)
+        [Route("api/customerWebsite/getCustomerLines/{idCard}")]
+        public IHttpActionResult GetCustomerLines(string idCard)
         {
             Customer customer;
             try
             {
-                customer = _websiteManager.GetCustomerLines(idCard);
+                customer = _customerWebsiteManager.GetCustomerWithLines(idCard);
+
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (customer != null)
+            {
+                var response = JsonConvert.SerializeObject(customer, Formatting.Indented,
+                                new JsonSerializerSettings
+                                {
+                                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                                });
+                return Ok(response);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to find the Customer"));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/customerWebsite/getPackageRecommendation/{lineId}")]
+        public IHttpActionResult GetLineDetails(int lineId)
+        {
+            LineWebsiteDTO lineDetails;
+            try
+            {
+                lineDetails = _customerWebsiteManager.GetLineDetails(lineId);
+
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (lineDetails != null)
+            {
+                return Ok(lineDetails);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to find the line"));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/customerWebsite/getPackageRecommendation/{lineId}")]
+        public IHttpActionResult GetPackageRecommendation(int lineId)
+        {
+            Customer customer;
+            try
+            {
+                customer = _customerWebsiteManager.GetCustomerLines(lineId);
             }
             catch (NotFoundException e)
             {

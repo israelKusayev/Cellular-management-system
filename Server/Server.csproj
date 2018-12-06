@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="Interfaces\IBiApi.cs" />
     <Compile Include="Interfaces\ICustomerApi.cs" />
+    <Compile Include="Interfaces\ICustomerWebsiteApi.cs" />
     <Compile Include="Interfaces\ILineApi.cs" />
     <Compile Include="Interfaces\IEmployeeLoginApi.cs" />
     <Compile Include="Interfaces\IPackageApi.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Interfaces\ISimulatorApi.cs" />
     <Compile Include="Managers\BiManager.cs" />
     <Compile Include="Managers\CustomerManager.cs" />
+    <Compile Include="Managers\CustomerWebsiteManager.cs" />
     <Compile Include="Managers\EmployeeManager.cs" />
     <Compile Include="Managers\LineManager.cs" />
     <Compile Include="Managers\ReceiptManager.cs" />

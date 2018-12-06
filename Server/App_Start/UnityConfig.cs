@@ -55,6 +55,7 @@ namespace Server
             container.RegisterType<IReceiptManager, ReceiptManager>(new HierarchicalLifetimeManager());
             container.RegisterType<ISimulatorManager, SimulatorManager>(new HierarchicalLifetimeManager());
             container.RegisterType<IBiManager, BiManager>(new HierarchicalLifetimeManager());
+            container.RegisterType<ICustomerWebsiteManager, CustomerWebsiteManager>(new HierarchicalLifetimeManager());
 
             container.RegisterType<IUnitOfWork, UnitOfWork<CellularContext>>(new HierarchicalLifetimeManager());
 

@@ -23,7 +23,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/bi/login")] //v
+        [Route("api/bi/login")] 
         public IHttpActionResult LoginManager(LoginDTO loginEmployee)
         {
             if (loginEmployee == null
@@ -62,7 +62,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/bi/bestSellerEmployees")] //v
+        [Route("api/bi/bestSellerEmployees")] 
         public IHttpActionResult GetBestSellerEmployees()
         {
             List<EmployeeBiDTO> employees;
@@ -87,21 +87,32 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/bi/GroupsOfFreindsWhoTalkEachOther")]
-        public IHttpActionResult GetGroupsOfFreindsWhoTalkEachOther()
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
         [Route("api/bi/linesAtRiskOfAbandonment")]
-        public IHttpActionResult GetLinesAtRiskOfAbandonment()
+        public IHttpActionResult GetCustomersAtRiskOfAbandonment()
         {
-            throw new NotImplementedException();
+            List<CustomerBiDTO> customers;
+            try
+            {
+                customers = _biManager.GetCustomersAtRiskOfAbandonment();
+
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (customers != null)
+            {
+                return Ok(customers);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate customers at risk of abandonment report"));
+            }
         }
 
         [HttpGet]
-        [Route("api/bi/mostCallingToCenterCustomers")] //v
+        [Route("api/bi/mostCallingToCenterCustomers")] 
         public IHttpActionResult GetMostCallingToCenterCustomers()
         {
             List<MostCallCustomerDTO> customers;
@@ -126,7 +137,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/bi/mostProfitableCustomers")]
+        [Route("api/bi/mostProfitableCustomers")] 
         public IHttpActionResult GetMostProfitableCustomers()
         {
             List<ProfitableCustomerDTO> customers;
@@ -151,7 +162,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/bi/opinionLeadersCustomers")]
+        [Route("api/bi/opinionLeadersCustomers")] 
         public IHttpActionResult GetOpinionLeadersCustomers()
         {
             List<CustomerBiDTO> customers;
@@ -172,6 +183,31 @@ namespace Server.Controllers
             else
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate most calling to center customer report"));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/bi/GroupsOfFreindsWhoTalkEachOther")]
+        public IHttpActionResult GetGroupsOfFreindsWhoTalkEachOther()
+        {
+            List<GroupDTO> groups;
+
+            try
+            {
+                groups = _biManager.GetGroupsOfFreindsWhoTalkEachOther();
+            }
+            catch (Exception)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
+            }
+
+            if (groups != null)
+            {
+                return Ok(groups);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate optional groups report"));
             }
         }
 

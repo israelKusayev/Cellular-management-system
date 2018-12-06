@@ -12,6 +12,7 @@ namespace Db.Repositories
 {
     public class EmployeeRepository : Repository<Employee>, IEmployeeRepository
     {
+        //ctor
         public EmployeeRepository(DbContext context) : base(context)
         {
 

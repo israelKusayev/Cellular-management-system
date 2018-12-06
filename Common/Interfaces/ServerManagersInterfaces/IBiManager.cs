@@ -15,5 +15,7 @@ namespace Common.Interfaces.ServerManagersInterfaces
         List<EmployeeBiDTO> GetBestSellerEmployees();
         List<CustomerBiDTO> GetOpinionLeadersCustomers();
         List<ProfitableCustomerDTO> GetMostProfitableCustomers();
+        List<CustomerBiDTO> GetCustomersAtRiskOfAbandonment();
+        List<GroupDTO> GetGroupsOfFreindsWhoTalkEachOther();
     }
 }

@@ -11,6 +11,7 @@ namespace Db.Repositories
 {
     public class CallRepository : Repository<Call>, ICallRepository
     {
+        //ctor
         public CallRepository(DbContext context) : base(context)
         {
 

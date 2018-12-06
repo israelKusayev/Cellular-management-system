@@ -11,10 +11,12 @@ namespace Db.Repositories
 {
     public class SmsRepository :Repository<Sms>, ISmsRepository
     {
+        //ctor
         public SmsRepository(DbContext context):base(context)
         {
 
         }
+
         public CellularContext CellularContext
         {
             get { return Context as CellularContext; }

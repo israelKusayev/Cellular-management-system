@@ -11,11 +11,11 @@ namespace Server.Interfaces
     interface IBiApi
     {
         IHttpActionResult LoginManager(LoginDTO loginDTO);
-        IHttpActionResult GetMostProfitableCustomers(); //list<profilablrCustomerDTO> include first name last name id and profit
-        IHttpActionResult GetMostCallingToCenterCustomers();//list<customer>
-        IHttpActionResult GetOpinionLeadersCustomers(); //list<customer>
-        IHttpActionResult GetLinesAtRiskOfAbandonment();//list<customer>
-        IHttpActionResult GetBestSellerEmployees(); //list<employee> customer collection after filter
+        IHttpActionResult GetMostProfitableCustomers(); 
+        IHttpActionResult GetMostCallingToCenterCustomers();
+        IHttpActionResult GetOpinionLeadersCustomers(); 
+        IHttpActionResult GetCustomersAtRiskOfAbandonment();
+        IHttpActionResult GetBestSellerEmployees();
         IHttpActionResult GetGroupsOfFreindsWhoTalkEachOther();
     }
 }
