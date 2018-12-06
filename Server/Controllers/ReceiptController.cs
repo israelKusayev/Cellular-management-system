@@ -24,8 +24,11 @@ namespace Server.Controllers
         [Route("api/receipt/generatePayments")]
         public IHttpActionResult GeneratePaymentToAllLines()
         {
-            _receiptManager.GeneratePaymentsToAllLines(DateTime.Now);
-            return null;
+            if (_receiptManager.GeneratePaymentsToAllLines(DateTime.Now) != null)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
 
         //------------------//

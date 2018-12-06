@@ -15,39 +15,65 @@ namespace SimpleCallOrSmsSimulator
     {
         static void Main(string[] args)
         {
-            int simulateOption;
-
-            Console.WriteLine("Simulate calls or sms");
-            Console.WriteLine("type customer identity card");
-
-            string identityCard = Console.ReadLine();
-            Console.WriteLine();
-            var linesId = GetLines(identityCard);
-
-
-
-            int lineId;
-
-            do
+            while (true)
             {
-                Console.WriteLine("select line id");
-                linesId.ForEach(i => Console.Write("{0}\t", i));
+                Console.WriteLine("Click -1 to generate payment to this month");
+                if (Console.ReadLine() == "-1")
+                {
+                    GeneratePayments();
+                }
+                else
+                {
+
+                    int simulateOption;
+
+                    Console.WriteLine("Simulate calls or sms");
+                    Console.WriteLine("type customer identity card");
+
+                    string identityCard = Console.ReadLine();
+                    Console.WriteLine();
+                    var linesId = GetLines(identityCard);
+                    if (linesId != null)
+                    {
+                        int lineId;
+
+                        do
+                        {
+                            Console.WriteLine("select line id");
+                            linesId.ForEach(i => Console.Write("{0}\t", i));
+                            Console.WriteLine();
+                            int.TryParse(Console.ReadLine(), out lineId);
+                        } while (!linesId.Contains(lineId));
+
+                        Console.WriteLine();
+                        do
+                        {
+                            Console.WriteLine("Click 1 to simulate calls, Click 2 to simulate sms");
+                            int.TryParse(Console.ReadLine(), out simulateOption);
+                        } while (simulateOption != 1 && simulateOption != 2);
+
+                        SimulateDTO simulateDTO = CreateSimulateDTO(simulateOption, identityCard, lineId);
+
+                        Simulate(simulateDTO);
+                    }
+
+                }
                 Console.WriteLine();
-                int.TryParse(Console.ReadLine(), out lineId);
-            } while (!linesId.Contains(lineId));
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+        }
 
-            Console.WriteLine();
-            do
-            {
-                Console.WriteLine("Click 1 to simulate calls, Click 2 to simulate sms");
-                int.TryParse(Console.ReadLine(), out simulateOption);
-            } while (simulateOption != 1 && simulateOption != 2);
-
+        /// <summary>
+        /// Create SimulateDTO model to simulate calls or sms
+        /// </summary>
+        static SimulateDTO CreateSimulateDTO(int simulateOption, string identityCard, int lineId)
+        {
             Random r = new Random();
-            SimulateDTO simulateDTO ;
+            SimulateDTO simulateDTO;
             if (simulateOption == 1)
             {
-                 simulateDTO = new SimulateDTO()
+                simulateDTO = new SimulateDTO()
                 {
                     IsSms = false,
                     CallToCenter = 2,
@@ -59,11 +85,11 @@ namespace SimpleCallOrSmsSimulator
                     SendTo = SimulateSendTo.All
                 };
             }
-            else 
+            else
             {
-                 simulateDTO = new SimulateDTO()
+                simulateDTO = new SimulateDTO()
                 {
-                    IsSms = false,
+                    IsSms = true,
                     CallToCenter = 2,
                     IdentityCard = identityCard,
                     LineId = lineId,
@@ -72,13 +98,15 @@ namespace SimpleCallOrSmsSimulator
                 };
             }
 
-            Simulate(simulateDTO);
-            Console.ReadKey();
+            return simulateDTO;
         }
 
-
-
-        internal static List<int> GetLines(string idCard)
+        /// <summary>
+        /// Get customer lines from api
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <returns>Collection of founded lines, or null</returns>
+        static List<int> GetLines(string idCard)
         {
             try
             {
@@ -109,8 +137,11 @@ namespace SimpleCallOrSmsSimulator
             return null;
         }
 
-
-        internal static void Simulate(SimulateDTO simulateDTO)
+        /// <summary>
+        /// Sending to api SimulateDTO model to simulate calls or sms
+        /// </summary>
+        /// <param name="simulateDTO">simulateDTO model</param>
+        static void Simulate(SimulateDTO simulateDTO)
         {
             try
             {
@@ -131,6 +162,32 @@ namespace SimpleCallOrSmsSimulator
             catch (Exception e)
             {
                 Console.WriteLine("server error");
+            }
+        }
+
+        /// <summary>
+        /// create payments for this month
+        /// </summary>
+        static void GeneratePayments()
+        {
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    var result = http.GetAsync($"http://localhost:54377/api/receipt/generatePayments").Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("Payments was created successfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine(result.Content.ReadAsAsync<ResponseMessage>().Result.Message); 
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Server error");
             }
         }
     }

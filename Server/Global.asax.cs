@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿
 using Common.Interfaces.ServerManagersInterfaces;
 using Common.RepositoryInterfaces;
 using Db;
@@ -17,7 +17,6 @@ namespace Server
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
-        public static IContainer container;
         protected void Application_Start()
         {
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
