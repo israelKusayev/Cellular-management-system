@@ -56,7 +56,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/customerWebsite/getPackageRecommendation/{lineId}")]
+        [Route("api/customerWebsite/getLineInfo/{lineId}")]
         public IHttpActionResult GetLineDetails(int lineId)
         {
             LineWebsiteDTO lineDetails;
