@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bi.Client", "Bi.Client\Bi.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.WebSite", "Customer.WebSite\Customer.WebSite.csproj", "{A6123DEF-F421-4215-BD35-BA3A51F95D34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCallOrSmsSimulator", "SimpleCallOrSmsSimulator\SimpleCallOrSmsSimulator.csproj", "{20D96A05-9343-425A-86BF-01F7B7532F37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{A6123DEF-F421-4215-BD35-BA3A51F95D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6123DEF-F421-4215-BD35-BA3A51F95D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6123DEF-F421-4215-BD35-BA3A51F95D34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20D96A05-9343-425A-86BF-01F7B7532F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D96A05-9343-425A-86BF-01F7B7532F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D96A05-9343-425A-86BF-01F7B7532F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D96A05-9343-425A-86BF-01F7B7532F37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

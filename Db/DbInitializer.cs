@@ -67,7 +67,7 @@ namespace Db
                 new Line(){LineNumber ="2234567"+uniqueParamater.ToString(),CreatedDate = DateTime.Now,Status = Common.Enums.LineStatus.Used,Package=GetCustomPackage() },
                 new Line(){LineNumber ="3234567"+uniqueParamater.ToString(),CreatedDate = DateTime.Now,Status = Common.Enums.LineStatus.Used },
                 new Line(){LineNumber ="4234568"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-1),Status = Common.Enums.LineStatus.Used },
-                new Line(){LineNumber ="5234569"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-2),Status = Common.Enums.LineStatus.Removed }
+                new Line(){LineNumber ="5234569"+uniqueParamater.ToString(),CreatedDate = DateTime.Now.AddMonths(-2),Status = Common.Enums.LineStatus.Used }
             };
         }
 
