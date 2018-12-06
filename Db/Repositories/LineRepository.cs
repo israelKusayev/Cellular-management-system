@@ -12,6 +12,7 @@ namespace Db.Repositories
 {
     public class LineRepository : Repository<Line>, ILineRepository
     {
+        //ctor
         public LineRepository(DbContext context) : base(context)
         {
 

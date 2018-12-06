@@ -11,10 +11,12 @@ namespace Db.Repositories
 {
   public  class PaymentRepository : Repository<Payment>, IPaymentRepository
     {
+        //ctor
         public PaymentRepository(DbContext context):base(context)
         {
 
         }
+
         public CellularContext CellularContext
         {
             get { return Context as CellularContext; }

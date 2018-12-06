@@ -131,13 +131,17 @@ namespace Server.Managers
             return employeesDTO;
         }
 
+        /// <summary>
+        /// Get the customers who talk the most with different destinations 
+        /// </summary>
+        /// <returns>>List of customers if succeeded otherwise null</returns>
         public List<CustomerBiDTO> GetOpinionLeadersCustomers()
         {
             List<CustomerBiDTO> customerBiDTOs = new List<CustomerBiDTO>();
             List<Customer> customers;
             try
             {
-                customers = _unitOfWork.Customer.GetTop10TalkingCustomers();
+                customers = _unitOfWork.Customer.GetOpinionLeadersCustomers();
             }
             catch (Exception e)
             {
@@ -154,6 +158,10 @@ namespace Server.Managers
             return customerBiDTOs;
         }
 
+        /// <summary>
+        /// Get the Customers who have the highest average invoices
+        /// </summary>
+        /// <returns>List of customers if succeeded otherwise null</returns>
         public List<ProfitableCustomerDTO> GetMostProfitableCustomers()
         {
             List<Customer> customers;
@@ -178,12 +186,100 @@ namespace Server.Managers
                     customerDTO.FirstName = customer.FirstName;
                     customerDTO.LastName = customer.LastName;
                     customerDTO.IdentityCard = customer.IdentityCard;
-                    //customerDTO.LastMonthProfit = customer.Lines.
+                    customerDTO.LastMonthProfit = customer.Lines.Sum(p => p.Payments.Where(x => x.Date.Year == DateTime.Now.Year && x.Date.Month == DateTime.Now.Month).Sum(q => q.LineTotalPrice));
+
                     profitableCustomersDTO.Add(customerDTO);
                 }
             }
             return profitableCustomersDTO;
 
+        }
+
+        /// <summary>
+        /// Get the customers that two or more of the friends they call the most left the company
+        /// </summary>
+        /// <returns>List of customers if succeeded otherwise null</returns>
+        public List<CustomerBiDTO> GetCustomersAtRiskOfAbandonment()
+        {
+            List<CustomerBiDTO> customersBiDTOs = new List<CustomerBiDTO>();
+            List<Customer> customers;
+            try
+            {
+                customers = _unitOfWork.Customer.GetCustomersAtRiskOfAbandonment();
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+            }
+
+            if(customers != null)
+            {
+                foreach (var customer in customers)
+                {
+                    CustomerBiDTO customerBi = new CustomerBiDTO();
+                    customerBi.FirstName = customer.FirstName;
+                    customerBi.LastName = customer.LastName;
+                    customerBi.IdentityCard = customer.IdentityCard;
+
+                    customersBiDTOs.Add(customerBi);
+                }
+            }
+            return customersBiDTOs;
+        }
+
+        //Need to finish this function
+        /// <summary>
+        /// Get groups of customers who talks each other the most
+        /// </summary>
+        /// <returns>List of customers groups if succeeded otherwise null</returns>
+        public List<GroupDTO> GetGroupsOfFreindsWhoTalkEachOther()
+        {
+            List<GroupDTO> groups = new List<GroupDTO>();
+            List<Customer> customers;
+            try
+            {
+                customers = _unitOfWork.Customer.GetActiveCustomersWithLinesAndCalls();
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+                throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+            }
+
+            if (customers != null)
+            {
+                List<MostCalledNumberCustomerDTO> mostCallCustomers = new List<MostCalledNumberCustomerDTO>();
+
+                foreach (var customer in customers)
+                {
+                    List<Call> calls = new List<Call>();
+                    foreach (var item in customer.Lines)
+                    {
+                        calls.AddRange(item.Calls);
+                    }
+                    List<Call> mostNumbers = calls.OrderByDescending((s) => calls.GroupBy(x => x.DestinationNumber).Count()).Take(3).ToList();
+
+                    MostCalledNumberCustomerDTO mostCallCustomer = new MostCalledNumberCustomerDTO()
+                    {
+                        Customer = customer,
+                        FirstNumber = mostNumbers[0].DestinationNumber,
+                        SecondNumber = mostNumbers[1].DestinationNumber,
+                        ThirdNumber = mostNumbers[2].DestinationNumber
+                    };
+
+                    mostCallCustomers.Add(mostCallCustomer);
+                }
+
+                //foreach (var customer in mostCallCustomers)
+                //{
+                //    foreach (var otherCustomer in mostCallCustomers)
+                //    {
+                //        if(customer.Customer)
+                //    }
+                //}
+            }
+            return groups;
         }
     }
 }

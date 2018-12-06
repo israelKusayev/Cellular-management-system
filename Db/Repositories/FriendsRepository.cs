@@ -11,6 +11,7 @@ namespace Db.Repositories
 {
     public class FriendsRepository : Repository<Friends>, IFriendsRepository
     {
+        //ctor
         public FriendsRepository(DbContext context) : base(context)
         {
 

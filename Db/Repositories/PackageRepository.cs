@@ -11,6 +11,7 @@ namespace Db.Repositories
 {
     public class PackageRepository : Repository<Package>, IPackageRepository
     {
+        //ctor
         public PackageRepository(DbContext context) : base(context)
         {
 

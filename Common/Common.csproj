@@ -64,6 +64,7 @@
     <Compile Include="Interfaces\IPayment.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\IBiManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\ICustomerManager.cs" />
+    <Compile Include="Interfaces\ServerManagersInterfaces\ICustomerWebsiteManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\IEmployeeManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\ILineManager.cs" />
     <Compile Include="Interfaces\ServerManagersInterfaces\IPackageManager.cs" />
@@ -74,9 +75,12 @@
     <Compile Include="Logger\LoggerManager.cs" />
     <Compile Include="ModelsDTO\CustomerBiDTO.cs" />
     <Compile Include="ModelsDTO\EmployeeBiDTO.cs" />
+    <Compile Include="ModelsDTO\GroupDTO.cs" />
     <Compile Include="ModelsDTO\LineReceiptDTO.cs" />
+    <Compile Include="ModelsDTO\LineWebsiteDTO.cs" />
     <Compile Include="ModelsDTO\LoginDTO.cs" />
     <Compile Include="ModelsDTO\MostCallCustomerDTO.cs" />
+    <Compile Include="ModelsDTO\MostCalledNumberCustomerDTO.cs" />
     <Compile Include="ModelsDTO\ProfitableCustomerDTO.cs" />
     <Compile Include="ModelsDTO\SimulateDTO.cs" />
     <Compile Include="Models\Call.cs" />
