@@ -10,7 +10,6 @@ namespace Server.Interfaces
     public interface ICustomerWebsiteApi
     {
         IHttpActionResult GetCustomerLines(string idCard);
-        IHttpActionResult GetLineDetails(int lineId);
-        //IHttpActionResult GetPackageRecommendation(int lineId);
+        IHttpActionResult GetLineDetails(string lineNumber);
     }
 }

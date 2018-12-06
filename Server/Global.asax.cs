@@ -1,5 +1,4 @@
-﻿
-using Common.Interfaces.ServerManagersInterfaces;
+﻿using Common.Interfaces.ServerManagersInterfaces;
 using Common.RepositoryInterfaces;
 using Db;
 using Db.Repositories;
@@ -24,6 +23,5 @@ namespace Server
             GlobalConfiguration.Configure(WebApiConfig.Register);
             new CellularContext().InitDataBase();
         }
-
     }
 }

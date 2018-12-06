@@ -33,6 +33,7 @@ namespace Crm.Client.BL
                     if (result.IsSuccessStatusCode)
                     {
                         _receipts = result.Content.ReadAsAsync<List<LineReceiptDTO>>().Result;
+                        if (_receipts.Count == 0) return false;
                         return true;
                     }
                     else

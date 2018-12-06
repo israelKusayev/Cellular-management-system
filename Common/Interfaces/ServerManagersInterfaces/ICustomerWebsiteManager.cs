@@ -11,6 +11,6 @@ namespace Common.Interfaces.ServerManagersInterfaces
     public interface ICustomerWebsiteManager
     {
         Customer GetCustomerWithLines(string idCard);
-        LineWebsiteDTO GetLineDetails(int lineId);
+        LineWebsiteDTO GetLineDetails(string lineNumber);
     }
 }

@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace Db.Repositories
 {
@@ -27,6 +28,18 @@ namespace Db.Repositories
         public Line GetLineByLineNumber(string lineNumber)
         {
             return CellularContext.LinesTable.SingleOrDefault((l) => l.LineNumber == lineNumber && l.Status == LineStatus.Used);
+        }
+
+        public Line GetLineByLineNumberWithPaymentsAndPackageAndFriends(string lineNumber)
+        {
+            return CellularContext.LinesTable.Where((l) => l.LineNumber == lineNumber && l.Status == LineStatus.Used).Include(y => y.Payments).Include(y => y.Package).Include(x => x.Package.Friends).SingleOrDefault();
+        }
+
+        public Line GetLineWithCalls(string lineNumber, DateTime requestedTime)
+        {
+            return  CellularContext.LinesTable.Where(l => l.LineNumber == lineNumber && l.Status == LineStatus.Used)
+                                              .IncludeFilter(c => c.Calls.Where(d => d.DateOfCall.Year == requestedTime.Year && d.DateOfCall.Month == requestedTime.Month))
+                                              .SingleOrDefault();
         }
 
         public Line LineNumberIsAvailable(string lineNumber)

@@ -56,13 +56,13 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/customerWebsite/getLineInfo/{lineId}")]
-        public IHttpActionResult GetLineDetails(int lineId)
+        [Route("api/customerWebsite/getLineInfo/{linenumber}")]
+        public IHttpActionResult GetLineDetails(string linenumber)
         {
             LineWebsiteDTO lineDetails;
             try
             {
-                lineDetails = _customerWebsiteManager.GetLineDetails(lineId);
+                lineDetails = _customerWebsiteManager.GetLineDetails(linenumber);
 
             }
             catch (Exception)
@@ -72,37 +72,17 @@ namespace Server.Controllers
 
             if (lineDetails != null)
             {
-                return Ok(lineDetails);
+                var response = JsonConvert.SerializeObject(lineDetails, Formatting.Indented,
+                               new JsonSerializerSettings
+                               {
+                                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                               });
+                return Ok(response);
             }
             else
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to find the line"));
             }
         }
-
-        //[HttpGet]
-        //[Route("api/customerWebsite/getPackageRecommendation/{lineId}")]
-        //public IHttpActionResult GetPackageRecommendation(int lineId)
-        //{
-        //    Customer customer;
-        //    try
-        //    {
-        //        customer = _customerWebsiteManager.GetCustomerLines(lineId);
-        //    }
-        //    catch (NotFoundException e)
-        //    {
-        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Something went wrong"));
-        //    }
-        //    var response = JsonConvert.SerializeObject(customer, Formatting.Indented,
-        //                        new JsonSerializerSettings
-        //                        {
-        //                              ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        //                        });
-        //    return Ok(response);
-        //}
     }
 }

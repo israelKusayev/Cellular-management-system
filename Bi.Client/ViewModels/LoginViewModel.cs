@@ -50,21 +50,19 @@ namespace Bi.Client.ViewModels
 
         private async void Login()
         {
-            _navigationService.NavigateTo("Reports");
+            if (!CanLogin())
+            {
+                MessageBox.Show("All fields are required.");
+                return;
+            }
+            LoadingVisibility = Visibility.Visible;
 
-            //if (!CanLogin())
-            //{
-            //    MessageBox.Show("All fields are required.");
-            //    return;
-            //}
-            //LoadingVisibility = Visibility.Visible;
-
-            //if (await _loginManager.Login(Username, Password))
-            //{
-            //    ViewModelLocator.UnRegisterLoginViewModel();
-            //    _navigationService.NavigateTo("Reports");
-            //}
-            //LoadingVisibility = Visibility.Collapsed;
+            if (await _loginManager.Login(Username, Password))
+            {
+                ViewModelLocator.UnRegisterLoginViewModel();
+                _navigationService.NavigateTo("Reports");
+            }
+            LoadingVisibility = Visibility.Collapsed;
 
         }
     }
