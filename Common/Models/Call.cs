@@ -18,4 +18,3 @@ namespace Common.Models
         public string DestinationNumber { get; set; }
     }
 }
-//nt result = line.Calls.GroupBy(x => x.DestinationNumber).Where(x => x.Count() == 1).Count();

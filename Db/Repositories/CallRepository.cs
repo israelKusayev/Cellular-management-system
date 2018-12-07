@@ -16,6 +16,7 @@ namespace Db.Repositories
         {
 
         }
+
         public CellularContext CellularContext
         {
             get { return Context as CellularContext; }

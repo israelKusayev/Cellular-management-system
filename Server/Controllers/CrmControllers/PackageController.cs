@@ -49,6 +49,11 @@ namespace Server.Controllers.CrmControllers
         [Route("api/crm/package/{lineId}")]
         public IHttpActionResult GetPackage(int lineId)
         {
+            if (lineId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,Line id Can not be smaller than 1"));
+            }
+
             Package returnedPackage;
             try
             {
@@ -73,6 +78,11 @@ namespace Server.Controllers.CrmControllers
         [Route("api/crm/package/{lineId}")]
         public IHttpActionResult AddPackageToLine(int lineId, Package package)
         {
+            if (lineId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,Line id Can not be smaller than 1"));
+            }
+
             if (package == null)
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
@@ -133,6 +143,11 @@ namespace Server.Controllers.CrmControllers
         [Route("api/crm/package/{lineId}")]
         public IHttpActionResult RemovePackageFromLine(int lineId)
         {
+            if (lineId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,Line id Can not be smaller than 1"));
+            }
+
             Package removedPackage;
             try
             {
@@ -159,6 +174,11 @@ namespace Server.Controllers.CrmControllers
         [Route("api/crm/package/friends/{PackageId}")]
         public IHttpActionResult AddFriends(int PackageId, Friends friendsToAdd)
         {
+            if (PackageId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,package id Can not be smaller than 1"));
+            }
+
             if (friendsToAdd == null)
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
@@ -188,6 +208,16 @@ namespace Server.Controllers.CrmControllers
         [Route("api/crm/package/friends/{PackageId}")]
         public IHttpActionResult EditFriends(int PackageId, Friends friendsToEdit)
         {
+            if (PackageId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,package id Can not be smaller than 1"));
+            }
+
+            if (friendsToEdit == null)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
+            }
+
             Friends edittedFriends = null;
             try
             {

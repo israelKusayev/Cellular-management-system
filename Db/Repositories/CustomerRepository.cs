@@ -71,6 +71,11 @@ namespace Db.Repositories
                                   .SingleOrDefault();
         }
 
+        public List<Customer> GetActiveCustomersWithLinesAndCalls()
+        {
+            return CellularContext.CustomerTable.Where(c=>c.IsActive == true).Include(c => c.Lines).Include(c => c.Lines.Select(x => x.Calls)).ToList();
+        }
+
 
         public List<Customer> GetMostCallToCenterCustomers(DateTime requestedTime)
         {
@@ -83,6 +88,10 @@ namespace Db.Repositories
                                   .ToList();
         }
 
+        /// <summary>
+        /// Get the customers who communicate with the widest range of people
+        /// </summary>
+        /// <returns>List of customers if succeeded otherwise null</returns>
         public List<Customer> GetOpinionLeadersCustomers()
         {
             return CellularContext.CustomerTable
@@ -94,6 +103,10 @@ namespace Db.Repositories
                                   .ToList();
         }
 
+        /// <summary>
+        /// Get the customers with the highest average invoicing
+        /// </summary>
+        /// <returns>>List of customers if succeeded otherwise null</returns>
         public List<Customer> GetMostProfitableCustomers()
         {
             List<Customer> customers = CellularContext.CustomerTable
@@ -109,6 +122,10 @@ namespace Db.Repositories
             return mostProfitableCustomers;
         }
 
+        /// <summary>
+        /// Get the The customers that the two customers they talk to most leave the company
+        /// </summary>
+        /// <returns>List of customers if succeeded otherwise null</returns>
         public List<Customer> GetCustomersAtRiskOfAbandonment()
         {
 
@@ -140,10 +157,6 @@ namespace Db.Repositories
             return customers;
         }
 
-        public List<Customer> GetActiveCustomersWithLinesAndCalls()
-        {
-            return CellularContext.CustomerTable.Where(c=>c.IsActive == true).Include(c => c.Lines).Include(c => c.Lines.Select(x => x.Calls)).ToList();
-        }
 
         public CellularContext CellularContext
         {

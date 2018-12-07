@@ -58,6 +58,12 @@ namespace Server.Controllers.CrmControllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
             }
+
+            if(customerId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,Customer id Can not be smaller than 1"));
+            }
+
             Line addedLine;
             try
             {
@@ -88,9 +94,13 @@ namespace Server.Controllers.CrmControllers
 
         [HttpDelete]
         [Route("api/crm/line/{lineId}")]
-
         public IHttpActionResult DeactivateLine(int lineId)
         {
+            if (lineId < 1)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,Line id Can not be smaller than 1"));
+            }
+
             Line editedLine;
             try
             {

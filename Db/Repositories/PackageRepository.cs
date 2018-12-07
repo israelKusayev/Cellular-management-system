@@ -17,11 +17,10 @@ namespace Db.Repositories
 
         }
 
-        public CellularContext CellularContext
-        {
-            get { return Context as CellularContext; }
-        }
-
+        /// <summary>
+        /// Get the packages that the company created by itself
+        /// </summary>
+        /// <returns>List of packages if succeeded otherwise null</returns>
         public List<Package> GetPackageTemplate()
         {
             return  CellularContext.PackagesTable.Where((p) => p.IsPackageTemplate == true).ToList();
@@ -30,6 +29,12 @@ namespace Db.Repositories
         public Package GetPackageWithFriends(int packageId)
         {
             return CellularContext.PackagesTable.Where((p) => p.PackageId == packageId).Include(x => x.Friends).SingleOrDefault();
+        }
+
+
+        public CellularContext CellularContext
+        {
+            get { return Context as CellularContext; }
         }
     }
 }

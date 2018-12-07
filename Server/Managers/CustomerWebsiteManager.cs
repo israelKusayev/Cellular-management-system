@@ -25,6 +25,11 @@ namespace Server.Managers
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Get the requested customer with his lines
+        /// </summary>
+        /// <param name="idCard">Customer identity card</param>
+        /// <returns>Customer  if succeeded otherwise null</returns>
         public Customer GetCustomerWithLines(string idCard)
         {
             try
@@ -38,6 +43,11 @@ namespace Server.Managers
             }
         }
 
+        /// <summary>
+        /// Get line usage details and packages recommendation for the last month
+        /// </summary>
+        /// <param name="lineNumber"></param>
+        /// <returns>LineWebsiteDTO with last month line details and Recommended Packages if succeeded otherwise null</returns>
         public LineWebsiteDTO GetLineDetails(string lineNumber)
         {
             Line foundedLine;
@@ -47,7 +57,6 @@ namespace Server.Managers
             try
             {
                 foundedLine = _unitOfWork.Line.GetLineByLineNumberWithPaymentsAndPackageAndFriends(lineNumber);
-
 
                 if (foundedLine != null && foundedLine.Payments != null)
                 {
@@ -79,6 +88,8 @@ namespace Server.Managers
 
                     if (payment != null)
                     {
+                        List<Package> templates = _unitOfWork.Package.GetPackageTemplate();
+                        lineWebsiteDTO.RecommendPackages =  templates.OrderBy(p => Math.Abs(p.MaxMinute - payment.UsageCall)).Take(3).ToList();
                         lineWebsiteDTO.TotalLinePrice = payment.LineTotalPrice;
                         lineWebsiteDTO.TotalMinutes = payment.UsageCall / 60;
                         lineWebsiteDTO.TotalSms = payment.UsageSms;

@@ -233,6 +233,55 @@ namespace Server.Managers
         /// Get groups of customers who talks each other the most
         /// </summary>
         /// <returns>List of customers groups if succeeded otherwise null</returns>
+        //public List<GroupDTO> GetGroupsOfFreindsWhoTalkEachOther()
+        //{
+        //    List<GroupDTO> groups = new List<GroupDTO>();
+        //    List<Customer> customers;
+        //    try
+        //    {
+        //        customers = _unitOfWork.Customer.GetActiveCustomersWithLinesAndCalls();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logger.Log($"{Messages.messageFor[MessageType.GeneralDbFaild]} Execption details: {e.Message}");
+        //        throw new FaildToConnectDbExeption(Messages.messageFor[MessageType.GeneralDbFaild]);
+        //    }
+
+        //    if (customers != null)
+        //    {
+        //        List<MostCalledNumberCustomerDTO> mostCallCustomers = new List<MostCalledNumberCustomerDTO>();
+
+        //        foreach (var customer in customers)
+        //        {
+        //            List<Call> calls = new List<Call>();
+        //            foreach (var item in customer.Lines)
+        //            {
+        //                calls.AddRange(item.Calls);
+        //            }
+        //            List<Call> mostNumbers = calls.OrderByDescending((s) => calls.GroupBy(x => x.DestinationNumber).Count()).Take(3).ToList();
+
+        //            MostCalledNumberCustomerDTO mostCallCustomer = new MostCalledNumberCustomerDTO()
+        //            {
+        //                Customer = customer,
+        //                FirstNumber = mostNumbers[0].DestinationNumber,
+        //                SecondNumber = mostNumbers[1].DestinationNumber,
+        //                ThirdNumber = mostNumbers[2].DestinationNumber
+        //            };
+
+        //            mostCallCustomers.Add(mostCallCustomer);
+        //        }
+
+        //        //foreach (var customer in mostCallCustomers)
+        //        //{
+        //        //    foreach (var otherCustomer in mostCallCustomers)
+        //        //    {
+        //        //        if(customer.Customer)
+        //        //    }
+        //        //}
+        //    }
+        //    return groups;
+        //}
+
         public List<GroupDTO> GetGroupsOfFreindsWhoTalkEachOther()
         {
             List<GroupDTO> groups = new List<GroupDTO>();
@@ -258,26 +307,18 @@ namespace Server.Managers
                     {
                         calls.AddRange(item.Calls);
                     }
-                    List<Call> mostNumbers = calls.OrderByDescending((s) => calls.GroupBy(x => x.DestinationNumber).Count()).Take(3).ToList();
+                    List<string> mostNumbers = calls.OrderByDescending((s) => calls.GroupBy(x => x.DestinationNumber).Count()).Select(d=>d.DestinationNumber).Take(3).ToList();
 
                     MostCalledNumberCustomerDTO mostCallCustomer = new MostCalledNumberCustomerDTO()
                     {
                         Customer = customer,
-                        FirstNumber = mostNumbers[0].DestinationNumber,
-                        SecondNumber = mostNumbers[1].DestinationNumber,
-                        ThirdNumber = mostNumbers[2].DestinationNumber
+                        FirstNumber = mostNumbers[0],
+                        SecondNumber = mostNumbers[1],
+                        ThirdNumber = mostNumbers[2]
                     };
 
                     mostCallCustomers.Add(mostCallCustomer);
                 }
-
-                //foreach (var customer in mostCallCustomers)
-                //{
-                //    foreach (var otherCustomer in mostCallCustomers)
-                //    {
-                //        if(customer.Customer)
-                //    }
-                //}
             }
             return groups;
         }

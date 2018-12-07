@@ -210,7 +210,5 @@ namespace Server.Controllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Sorry, we were unable to generate optional groups report"));
             }
         }
-
-
     }
 }

@@ -19,6 +19,7 @@ namespace Db.Repositories
 
         }
 
+
         public Line GetLineWithPackageAndFriends(int lineId)
         {
 
@@ -65,6 +66,7 @@ namespace Db.Repositories
         {
             return CellularContext.LinesTable.Where((l) => l.Status == LineStatus.Used || l.Status == LineStatus.Removed).Include(x => x.Payments).Include(p => p.Package).Include(f => f.Package.Friends).Include(s => s.Calls).Include(m => m.Messages);
         }
+
 
         public CellularContext CellularContext
         {

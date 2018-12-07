@@ -34,6 +34,16 @@ namespace Server.Controllers
         [Route("api/receipt/{idCard}/{year}/{month}")]
         public IHttpActionResult GetCustomerReceipt(string idCard, int year, int month)
         {
+            if (string.IsNullOrWhiteSpace(idCard))
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
+            }
+
+            if (month<1 || month>12 || year<1900 || year>DateTime.Now.Year)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Year or month are invalid"));
+            }
+
             List<LineReceiptDTO> lineReceipts;
             DateTime date = new DateTime(year, month, 1);
             try

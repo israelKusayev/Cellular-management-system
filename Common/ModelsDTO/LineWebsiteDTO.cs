@@ -15,6 +15,6 @@ namespace Common.ModelsDTO
         public int TotalMinutesTopNumber { get; set; }
         public int TotalMinutesTop3Numbers { get; set; }
         public int TotalMinutesWithFamily { get; set; }
-        List<Package> RecommendPackages { get; set; }
+        public List<Package> RecommendPackages { get; set; }
     }
 }

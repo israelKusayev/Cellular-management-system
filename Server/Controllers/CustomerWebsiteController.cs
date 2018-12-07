@@ -29,6 +29,11 @@ namespace Server.Controllers
         [Route("api/customerWebsite/getCustomerLines/{idCard}")]
         public IHttpActionResult GetCustomerLines(string idCard)
         {
+            if (string.IsNullOrWhiteSpace(idCard))
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
+            }
+
             Customer customer;
             try
             {
@@ -59,6 +64,11 @@ namespace Server.Controllers
         [Route("api/customerWebsite/getLineInfo/{linenumber}")]
         public IHttpActionResult GetLineDetails(string linenumber)
         {
+            if (string.IsNullOrWhiteSpace(linenumber))
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Some details are missing"));
+            }
+
             LineWebsiteDTO lineDetails;
             try
             {

@@ -10,12 +10,13 @@ namespace Common.Models
 {
     public class CustomerType
     {
+        //ctor
         public CustomerType()
         {
             Customers = new List<Customer>();
         }
-        public int CustomerTypeId { get; set; }
 
+        public int CustomerTypeId { get; set; }
         public CustomerTypeEnum CustomerTypeEnum { get; set; }
         public ICollection<Customer> Customers { get; set; }
         public double MinutePrice { get; set; }

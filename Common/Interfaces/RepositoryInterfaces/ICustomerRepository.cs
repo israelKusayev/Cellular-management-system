@@ -21,5 +21,8 @@ namespace Common.RepositoryInterfaces
         List<Customer> GetOpinionLeadersCustomers();
         List<Customer> GetMostProfitableCustomers();
         List<Customer> GetCustomersAtRiskOfAbandonment();
+
+
+
     }
 }
