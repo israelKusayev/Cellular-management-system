@@ -1,5 +1,4 @@
-﻿
-using Common.Interfaces.ServerManagersInterfaces;
+﻿using Common.Interfaces.ServerManagersInterfaces;
 using Common.RepositoryInterfaces;
 using Db;
 using Db.Repositories;
@@ -17,7 +16,6 @@ namespace Server
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
-        
         protected void Application_Start()
         {
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
@@ -25,6 +23,5 @@ namespace Server
             GlobalConfiguration.Configure(WebApiConfig.Register);
             new CellularContext().InitDataBase();
         }
-
     }
 }

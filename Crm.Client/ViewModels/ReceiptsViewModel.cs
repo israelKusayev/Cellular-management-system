@@ -3,11 +3,11 @@ using Crm.Client.BL;
 using Crm.Client.Helpers;
 using Crm.Client.Utils;
 using Crm.Client.Views;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using PdfSharp;
-using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -156,16 +156,104 @@ namespace Crm.Client.ViewModels
             SaveFileDialog sfd = new SaveFileDialog() { Filter = "PDF file|*.pdf", ValidateNames = true };
             if (sfd.ShowDialog() == true)
             {
-                    string html = "<!DOCTYPE html><html lang='en'> <head> <meta charset='UTF-8' /> <meta name='viewport' content='width=device-width, initial-scale=1.0' /> <meta http-equiv='X-UA-Compatible' content='ie=edge' /> <title>Document</title> </head> <body> <header> <h1 style='text-align: center'>Customer Name: 0</h1> <h2 style='text-align: center'>Year: 2001 ,month: 12</h2> <h3 style='text-align: center'>Total price: 100</h3> </header> <table style='width:100%'>";
-                    for (int i = 0; i < Receipts.Count; i++)
-                    {
-                        html += $@"<tr> <th colspan='3'><h2>Line Number: 10000</h2></th> </tr> <tr> <td><h2>line info</h2></td> </tr> <tr> <td> <div><b>Amount of minute you used: </b>0 |</div> </td> <td> <div><b>Amount of sms you used:</b>0 |</div> </td> <td> <div><b>Total line price:</b>0</div> </td> </tr> <tr> <td><h2>Package info</h2></td> </tr> <tr> <td> <div><b>Minute: </b>0</div> </td> <td> <div><b>Minute left in package:</b>0</div> </td> <td> <div><b>Package % usage:</b>0</div> </td> </tr> <tr> <td> <div><b>Sms: </b>0</div> </td> <td> <div><b>Sms left in package:</b>0</div> </td> <td> <div><b>Package % usage:</b>0</div> </td> </tr> <tr> <td> <div><b>Package price:</b>0</div> </td> </tr> <hr /> <tr> <td><h2>Out of package</h2></td> </tr> <tr> <td> <div><b>Minute beyond package limit: </b>0</div> </td> <td> <div><b>Price per minute:</b>0</div> </td> <td> <div><b>Total:</b>0</div> </td> </tr> <tr> <td> <div><b>Sms beyond package limit: </b>0</div> </td> <td> <div><b>Price per sms:</b>0</div> </td> <td> <div><b>Total:</b>0</div> </td> </tr> </table> <hr /> ";
-                    }
-                    html += "</body></html>";
-
-                    PdfDocument pdf = PdfGenerator.GeneratePdf(html, PageSize.A4);
-                    pdf.Save(sfd.FileName);
+                Document doc = new Document(PageSize.A4);
+                var output = new FileStream(sfd.FileName, FileMode.Append);
+                var writer = PdfWriter.GetInstance(doc, output);
+                doc.Open();
+                PdfPTable table1 = CreateBillConstTable();
+                doc.Add(table1);
+                for (int i = 0; i < Receipts.Count; i++)
+                {
+                    PdfPTable table2 = CreateLineTable(Receipts[i]);
+                    doc.Add(table2);
+                }
+                doc.Close();
             }
+        }
+
+        private PdfPTable CreateBillConstTable()
+        {
+            PdfPTable table = new PdfPTable(2)
+            {
+                WidthPercentage = 100
+            };
+
+            PdfPCell cell1 = new PdfPCell
+            {
+                Colspan = 1
+            };
+            cell1.AddElement(new Paragraph("Client Name: " + CustomerName));
+            cell1.AddElement(new Paragraph("Date: " + SelectedMonth + "/" + SelectedYear, new Font()));
+            cell1.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PdfPCell cell2 = new PdfPCell();
+            cell2.AddElement(new Paragraph("Total Price: " + TotalPayment));
+            cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            table.AddCell(cell1);
+            table.AddCell(cell2);
+            return table;
+        }
+
+        private PdfPTable CreateLineTable(LineReceiptDTO receipt)
+        {
+            PdfPTable table = new PdfPTable(3)
+            {
+                WidthPercentage = 100
+            };
+
+            PdfPCell cell = new PdfPCell(new Phrase("Line Number:" + receipt.LineNumber));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.AddCell(cell);
+
+            table.AddCell("Total line price: " + receipt.LineTotalPrice + "₪");
+            cell = new PdfPCell(new Phrase("Package info:"));
+            cell.Colspan = 2;
+            table.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Package"));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_LEFT;
+            table.AddCell(cell);
+
+            table.AddCell("Minute: " + receipt.UsageCall);  // "Row 4, Col 1"
+            table.AddCell("Minute left: " + receipt.LeftMinutes);  // "Row 4, Col 2"
+            table.AddCell("Package used: " + receipt.MinutesUsagePrecent + "%");  // "Row 4, Col 3"
+
+            table.AddCell("SMS: " + receipt.UsageSms);  // "Row 5, Col 1"
+            table.AddCell("SMS left: " + receipt.LeftSms);  // "Row 5, Col 2"
+            table.AddCell("Package used: " + receipt.SmsUsagePrecent + "%");  // "Row 5, Col 3"
+
+            cell = new PdfPCell(new Phrase("Package price: " + receipt.PackagePrice + "₪"));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Out of Package"));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_LEFT;
+            table.AddCell(cell);
+
+            table.AddCell("Minute beyond package: " + receipt.MinutesBeyondPackageLimit);  // "Row 8, Col 1"
+            table.AddCell("price per minunte: " + receipt.PricePerMinute + "₪");  // "Row 8, Col 2"
+            table.AddCell("Total: " + receipt.ExceptionalMinutesPrice);  // "Row 8, Col 3"
+
+            table.AddCell("SMS beyond package: " + receipt.SmsBeyondPackageLimit);  // "Row 9, Col 1"
+            table.AddCell("price per SMS: " + receipt.PricePerSms + "₪");  // "Row 9, Col 2"
+            table.AddCell("Total: " + receipt.ExceptionalSmsPrice);  // "Row 9, Col 3"
+
+            //cell = new PdfPCell(new Phrase("Total:" + receipt.));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("  "));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.AddCell(cell);
+
+            return table;
         }
 
         /// <summary>
@@ -186,6 +274,7 @@ namespace Crm.Client.ViewModels
                 CustomerName = Receipts.Last().CustomerName;
                 _navigationService.NavigateTo("Receipts");
             }
+           
         }
 
         /// <summary>

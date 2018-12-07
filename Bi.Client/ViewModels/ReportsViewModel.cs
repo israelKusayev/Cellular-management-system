@@ -21,7 +21,7 @@ namespace Bi.Client.ViewModels
 
         public ICommand LogoutCommand { get; set; }
         public ICommand GeneratePaymentsCommand { get; set; }
-        
+
 
         private ObservableCollection<MostCallCustomerDTO> _mostCallCustomes;
         public ObservableCollection<MostCallCustomerDTO> MostCallCustomes
@@ -87,9 +87,11 @@ namespace Bi.Client.ViewModels
             _reportsManager = new ReportsManager();
             LogoutCommand = new RelayCommand(() =>
             {
+                ViewModelLocator.UnRegisterReportsViewModel();
                 _frameNavigationService.NavigateTo("Login");
             });
-            GeneratePaymentsCommand = new RelayCommand(() => {
+            GeneratePaymentsCommand = new RelayCommand(() =>
+            {
                 _reportsManager.GeneratePayments();
             });
             GetReports();
@@ -99,7 +101,6 @@ namespace Bi.Client.ViewModels
         {
             try
             {
-
                 MostCallCustomes = new ObservableCollection<MostCallCustomerDTO>(_reportsManager.GetReports<MostCallCustomerDTO>("mostCallingToCenterCustomers"));
                 BestSellers = new ObservableCollection<EmployeeBiDTO>(_reportsManager.GetReports<EmployeeBiDTO>("bestSellerEmployees"));
                 ProfitableCustomers = new ObservableCollection<ProfitableCustomerDTO>(_reportsManager.GetReports<ProfitableCustomerDTO>("mostProfitableCustomers"));
@@ -109,7 +110,6 @@ namespace Bi.Client.ViewModels
             catch (Exception)
             {
                 MessageBox.Show("failed to get the date");
-                //_frameNavigationService.NavigateTo("Login");
             }
         }
     }

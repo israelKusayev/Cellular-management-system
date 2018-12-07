@@ -90,11 +90,11 @@ namespace Db
         {
             return new List<Customer>
                 {
-                    new Customer() { IdentityCard = "1"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "1", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 1, IsActive = true, Lines = GetLines(1+uniqueParamater)},
-                    new Customer() { IdentityCard = "2"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "2", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 2, IsActive = true, Lines = GetLines(2+uniqueParamater)},
-                    new Customer() { IdentityCard = "3"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "3", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 1, IsActive = true, Lines = GetLines(3+uniqueParamater)},
-                    new Customer() { IdentityCard = "4"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "4", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 1, IsActive = true, Lines = GetLines(4+uniqueParamater)},
-                    new Customer() { IdentityCard = "5"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "5", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 3, IsActive = true, Lines = GetLines(5+uniqueParamater)},
+                    new Customer() { IdentityCard = "1"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "1", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 1, IsActive = true, JoinDate= DateTime.Now, Lines = GetLines(1+uniqueParamater)},
+                    new Customer() { IdentityCard = "2"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "2", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 2, IsActive = true, JoinDate= DateTime.Now, Lines = GetLines(2+uniqueParamater)},
+                    new Customer() { IdentityCard = "3"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "3", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 1, IsActive = true, JoinDate= DateTime.Now, Lines = GetLines(3+uniqueParamater)},
+                    new Customer() { IdentityCard = "4"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "4", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 1, IsActive = true, JoinDate= DateTime.Now, Lines = GetLines(4+uniqueParamater)},
+                    new Customer() { IdentityCard = "5"+uniqueParamater.ToString(), Address =r.Next(1, 1000000).ToString(), FirstName =r.Next(1, 1000000).ToString(), LastName = "5", ContactNumber = r.Next(1, 1000000).ToString(), CustomerTypeId = 3, IsActive = true, JoinDate= DateTime.Now, Lines = GetLines(5+uniqueParamater)},
                };
         }
     }
