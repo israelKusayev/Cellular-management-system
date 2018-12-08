@@ -59,7 +59,7 @@ namespace Crm.Client.BL
                     var result = http.PostAsJsonAsync($"{_baseUrl}/simulator", simulateDTO).Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("The simulation was seccessful");
+                        MessageBox.Show("Simulation passed successfully");
                     }
                     else
                     {

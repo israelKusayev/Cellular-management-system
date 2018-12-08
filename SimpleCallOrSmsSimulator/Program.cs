@@ -15,9 +15,12 @@ namespace SimpleCallOrSmsSimulator
     {
         static void Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Title = "Console Simulator";
             while (true)
             {
-                Console.WriteLine("Click -1 to generate payment to this month");
+
+                Console.WriteLine("Click -1 to generate payment to this month OR enter to continue");
                 if (Console.ReadLine() == "-1")
                 {
                     GeneratePayments();
@@ -27,7 +30,7 @@ namespace SimpleCallOrSmsSimulator
 
                     int simulateOption;
 
-                    Console.WriteLine("Simulate calls or sms");
+                    Console.WriteLine("Simulate calls or sms \n");
                     Console.WriteLine("type customer identity card");
 
                     string identityCard = Console.ReadLine();
@@ -56,7 +59,6 @@ namespace SimpleCallOrSmsSimulator
 
                         Simulate(simulateDTO);
                     }
-
                 }
                 Console.WriteLine();
                 Console.WriteLine();
@@ -150,7 +152,7 @@ namespace SimpleCallOrSmsSimulator
                     var result = http.PostAsJsonAsync($"http://localhost:54377/api/simulator", simulateDTO).Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        Console.WriteLine("The simulation was seccessful");
+                        Console.WriteLine("Simulation passed successfully");
                     }
                     else
                     {
@@ -181,7 +183,7 @@ namespace SimpleCallOrSmsSimulator
                     }
                     else
                     {
-                        Console.WriteLine(result.Content.ReadAsAsync<ResponseMessage>().Result.Message); 
+                        Console.WriteLine(result.Content.ReadAsAsync<ResponseMessage>().Result.Message);
                     }
                 }
             }
