@@ -14,7 +14,7 @@
             <TextBlock x:Name="title" HorizontalAlignment="Center" TextWrapping="NoWrap"  FontWeight="Bold" FontSize="15" Text="Reports"  VerticalAlignment="Top" Margin="372,26,372,0" />
             <TabControl Width="800" Height="400" VerticalAlignment="Bottom">
                 <TabItem  Header="Customer opinion leaders">
-                    <DataGrid x:Name="dataGrid"  ItemsSource="{Binding CustomersOpinionLeaders}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
+                    <DataGrid x:Name="dataGrid" ItemsSource="{Binding CustomersOpinionLeaders}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
                 </TabItem>
                 <TabItem Header="Optional abendoment customers" >
                     <DataGrid x:Name="dataGrid1" ItemsSource="{Binding DisconnectionRiskClient}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
@@ -28,15 +28,9 @@
                 <TabItem Header="Best sellers">
                     <DataGrid x:Name="dataGrid4"  ItemsSource="{Binding BestSellers}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>
                 </TabItem>
-                <TabItem Header="Groops">
-                    <!--<DataGrid x:Name="dataGrid5"  ItemsSource="{Binding MostCallCustomes}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="500"/>-->
-                </TabItem>
             </TabControl>
             <Button x:Name="logoutButton" Command="{Binding LogoutCommand}" Content="Logout" HorizontalAlignment="Left" Margin="14,25,0,0" VerticalAlignment="Top" Width="112" Background="#225367" Foreground="White" />
             <Button x:Name="generatePaymentsButton" Command="{Binding GeneratePaymentsCommand}" Content="Generate payments" HorizontalAlignment="Left" Margin="668,25,0,0" VerticalAlignment="Top" Width="113" Background="#225367" Foreground="White" />
-
-
-
         </Grid>
     </Grid>
 </Page>

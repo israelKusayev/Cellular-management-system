@@ -219,6 +219,8 @@ namespace Crm.Client.ViewModels
                     return "Min duration must be a number";
                 if (!int.TryParse(MaxDuration, out int max))
                     return "Max duration must be a number";
+                if (min > max)
+                    return "Min duration cannot be greater than max duration";
             }
             if (string.IsNullOrWhiteSpace(Count))
                 return "Number of Calls/SMS is required";

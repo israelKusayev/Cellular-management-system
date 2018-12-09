@@ -1,15 +1,12 @@
 ﻿using Common.DataConfig;
-using Common.Enums;
 using Common.Interfaces.ServerManagersInterfaces;
 using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
 using Common.RepositoryInterfaces;
-using Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Server.Managers
 {
@@ -39,26 +36,11 @@ namespace Server.Managers
                 if (line.RemovedDate == null ||
                     (line.RemovedDate.Value.Year == requstedTime.Year
                     && line.RemovedDate.Value.Month == requstedTime.Month))
-                {
-                    if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month)) //Make sure that the current line does not have an existing invoice
-                    {//Generates an invoice according to line data
-                        Payment newPayment = new Payment() { Date = requstedTime };
-                        Customer customer = _unitOfWork.Customer.GetCustomerWithTypeAndLines(line.CustomerId);
-                        newPayment.CustomerType = customer.CustomerType;
-                        newPayment.LineId = line.LineId;
+                {   // if line is active, or removed this month
 
-                        newPayment.UsageSms = GetTotalLineSmsPerMonth(line, requstedTime);
-                        newPayment.UsageCall = GetTotalLineCallsDurationPerMonth(line, requstedTime);
-
-                        if (line.Package != null)
-                        {
-                            newPayment.PackageMinute = line.Package.MaxMinute;
-                            newPayment.PackageSms = line.Package.MaxSms;
-                            newPayment.PackagePrice = line.Package.TotalPrice;
-                        }
-                        double totalMinutesPrice = CalculateLineTotalMinutesPrice(customer, line, newPayment, requstedTime);
-                        double totalSmsPrics = CalculateLineTotalSmsPrice(customer, line, newPayment);
-                        newPayment.LineTotalPrice = totalMinutesPrice + totalSmsPrics + newPayment.PackagePrice;
+                    if (!line.Payments.Any(p => p.Date.Year == requstedTime.Year && p.Date.Month == requstedTime.Month)) //Make sure that the current line does not have an existing payment
+                    {   //Generates an payment according to line data
+                        Payment newPayment = CreatePaymentModel(requstedTime, line);
                         payments.Add(newPayment);
                         line.Payments.Add(newPayment);
                     }
@@ -89,26 +71,61 @@ namespace Server.Managers
 
                     if (linePayment != null) //Create new receipt according to payment details
                     {
-                        LineReceiptDTO newReceipt = new LineReceiptDTO(linePayment);
-
-                        newReceipt.CustomerName = $"{customer.FirstName} {customer.LastName}";
-                        newReceipt.LineNumber = line.LineNumber;
-                        int usageCallMinute = newReceipt.UsageCall;
-                        newReceipt.MinutesBeyondPackageLimit = TimeSpan.FromMinutes(linePayment.MinutesBeyondPackageLimit);
-                        newReceipt.LeftMinutes = newReceipt.PackageMinute - usageCallMinute < 0 ? TimeSpan.Zero : TimeSpan.FromMinutes(newReceipt.PackageMinute - usageCallMinute);
-                        newReceipt.LeftSms = newReceipt.PackageMinute - usageCallMinute < 0 ? 0 : newReceipt.PackageSms - newReceipt.UsageSms;
-                        newReceipt.MinutesUsagePrecent = newReceipt.PackageMinute == 0 ? 0 :(100 -  (int)((newReceipt.LeftMinutes.TotalMinutes / newReceipt.PackageMinute) * 100));
-                        newReceipt.SmsUsagePrecent = newReceipt.PackageSms == 0 ? 0 : (100 - (int)((newReceipt.LeftSms / newReceipt.PackageSms) * 100));
-                        newReceipt.PricePerMinute = customer.CustomerType.MinutePrice;
-                        newReceipt.PricePerSms = customer.CustomerType.SmsPrice;
-                        newReceipt.ExceptionalMinutesPrice = newReceipt.MinutesBeyondPackageLimit.TotalMinutes * newReceipt.PricePerMinute;
-                        newReceipt.ExceptionalSmsPrice = newReceipt.SmsBeyondPackageLimit * newReceipt.PricePerSms;
+                        LineReceiptDTO newReceipt = CreateReceiptDTOModel(customer, line, linePayment);
 
                         receipts.Add(newReceipt);
                     }
                 }
             }
             return receipts;
+        }
+
+
+        /// <summary>
+        /// Create new payment model
+        /// </summary>
+        /// <returns></returns>
+        private Payment CreatePaymentModel(DateTime requstedTime, Line line)
+        {
+            Payment newPayment = new Payment() { Date = requstedTime };
+            Customer customer = _unitOfWork.Customer.GetCustomerWithTypeAndLines(line.CustomerId);
+            newPayment.CustomerType = customer.CustomerType;
+            newPayment.LineId = line.LineId;
+
+            newPayment.UsageSms = GetTotalLineSmsPerMonth(line, requstedTime);
+            newPayment.UsageCall = GetTotalLineCallsDurationPerMonth(line, requstedTime);
+
+            if (line.Package != null)
+            {
+                newPayment.PackageMinute = line.Package.MaxMinute;
+                newPayment.PackageSms = line.Package.MaxSms;
+                newPayment.PackagePrice = line.Package.TotalPrice;
+            }
+            double totalMinutesPrice = CalculateLineTotalMinutesPrice(customer, line, newPayment, requstedTime);
+            double totalSmsPrics = CalculateLineTotalSmsPrice(customer, line, newPayment);
+            newPayment.LineTotalPrice = totalMinutesPrice + totalSmsPrics + newPayment.PackagePrice;
+            return newPayment;
+        }
+
+        /// <summary>
+        /// Create new ReceiptDTO model
+        /// </summary>
+        private LineReceiptDTO CreateReceiptDTOModel(Customer customer, Line line, Payment linePayment)
+        {
+            LineReceiptDTO newReceipt = new LineReceiptDTO(linePayment);
+            newReceipt.CustomerName = $"{customer.FirstName} {customer.LastName}";
+            newReceipt.LineNumber = line.LineNumber;
+            int usageCallMinute = newReceipt.UsageCall;
+            newReceipt.MinutesBeyondPackageLimit = TimeSpan.FromMinutes(linePayment.MinutesBeyondPackageLimit);
+            newReceipt.LeftMinutes = newReceipt.PackageMinute - usageCallMinute < 0 ? TimeSpan.Zero : TimeSpan.FromMinutes(newReceipt.PackageMinute - usageCallMinute);
+            newReceipt.LeftSms = newReceipt.PackageMinute - usageCallMinute < 0 ? 0 : newReceipt.PackageSms - newReceipt.UsageSms;
+            newReceipt.MinutesUsagePrecent = newReceipt.PackageMinute == 0 ? 0 : (100 - (int)((newReceipt.LeftMinutes.TotalMinutes / newReceipt.PackageMinute) * 100));
+            newReceipt.SmsUsagePrecent = newReceipt.PackageSms == 0 ? 0 : (100 - (int)((newReceipt.LeftSms / newReceipt.PackageSms) * 100));
+            newReceipt.PricePerMinute = customer.CustomerType.MinutePrice;
+            newReceipt.PricePerSms = customer.CustomerType.SmsPrice;
+            newReceipt.ExceptionalMinutesPrice = newReceipt.MinutesBeyondPackageLimit.TotalMinutes * newReceipt.PricePerMinute;
+            newReceipt.ExceptionalSmsPrice = newReceipt.SmsBeyondPackageLimit * newReceipt.PricePerSms;
+            return newReceipt;
         }
 
         /// <summary>

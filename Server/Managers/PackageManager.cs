@@ -166,13 +166,12 @@ namespace Server.Managers
                     package = _unitOfWork.Package.GetPackageWithFriends(packageId);
                     if (package != null)
                     {
-                            newPackage.PackageId = package.PackageId;
-                            _unitOfWork.Package.Edit(package, newPackage);
-                            return _unitOfWork.Package.GetPackageWithFriends(package.PackageId);
+                        newPackage.PackageId = package.PackageId;
+                        _unitOfWork.Package.Edit(package, newPackage);
+                        return _unitOfWork.Package.GetPackageWithFriends(package.PackageId);
                     }
-                    _unitOfWork.Complete();
-
                 }
+                _unitOfWork.Complete();
             }
             catch (Exception e)
             {

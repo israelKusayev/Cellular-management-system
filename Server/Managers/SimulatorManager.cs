@@ -6,11 +6,9 @@ using Common.Logger;
 using Common.Models;
 using Common.ModelsDTO;
 using Common.RepositoryInterfaces;
-using Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Server.Managers
 {
@@ -31,7 +29,7 @@ namespace Server.Managers
         }
 
         /// <summary>
-        /// Simulate calls or sms to the specific line
+        /// Simulate calls or sms to a specific line
         /// </summary>
         /// <param name="simulateDTO">Simulate detalis</param>
         /// <returns>True if succeeded otherwise false</returns>

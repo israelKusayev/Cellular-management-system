@@ -86,11 +86,7 @@ namespace Server.Managers
 
                 foreach (var customer in customers)
                 {
-                    MostCallCustomerDTO customerDTO = new MostCallCustomerDTO();
-                    customerDTO.FirstName = customer.FirstName;
-                    customerDTO.LastName = customer.LastName;
-                    customerDTO.IdentityCard = customer.IdentityCard;
-                    customerDTO.CallsToCenter = customer.CallsToCenter;
+                    MostCallCustomerDTO customerDTO = CreateMostCallModel(customer);
                     customersDTO.Add(customerDTO);
                 }
             }
@@ -122,9 +118,11 @@ namespace Server.Managers
 
                 foreach (var employee in employees)
                 {
-                    EmployeeBiDTO employeeDTO = new EmployeeBiDTO();
-                    employeeDTO.UserName = employee.UserName;
-                    employeeDTO.LastMonthSells = employee.Customers.Count;
+                    EmployeeBiDTO employeeDTO = new EmployeeBiDTO
+                    {
+                        UserName = employee.UserName,
+                        LastMonthSells = employee.Customers.Count
+                    };
                     employeesDTO.Add(employeeDTO);
                 }
             }
@@ -182,11 +180,7 @@ namespace Server.Managers
 
                 foreach (var customer in customers)
                 {
-                    ProfitableCustomerDTO customerDTO = new ProfitableCustomerDTO();
-                    customerDTO.FirstName = customer.FirstName;
-                    customerDTO.LastName = customer.LastName;
-                    customerDTO.IdentityCard = customer.IdentityCard;
-                    customerDTO.LastMonthProfit = customer.Lines.Sum(p => p.Payments.Where(x => x.Date.Year == DateTime.Now.Year && x.Date.Month == DateTime.Now.Month).Sum(q => q.LineTotalPrice));
+                    ProfitableCustomerDTO customerDTO = CreateProfitableCustomerModel(customer);
 
                     profitableCustomersDTO.Add(customerDTO);
                 }
@@ -227,7 +221,6 @@ namespace Server.Managers
             }
             return customersBiDTOs;
         }
-
 
         /// <summary>
         /// Get groups of customers who talks each other the most
@@ -270,18 +263,40 @@ namespace Server.Managers
 
                     mostCallCustomers.Add(mostCallCustomer);
                 }
-
-                //foreach (var customer in mostCallCustomers)
-                //{
-                //    foreach (var otherCustomer in mostCallCustomers)
-                //    {
-                //        if(customer.Customer)
-                //    }
-                //}
             }
             return groups;
         }
 
+
+        /// <summary>
+        /// Create most call model
+        /// </summary>
+        /// <param name="customer">Customer model</param>
+        /// <returns>MostCallCustomerDTO model</returns>
+        private MostCallCustomerDTO CreateMostCallModel(Customer customer)
+        {
+            MostCallCustomerDTO customerDTO = new MostCallCustomerDTO();
+            customerDTO.FirstName = customer.FirstName;
+            customerDTO.LastName = customer.LastName;
+            customerDTO.IdentityCard = customer.IdentityCard;
+            customerDTO.CallsToCenter = customer.CallsToCenter;
+            return customerDTO;
+        }
+
+        /// <summary>
+        /// Create profitable customer model
+        /// </summary>
+        /// <param name="customer">Customer model</param>
+        /// <returns>ProfitableCustomerDTO model</returns>
+        private ProfitableCustomerDTO CreateProfitableCustomerModel(Customer customer)
+        {
+            ProfitableCustomerDTO customerDTO = new ProfitableCustomerDTO();
+            customerDTO.FirstName = customer.FirstName;
+            customerDTO.LastName = customer.LastName;
+            customerDTO.IdentityCard = customer.IdentityCard;
+            customerDTO.LastMonthProfit = customer.Lines.Sum(p => p.Payments.Where(x => x.Date.Year == DateTime.Now.Year && x.Date.Month == DateTime.Now.Month).Sum(q => q.LineTotalPrice));
+            return customerDTO;
+        }
     }
 }
 

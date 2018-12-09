@@ -213,11 +213,6 @@ namespace Server.Controllers.CrmControllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry,package id Can not be smaller than 1"));
             }
 
-            if (friendsToEdit == null)
-            {
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Sorry, we could not get the data"));
-            }
-
             Friends edittedFriends = null;
             try
             {
