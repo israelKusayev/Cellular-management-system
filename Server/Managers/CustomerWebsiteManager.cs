@@ -93,8 +93,11 @@ namespace Server.Managers
                         lineWebsiteDTO.TotalLinePrice = payment.LineTotalPrice;
                         lineWebsiteDTO.TotalMinutes = payment.UsageCall / 60;
                         lineWebsiteDTO.TotalSms = payment.UsageSms;
-                        lineWebsiteDTO.TotalMinutesTopNumber = totalMinutesTopNumbers[0];
-                        lineWebsiteDTO.TotalMinutesTop3Numbers = totalMinutesTopNumbers.Sum();
+                        if (totalMinutesTopNumbers.Count != 0)
+                        {
+                            lineWebsiteDTO.TotalMinutesTopNumber = totalMinutesTopNumbers[0];
+                            lineWebsiteDTO.TotalMinutesTop3Numbers = totalMinutesTopNumbers.Sum();
+                        }
                         lineWebsiteDTO.TotalMinutesWithFamily = totalFamilyMinutes;
                     }
                 }
