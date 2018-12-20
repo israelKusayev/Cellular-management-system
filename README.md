@@ -1,4 +1,4 @@
-# Cellular-managment-system
+# Cellular-management-system
 
 Cellular-management-system written in c# (Web API and  WPF with MVVM)
 
